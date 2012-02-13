@@ -1,0 +1,23 @@
+%h1 Listing playlists
+
+%table
+  %tr
+    %th Name
+    %th Description
+    %th Tags
+    %th
+    %th
+    %th
+
+  - @playlists.each do |playlist|
+    %tr
+      %td= playlist.name
+      %td= playlist.description
+      %td= playlist.tags
+      %td= link_to 'Show', playlist
+      %td= link_to 'Edit', edit_playlist_path(playlist)
+      %td= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete
+
+%br
+
+= link_to 'New Playlist', new_playlist_path
