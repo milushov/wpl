@@ -1,10 +1,10 @@
 development:
   host: localhost
-  database: p_development
+  database: playlists_development
 
 test:
   host: localhost
-  database: p_test
+  database: playlists_test
 
 # set these environment variables on your prod server
 production:
