@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Artist:
+  = @track.artist
+%p
+  %b Title:
+  = @track.title
+%p
+  %b Audio:
+  = @track.audio_id
+
+= link_to 'Edit', edit_track_path(@track)
+\|
+= link_to 'Back', tracks_path

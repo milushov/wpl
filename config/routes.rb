@@ -1,6 +1,11 @@
 P::Application.routes.draw do
-  resources :playlists
+  
   root :to => 'playlists#index'
+
+  resources :playlists do
+    resources :tracks
+  end
+    
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
