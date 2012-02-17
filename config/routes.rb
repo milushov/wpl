@@ -1,4 +1,4 @@
-P::Application.routes.draw do
+Playlists::Application.routes.draw do
   
   root :to => 'playlists#index'
 

@@ -1,33 +1,11 @@
-
-
-class Playlists.Models.Track extends Backbone.Model
-	
-	defaults:
-		track_id: null # id'шник трека у нас в базе
-		artist: null
-		title: null
-		audio_id: null # состоит из owner_id + '_' + aid
-		duration: 1
-
-	initialize: ->
-		console.log 'Track model start'
-
-	
-
-class Playlists.Models.Playlist extends Playlists.Models.Track
+class P.Models.Playlist extends Backbone.Model
   paramRoot: 'playlist'
 
   defaults:
     name: null
     description: null
     tags: null
-  
-  initialize: ->
-  	console.log 'Playlist model start'
 
-
-class Playlists.Collections.PlaylistsCollection extends Backbone.Collection
-  model: Playlists.Models.Playlist
+class P.Collections.PlaylistsCollection extends Backbone.Collection
+  model: P.Models.Playlist
   url: '/playlists'
-
-

@@ -1,0 +1,47 @@
+!!!
+%html
+	%head
+		%title Playlists
+		= stylesheet_link_tag"application"
+		= javascript_include_tag "application"
+		= csrf_meta_tags
+		%link{ rel: "shortcut icon", href: "/assets/icon.jpg", type: "image/x-icon" }
+
+		%script#playlist-template{ type: 'text/template'}
+			:plain
+				<h2><%= playlist_name ></h2>
+				<div class='playlist'>
+					
+				</div>
+		
+		%script#playlist-track{ type: 'text/template' }
+			:plain
+				<% _.each(tracks, function(track) { %>
+				<div class='track'>
+					<div class='play_btn fl_l'>
+						<a class='btn btn-primary btn-small' onclick="alert('play');">play</a>
+					</div>
+					<div class='info fl_l'>
+						<div class='atrist fl_l'>
+							<%= track.artist %>
+						</div>
+						<div class='title fl_l'>
+							<%= track.title %>
+						</div>
+						<div class='duration fl_r clear'>
+							<%= track.duration %>
+						</div>
+					</div>
+					<div class='actions fl_l clear'>
+						<div class='up fl_l'>
+							<a>▲</a>
+						</div>
+						<div class='down clear fl_l'>
+							<a>▼</a>
+						</div>
+					</div>
+				</div>
+				<% }); %>
+
+	%body
+		= yield

@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-P::Application.load_tasks
+Playlists::Application.load_tasks

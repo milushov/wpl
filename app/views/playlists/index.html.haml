@@ -1,25 +1,42 @@
 %h1 Listing playlists
 
 %table
-  %tr
-    %th Name
-    %th Description
-    %th Tags
-    %th
-    %th
-    %th
+	%tr
+		%th Name
+		%th Description
+		%th Tags
+		%th
+		%th
+		%th
 
-  - @playlists.each do |playlist|
-    %tr
-      %td= playlist.name
-      %td= playlist.description
-      %td= playlist.tags
-      %td= link_to 'Show', playlist
-      %td= link_to 'Edit', edit_playlist_path(playlist)
-      %td= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete
+	- @playlists.each do |playlist|
+		%tr
+			%td= playlist.name
+			%td= playlist.description
+			%td= playlist.tags
+			%td= link_to 'Show', playlist
+			%td= link_to 'Edit', edit_playlist_path(playlist)
+			%td= link_to 'Destroy', playlist, :confirm => 'Are you sure?', :method => :delete
 
 %br
 
 = link_to 'New Playlist', new_playlist_path
 
-123
+%hr
+
+.playlist
+	.track
+		.play_btn.fl_l
+			%a.btn.btn-primary.btn-small{ onclick: "alert('play');" } play
+		.info.fl_l
+			.atrist.fl_l
+				artist name
+			.title.fl_l
+				track title
+			.duration.fl_r.clear
+				4:23
+		.actions.fl_l.clear
+			.up.fl_l
+				%a ▲
+			.down.clear.fl_l
+				%a ▼
