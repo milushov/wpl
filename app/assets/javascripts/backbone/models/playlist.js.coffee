@@ -1,4 +1,4 @@
-class P.Models.Playlist extends Backbone.Model
+class Playlists.Models.Playlist extends Backbone.Model
   paramRoot: 'playlist'
 
   defaults:
@@ -6,6 +6,6 @@ class P.Models.Playlist extends Backbone.Model
     description: null
     tags: null
 
-class P.Collections.PlaylistsCollection extends Backbone.Collection
-  model: P.Models.Playlist
+class Playlists.Collections.PlaylistsCollection extends Backbone.Collection
+  model: Playlists.Models.Playlist
   url: '/playlists'

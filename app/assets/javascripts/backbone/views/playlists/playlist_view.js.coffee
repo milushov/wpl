@@ -1,6 +1,6 @@
-P.Views.Playlists ||= {}
+Playlists.Views.Playlists ||= {}
 
-class P.Views.Playlists.PlaylistView extends Backbone.View
+class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   template: JST["backbone/templates/playlists/playlist"]
 
   events:
