@@ -5,7 +5,13 @@
 #= require_tree ./routers
 
 window.Playlists =
-  Models: {}
-  Collections: {}
-  Routers: {}
-  Views: {}
+	Models: {}
+	Collections: {}
+	Routers: {}
+	Views: {}
+	init: ->
+		console.log('hello')
+		
+
+$(document).ready ->
+	window.Playlists.init()

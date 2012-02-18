@@ -40,3 +40,12 @@
 				%a ▲
 			.down.clear.fl_l
 				%a ▼
+%hr
+
+<div id="playlists"></div>
+
+:javascript
+	$(function() {
+		window.router = new Playlists.Routers.PlaylistsRouter({posts:#{@playlists.to_json.html_safe}});
+		Backbone.history.start();
+	});
