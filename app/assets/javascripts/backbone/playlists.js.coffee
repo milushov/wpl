@@ -9,9 +9,3 @@ window.Playlists =
 	Collections: {}
 	Routers: {}
 	Views: {}
-	init: ->
-		console.log('hello')
-		
-
-$(document).ready ->
-	window.Playlists.init()

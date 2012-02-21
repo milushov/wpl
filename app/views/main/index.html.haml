@@ -1,0 +1,37 @@
+.navbar.navbar-fixed-top
+	.navbar-inner
+		.container
+			%a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+				%span.icon-bar
+				%span.icon-bar
+				%span.icon-bar
+			%a.brand{href: "/"} WikiPlaylists
+			.nav-collapse
+				%ul.nav
+					%li.active
+						%a{href: "#"} Last
+					%li
+						%a{href: "#about"} About
+					%li
+						%a{href: "#contact"} Contact
+				%ul.nav.pull-right
+					%li.divider-vertical
+					%li
+						.btn-group
+							%a#sign_in.btn.btn-success{:href => "#/sign_in"} Войти
+						
+			/ /.nav-collapse
+
+#playlists Loading..
+
+:javascript
+	$(function() {
+		window.router = new Playlists.Routers.PlaylistsRouter({
+			playlists:#{@playlists.to_json.html_safe}
+		});
+		Backbone.history.start();
+	});
+
+%footer
+	%p
+		%a{href:'http://vk.com/milushov'} © roma

@@ -9,4 +9,4 @@ class Playlists.Models.Track extends Backbone.Model
 
 class Playlists.Collections.TracksCollection extends Backbone.Collection
   model: Playlists.Models.Track
-  url: '/tracks'
+  url: '/api/tracks'

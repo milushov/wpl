@@ -1,32 +1,39 @@
 class Playlists.Routers.PlaylistsRouter extends Backbone.Router
-  initialize: (options) ->
-    @playlists = new Playlists.Collections.PlaylistsCollection()
-    @playlists.reset options.playlists
+	initialize: (options) ->
+		#console.log options
+		console.log 'PlaylistsRouter init'
+		@vk = new Playlists.Models.Vk
+		if !@vk.isAuth
+			@vk.auth();
+			console.log 'auth true'
 
-  routes:
-    "/new"      : "newPlaylist"
-    "/index"    : "index"
-    "/:id/edit" : "edit"
-    "/:id"      : "show"
-    ".*"        : "index"
+		@playlists = new Playlists.Collections.PlaylistsCollection()
+		@playlists.reset options.playlists
 
-  newPlaylist: ->
-    @view = new Playlists.Views.Playlists.NewView(collection: @playlists)
-    $("#playlists").html(@view.render().el)
+	routes:
+		"/new"      : "newPlaylist"
+		"/index"    : "index"
+		"/:id/edit" : "edit"
+		"/:id"      : "show"
+		".*"        : "index"
 
-  index: ->
-    console.log('index route')
-    @view = new Playlists.Views.Playlists.IndexView(playlists: @playlists)
-    $("#playlists").html(@view.render().el)
+	newPlaylist: ->
+		@view = new Playlists.Views.Playlists.NewView(collection: @playlists)
+		$("#playlists").html(@view.render().el)
 
-  show: (id) ->
-    playlist = @playlists.get(id)
+	index: ->
+		console.log('index route')
+		@view = new Playlists.Views.Playlists.IndexView( playlists: @playlists )
+		$("#playlists").html(@view.render().el)
 
-    @view = new Playlists.Views.Playlists.ShowView(model: playlist)
-    $("#playlists").html(@view.render().el)
+	show: (id) ->
+		playlist = @playlists.get(id)
 
-  edit: (id) ->
-    playlist = @playlists.get(id)
+		@view = new Playlists.Views.Playlists.ShowView(model: playlist)
+		$("#playlists").html(@view.render().el)
 
-    @view = new Playlists.Views.Playlists.EditView(model: playlist)
-    $("#playlists").html(@view.render().el)
+	edit: (id) ->
+		playlist = @playlists.get(id)
+
+		@view = new Playlists.Views.Playlists.EditView(model: playlist)
+		$("#playlists").html(@view.render().el)

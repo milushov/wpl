@@ -1,15 +1,39 @@
-<h1>Listing playlists</h1>
+<h1>Last playlists</h1>
 
-<table id="playlists-table">
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Tags</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-</table>
+<% _.each( playlists, function(playlist) { %>
+	<h3><%= playlist.name %></h3>
+	<h4><%= playlist.description %></h4>
+
+	<div class='playlist'>
+		<% _.each( playlist.tracks, function(track) { %>
+		<div class='track'>
+			<div class='play_btn fl_l'>
+				<a class='btn btn-primary btn-small' onclick="alert('play');">play</a>
+			</div>
+			<div class='info fl_l'>
+				<div class='atrist fl_l'>
+					<%= track.artist %>
+				</div>
+				<div class='title fl_l'>
+					<%= track.title %>
+				</div>
+				<div class='duration fl_r clear'>
+					123
+				</div>
+			</div>
+			<div class='actions fl_l clear'>
+				<div class='up fl_l'>
+					<a>▲</a>
+				</div>
+				<div class='down clear fl_l'>
+					<a>▼</a>
+				</div>
+			</div>
+		</div>
+		<% }); %>
+	</div>
+<% }); %>
+				
 
 <br/>
 

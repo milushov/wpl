@@ -12,6 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.cookie
+//= require jquery.url
+//= require moment
 //= require bootstrap
 //= require underscore
 //= require backbone

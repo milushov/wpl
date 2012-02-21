@@ -1,28 +1,18 @@
 class PlaylistsController < ApplicationController
+  respond_to :json
+  
   # GET /playlists
-  # GET /playlists.json
   def index
-    @playlists = Playlist.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @playlists }
-    end
+    #respond_with(Playlist.all)
+    render :json => Playlist.all, :content_type => 'application/json'
   end
 
   # GET /playlists/1
-  # GET /playlists/1.json
   def show
-    @playlist = Playlist.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @playlist }
-    end
+    render json: Playlist.find(params[:id])
   end
 
   # GET /playlists/new
-  # GET /playlists/new.json
   def new
     @playlist = Playlist.new
 
