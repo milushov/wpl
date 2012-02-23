@@ -1,14 +1,17 @@
 class Playlists.Routers.PlaylistsRouter extends Backbone.Router
 	initialize: (options) ->
-		#console.log options
-		console.log 'PlaylistsRouter init'
 		@vk = new Playlists.Models.Vk
-		if !@vk.isAuth
-			@vk.auth();
-			console.log 'auth true'
-
+		
+		if @vk.isAuth()
+			console.log( @vk.isAuth() )
+			@navigate('index')
+		else
+			return false
+			alert 'вы не залогинены! атата!'
+		
 		@playlists = new Playlists.Collections.PlaylistsCollection()
 		@playlists.reset options.playlists
+
 
 	routes:
 		"/new"      : "newPlaylist"

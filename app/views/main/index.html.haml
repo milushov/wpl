@@ -5,15 +5,20 @@
 				%span.icon-bar
 				%span.icon-bar
 				%span.icon-bar
-			%a.brand{href: "/"} WikiPlaylists
+			%a.brand{href: "/"}
+				Wiki
+				%strong{style: 'color:#2AB2E2;'} Playlists
 			.nav-collapse
 				%ul.nav
 					%li.active
 						%a{href: "#"} Last
+				%ul.nav#player{style: 'margin-left: 100px;'}
 					%li
-						%a{href: "#about"} About
-					%li
-						%a{href: "#contact"} Contact
+						.btn-group
+							%a.btn.btn-inverse#prev_btn prev
+							%a.btn.btn-success#play_btn play
+							-#%a.btn.btn-danger#stop_btn stop
+							%a.btn.btn-primary#next_btn next
 				%ul.nav.pull-right
 					%li.divider-vertical
 					%li
@@ -21,17 +26,41 @@
 							%a#sign_in.btn.btn-success{:href => "#/sign_in"} Войти
 						
 			/ /.nav-collapse
+	#progress_line
+		#load
+		#play
+		#slider.ui-draggable
+		
+		
 
 #playlists Loading..
 
 :javascript
+	var test_playlist = ['http://cs5043.vkontakte.ru/u38335281/audio/a2cdcdc697c2.mp3', 'http://cs5080.vkontakte.ru/u173714/audio/42a8371383f5.mp3', 'http://cs1116.vkontakte.ru/u00840/audio/9fc085e0a52a.mp3']
+
 	$(function() {
 		window.router = new Playlists.Routers.PlaylistsRouter({
 			playlists:#{@playlists.to_json.html_safe}
 		});
-		Backbone.history.start();
+		Backbone.history.start({pushState: true});
+
+		//soundManager.url = '/';
+		//soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+		//soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
+		/*
+		 * read up on HTML5 audio support, if you're feeling adventurous.
+		 * iPad/iPhone and devices without flash installed will always attempt to use it.
+		*/
+
+		soundManager.onready( function() {
+		  // Ready to use; soundManager.createSound() etc. can now be called.
+		  console.log( 'soundManager ready' );
+		});
 	});
+
+
 
 %footer
 	%p
-		%a{href:'http://vk.com/milushov'} © roma
+		made with ♥ by
+		%a{href:'http://vk.com/milushov'} roma

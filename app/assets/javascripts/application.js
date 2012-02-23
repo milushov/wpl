@@ -21,4 +21,5 @@
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/playlists
+//= require soundmanager2
 //= require_tree .
