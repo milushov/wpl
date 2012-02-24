@@ -2,31 +2,48 @@
 	.navbar-inner
 		.container
 			%a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
-				%span.icon-bar
-				%span.icon-bar
-				%span.icon-bar
 			%a.brand{href: "/"}
 				Wiki
 				%strong{style: 'color:#2AB2E2;'} Playlists
 			.nav-collapse
 				%ul.nav
 					%li.active
-						%a{href: "#"} Last
-				%ul.nav#player{style: 'margin-left: 100px;'}
+						%a{href: "/new"} Новые
+					%li
+						%a{href: "/popular"} Популярные
 					%li
 						.btn-group
 							%a.btn.btn-inverse#prev_btn prev
 							%a.btn.btn-success#play_btn play
 							-#%a.btn.btn-danger#stop_btn stop
 							%a.btn.btn-primary#next_btn next
+					%li
+						#track_info
+							#artist	Roma
+							%div.fl_l –
+							#title test123
+							#duration 4:15
+
 				%ul.nav.pull-right
 					%li.divider-vertical
 					%li
 						.btn-group
-							%a#sign_in.btn.btn-success{:href => "#/sign_in"} Войти
+							%a.btn.btn-primary{href: '/sign_in'} Action
+							%a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+								%span.caret
+							%ul.dropdown-menu
+								%li
+									%a{:href => "#"} Action
+								%li
+									%a{:href => "#"} Another action
+								%li
+									%a{:href => "#"} Something else here
+								%li.divider
+								%li
+									%a{:href => "#"} Separated link
 						
 			/ /.nav-collapse
-	#progress_line
+	#progress_line{style:'margin-top:10px;'}
 		#load
 		#play
 		#slider.ui-draggable
@@ -44,8 +61,8 @@
 		});
 		Backbone.history.start({pushState: true});
 
-		//soundManager.url = '/';
-		//soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+		soundManager.url = '/';
+		soundManager.flashVersion = 9; // optional: shiny features (default = 8)
 		//soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
 		/*
 		 * read up on HTML5 audio support, if you're feeling adventurous.
@@ -53,8 +70,8 @@
 		*/
 
 		soundManager.onready( function() {
-		  // Ready to use; soundManager.createSound() etc. can now be called.
-		  console.log( 'soundManager ready' );
+			// Ready to use; soundManager.createSound() etc. can now be called.
+			console.log( 'soundManager ready' );
 		});
 	});
 
