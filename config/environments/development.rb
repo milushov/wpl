@@ -34,10 +34,10 @@ Playlists::Application.configure do
 	#config.assets.debug = false
 
 
-	config.assets.compress = true
-	config.assets.compile = false
+	# config.assets.compress = true
+	# config.assets.compile = false
 
-	config.serve_static_assets = false
+	# config.serve_static_assets = false
 
-	config.assets.digest = true
+	# config.assets.digest = true
 end

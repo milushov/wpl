@@ -1,12 +1,14 @@
 class Playlists.Models.Playlist extends Backbone.Model
   defaults:
-    playlist_id: null
+    _id: null
     name: null
     description: null
     tags: null
 
-  initializer:  ->
+  initialize: (options)->
     console.log( 'Playlist model created' )
+    #@tracks = new Playlists.Collections.TracksCollection( options.tracks )
+    @tracks = @nestCollection('tracks', new Playlists.Collections.TracksCollection(options.tracks))
  
 
 class Playlists.Collections.PlaylistsCollection extends Backbone.Collection

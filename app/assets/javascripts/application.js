@@ -18,8 +18,12 @@
 //= require bootstrap
 //= require underscore
 //= require backbone
+//= require common
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/playlists
 //= require soundmanager2
 //= require_tree .
+
+window.debug = 0
+if (debug) console.log = function(){}

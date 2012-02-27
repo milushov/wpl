@@ -12,11 +12,11 @@
 					%li
 						%a{href: "/popular"} Популярные
 					%li
-						.btn-group
-							%a.btn.btn-inverse#prev_btn prev
-							%a.btn.btn-success#play_btn play
-							-#%a.btn.btn-danger#stop_btn stop
-							%a.btn.btn-primary#next_btn next
+						#player_ui
+							%a#play_btn
+							%a#prev_btn
+							%a#next_btn
+							%a#repeat_btn
 					%li
 						#track_info
 							#artist	Roma
@@ -49,31 +49,35 @@
 		#slider.ui-draggable
 		
 		
+.container
+	#playlists Loading..
 
-#playlists Loading..
+	:javascript
+		var t = [
+			'http://dl.dropbox.com/u/15505476/1.mp3',
+			'http://dl.dropbox.com/u/15505476/2.mp3',
+			'http://dl.dropbox.com/u/15505476/3.mp3'
+		]
 
-:javascript
-	var test_playlist = ['http://cs5043.vkontakte.ru/u38335281/audio/a2cdcdc697c2.mp3', 'http://cs5080.vkontakte.ru/u173714/audio/42a8371383f5.mp3', 'http://cs1116.vkontakte.ru/u00840/audio/9fc085e0a52a.mp3']
+		$(function() {
+			window.App = new Playlists.Routers.PlaylistsRouter({
+				playlists:#{@playlists.to_json.html_safe}
+			});
+			Backbone.history.start({pushState: true});
 
-	$(function() {
-		window.router = new Playlists.Routers.PlaylistsRouter({
-			playlists:#{@playlists.to_json.html_safe}
+			soundManager.url = '/';
+			soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+			//soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
+			/*
+			 * read up on HTML5 audio support, if you're feeling adventurous.
+			 * iPad/iPhone and devices without flash installed will always attempt to use it.
+			*/
+
+			soundManager.onready( function() {
+				console.log( 'soundManager ready' );
+				window.App.player = new Playlists.Models.Player();
+			});
 		});
-		Backbone.history.start({pushState: true});
-
-		soundManager.url = '/';
-		soundManager.flashVersion = 9; // optional: shiny features (default = 8)
-		//soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
-		/*
-		 * read up on HTML5 audio support, if you're feeling adventurous.
-		 * iPad/iPhone and devices without flash installed will always attempt to use it.
-		*/
-
-		soundManager.onready( function() {
-			// Ready to use; soundManager.createSound() etc. can now be called.
-			console.log( 'soundManager ready' );
-		});
-	});
 
 
 

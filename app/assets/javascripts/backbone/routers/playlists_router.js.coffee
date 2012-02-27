@@ -4,13 +4,14 @@ class Playlists.Routers.PlaylistsRouter extends Backbone.Router
 		
 		if @vk.isAuth()
 			console.log( @vk.isAuth() )
+			# странная фигня: не работает @navigate('index')
 			@navigate('index')
 		else
 			return false
-			alert 'вы не залогинены! атата!'
+			alert 'вы не залогинены! атата! как не стыдно!'
 		
-		@playlists = new Playlists.Collections.PlaylistsCollection()
-		@playlists.reset options.playlists
+		@playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
+		#@playlists.reset options.playlists
 
 
 	routes:
