@@ -1,22 +1,24 @@
-<p>
-  <b>Track:</b>
-  <%= track_id %>
-</p>
-
-<p>
-  <b>Artist:</b>
-  <%= artist %>
-</p>
-
-<p>
-  <b>Title:</b>
-  <%= title %>
-</p>
-
-<p>
-  <b>Audio:</b>
-  <%= audio_id %>
-</p>
-
-
-<a href="#/index">Back</a>
+<div class='track' id='<%= title %>'>
+	<div class='play_btn fl_l'>
+		<a class='btn btn-primary btn-small' onclick="alert('play');">play</a>
+	</div>
+	<div class='info fl_l'>
+		<div class='atrist fl_l'>
+			<%= artist %> -
+		</div>
+		<div class='title fl_l'>
+			<%= title %>
+		</div>
+		<div class='duration fl_r clear'>
+			<%= duration %>
+		</div>
+	</div>
+	<div class='actions fl_l clear'>
+		<div class='up fl_l'>
+			<a>▲</a>
+		</div>
+		<div class='down clear fl_l'>
+			<a>▼</a>
+		</div>
+	</div>
+</div>
