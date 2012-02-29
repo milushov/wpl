@@ -17,7 +17,7 @@ class Playlists.Routers.PlaylistsRouter extends Backbone.Router
 
 	routes:
 		".*"        : "startPage"
-		"/index"   : "index"
+		"/index"    : "startPage"
 		"/new"      : "newPlaylist"
 		"/:id/edit" : "edit"
 		"/:id"      : "show"
