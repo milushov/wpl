@@ -3,6 +3,8 @@ Playlists.Views.Playlists ||= {}
 class Playlists.Views.Playlists.IndexView extends Backbone.View
   template: JST["backbone/templates/playlists/index"]
 
+  el: $('playlists')
+
   initialize: () ->
     console.log 'Playlists/IndexView nitialize( @options )', @options 
     @options.playlists.bind('reset', @addAll)

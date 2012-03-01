@@ -1,7 +1,7 @@
 Playlists.Views.Profile ||= {}
 
 class Playlists.Views.Profile.IndexView extends Backbone.View
-  template: JST["backbone/templates/profile/index"]
+  template: JST["backbone/templates/profile/profile"]
 
   initialize: () ->
     console.log 'Profile.IndexView nitialize()'
