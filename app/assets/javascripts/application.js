@@ -18,6 +18,7 @@
 //= require bootstrap
 //= require underscore
 //= require backbone
+//= require hamlcoffee
 //= require common
 //= require backbone_rails_sync
 //= require backbone_datalink

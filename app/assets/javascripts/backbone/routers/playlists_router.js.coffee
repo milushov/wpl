@@ -17,13 +17,12 @@ class Playlists.Routers.PlaylistsRouter extends Backbone.Router
 
 	routes:
 		".*"        : "startPage"
-		"/index"    : "startPage"
+		"/index"    : "index"
 		"/new"      : "newPlaylist"
 		"/:id/edit" : "edit"
 		"/:id"      : "show"
 
 	index: ->
-		alert 123
 		console.log('index route')
 		@view = new Playlists.Views.Playlists.IndexView( playlists: @playlists )
 		$("#playlists").html( @view.render().el )

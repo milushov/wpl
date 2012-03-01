@@ -1,10 +1,8 @@
-<h1>Last playlists</h1>
+<div class='playlist'>
+	<h3><%= name %></h3>
+	<h4><%= description %></h4>
 
-<% _.each( playlists, function(playlist) { %>
-	<h3><%= playlist.name %></h3>
-	<h4><%= playlist.description %></h4>
-
-	<div class='playlist'>
+	<div class='tracks'>	
 		<% _.each( playlist.tracks, function(track) { %>
 		<!--<div class='track'>
 			<div class='play_btn fl_l'>
@@ -32,9 +30,4 @@
 		</div>-->
 		<% }); %>
 	</div>
-<% }); %>
-				
-
-<br/>
-
-<a href="#/new">New Playlist</a>
+</div>
