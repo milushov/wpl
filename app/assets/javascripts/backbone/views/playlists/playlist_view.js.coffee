@@ -3,10 +3,14 @@ Playlists.Views.Playlists ||= {}
 class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   template: JST["backbone/templates/playlists/playlist"]
 
+  tagName: 'div'
+  className: 'playlist'
+
   events:
     "click .destroy" : "destroy"
 
-  tagName: "tr"
+  initialize: () ->
+    console.log 'Playlists.PlaylistView', @el
 
   destroy: () ->
     @model.destroy()
