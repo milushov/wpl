@@ -3,6 +3,7 @@ Playlists.Views.Playlists ||= {}
 #  Главная вьюха которая отображает список плейлистов
 
 class Playlists.Views.Playlists.IndexView extends Backbone.View
+
 	template: JST["backbone/templates/playlists/index"]
 
 	tagName: 'div'
@@ -31,5 +32,4 @@ class Playlists.Views.Playlists.IndexView extends Backbone.View
 			return true
 
 		#@addAll()
-
 		return this
