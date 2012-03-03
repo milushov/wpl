@@ -4,7 +4,12 @@
 
 $pw: 400px; // playlist_width
 
+#playlists {
+	//background-color: #fff;
+}
+
 .playlist {
+	background-color: #fff;
 	overflow: hidden;
 	padding: 10px;
 	border: 1px solid #ccc;

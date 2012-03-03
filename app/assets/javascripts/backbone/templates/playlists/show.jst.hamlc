@@ -1,1 +1,6 @@
-По идее тут должен быть шаблог для одного трека. Но он не нужен.
+%h2= @name
+%a#play_all.btn Play all
+%h3= @description
+%h3= @tags
+
+.tracks

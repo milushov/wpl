@@ -7,9 +7,13 @@ class PlaylistsController < ApplicationController
     render :json => Playlist.all, :content_type => 'application/json'
   end
 
-  # GET /playlists/1
+  # GET /playlists/url
   def show
-    render json: Playlist.find(params[:id])
+    render json: Playlist.where(url: params[:id]).first()
+  end
+
+  def show_for_user
+    #render json: Playlist.where( User.find(params[:user]).playlists )
   end
 
   # GET /playlists/new

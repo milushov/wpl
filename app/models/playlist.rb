@@ -10,5 +10,6 @@ class Playlist
   field :url, type: String
   field :creator, type: Integer # право рекдактировать теги без голосования
 
+  belongs_to :user
   embeds_many :tracks
 end

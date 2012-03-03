@@ -28,9 +28,9 @@
 					%li.divider-vertical
 					%li
 						.btn-group
-							%a.btn.btn-primary{href: '/sign_in'} Action
+							%a.btn.btn-primary{onclick: 'App.navigate("playlist/test123", true); return false;'} Action
 							%a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-								%span.caret
+								%span.caret,
 							%ul.dropdown-menu
 								%li
 									%a{:href => "#"} Action
@@ -64,7 +64,7 @@
 		
 		Backbone.history.start({pushState: true});
 
-		soundManager.url = '/';
+		soundManager.url = 'http://playlists.dev:3000';
 		soundManager.flashVersion = 9;
 		soundManager.onready( function() {
 			window.App.player = new Playlists.Models.Player();

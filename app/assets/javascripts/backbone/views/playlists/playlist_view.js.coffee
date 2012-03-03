@@ -10,7 +10,7 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
 	className: 'playlist'
 
 	initialize: () ->
-		console.log 'Views.Playlists.PlaylistView initialize(@options)'
+		#console.log 'Views.Playlists.PlaylistView initialize(@options)'
 		@model = @options.model
 		@options = null
 		$(@el).attr 'id', 'playlistId_'+@model.get '_id'

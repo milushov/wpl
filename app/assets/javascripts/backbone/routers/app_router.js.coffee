@@ -10,18 +10,18 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 			return false
 			alert 'вы не залогинены! атата! как не стыдно!'
 		
-		# создаем коллекцию
+		# по идее тут будет коллекция всех плейлистов пользовтеля
 		@playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
 		#@playlists.reset options.playlistsa
 
 
 	routes:
+		'playlist/:id': 'playlist'
+		'index'    : 'index'
+		'new'      : 'newPlaylist'
+		':id/edit' : 'edit'
+		':id'      : 'show'
 		'.*'        : 'index'
-		'/playlist/:id': 'playlist'
-		'/index'    : 'index'
-		'/new'      : 'newPlaylist'
-		'/:id/edit' : 'edit'
-		'/:id'      : 'show'
 
 	index: ->
 		console.log('index route')
@@ -29,8 +29,12 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 		@view = new Playlists.Views.Playlists.IndexView( collection: @playlists )
 		$("#app").html( @view.render().el )
 
-	playlist: ->
-		console.log 'Routers.PlaylistsRouter playlist()', @options
+	playlist: (id) ->
+		console.log 'Routers.PlaylistsRouter playlist()', id
+
+		console.log playlist = @playlists.getByUrl(id)
+		@view = new Playlists.Views.Playlists.ShowView(model: playlist)
+		$("#app").html( @view.render().el )
 
 	startPage: ->
 		console.log('Routers.PlaylistsRouter startPage')

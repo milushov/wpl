@@ -1,5 +1,6 @@
 .play_btn.fl_l
-	%a.btn.btn-primary.btn-small{:onclick => "alert('play');"} ♫ play
+	%a.btn.btn-primary.btn-small
+		♫ play
 .info.fl_l
 	.atrist.fl_l
 		= @artist
