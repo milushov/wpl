@@ -1,5 +1,6 @@
 Playlists::Application.routes.draw do
 
+  
 	scope 'api' do
 		resources :playlists do 
 			resources :tracks
