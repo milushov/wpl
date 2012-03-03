@@ -16,36 +16,21 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
 
 	routes:
-		".*"        : "index"
-		"/index"    : "index"
-		"/new"      : "newPlaylist"
-		"/:id/edit" : "edit"
-		"/:id"      : "show"
-
-
-
-
-
-
-
+		'.*'        : 'index'
+		'/playlist/:id': 'playlist'
+		'/index'    : 'index'
+		'/new'      : 'newPlaylist'
+		'/:id/edit' : 'edit'
+		'/:id'      : 'show'
 
 	index: ->
 		console.log('index route')
-
 		# передаем главной вьюхе ВСЮ коллекцию плейлистов
 		@view = new Playlists.Views.Playlists.IndexView( collection: @playlists )
-
-
-
 		$("#app").html( @view.render().el )
 
-
-
-
-
-
-
-
+	playlist: ->
+		console.log 'Routers.PlaylistsRouter playlist()', @options
 
 	startPage: ->
 		console.log('Routers.PlaylistsRouter startPage')

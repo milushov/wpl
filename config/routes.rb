@@ -6,6 +6,8 @@ Playlists::Application.routes.draw do
 		end
 	end
 
+	resources :users
+
 	root :to => 'main#index'
 	match '*path', to: 'main#index'
 
