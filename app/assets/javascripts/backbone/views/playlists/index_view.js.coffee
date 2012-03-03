@@ -1,26 +1,35 @@
 Playlists.Views.Playlists ||= {}
 
+#  Главная вьюха которая отображает список плейлистов
+
 class Playlists.Views.Playlists.IndexView extends Backbone.View
-  template: JST["backbone/templates/playlists/index"]
+	template: JST["backbone/templates/playlists/index"]
 
-  el: $('playlists')
+	tagName: 'div'
+	id: 'playlists'
+	#el: $('#playlists123')
 
-  initialize: () ->
-    console.log 'Playlists/IndexView nitialize( @options )', @options 
-    @options.playlists.bind('reset', @addAll)
+	initialize: () ->
+		console.log 'Playlists/IndexView initialize( @options )'
+		@playlists = @options.collection
+		@options = null
+		@playlists.bind('reset', @addAll)
 
-  addAll: () =>
-    console.log 'Playlists/IndexView addAll()'
-    @options.playlists.each(@addOne)
+	addAll: () =>
+		console.log 'Playlists/IndexView addAll()'
+		@playlists.each(@addOne)
 
-  addOne: (playlist) =>
-    console.log 'Playlists/IndexView add One()', @$
-    view = new Playlists.Views.Playlists.PlaylistView({model : playlist})
-    @$("tbody").append(view.render().el)
+	addOne: (playlist) =>
+		console.log 'Playlists/IndexView add One()'
+		$(@el).append( new Playlists.Views.Playlists.PlaylistView(model: playlist).render().el)
 
-  render: =>
-    console.log 'Playlists/IndexView render()', @el
-    $( @el ).html( @template(playlists: @options.playlists.toJSON() ) )
-    @addAll()
+	render: =>
+		console.log 'Playlists/IndexView render()'
+		$(@el).html @template()
+		@playlists.each (playlist) =>
+			$(@el).append( new Playlists.Views.Playlists.PlaylistView(model: playlist).render().el)
+			return true
 
-    return this
+		#@addAll()
+
+		return this

@@ -49,29 +49,28 @@
 		#slider.ui-draggable
 		
 		
-#app.container
-	#playlists Loading..
+#app.container Loading..
 
-	:javascript
-		var t = [
-			'http://dl.dropbox.com/u/15505476/1.mp3',
-			'http://dl.dropbox.com/u/15505476/2.mp3',
-			'http://dl.dropbox.com/u/15505476/3.mp3'
-		]
+:javascript
+	var t = [
+		'http://dl.dropbox.com/u/15505476/1.mp3',
+		'http://dl.dropbox.com/u/15505476/2.mp3',
+		'http://dl.dropbox.com/u/15505476/3.mp3'
+	]
 
-		$(function() {
-			window.App = new Playlists.Routers.PlaylistsRouter({
-				playlists:#{@playlists.to_json.html_safe}
-			});
-			
-			Backbone.history.start({pushState: true});
-
-			soundManager.url = '/';
-			soundManager.flashVersion = 9;
-			soundManager.onready( function() {
-				window.App.player = new Playlists.Models.Player();
-			});
+	$(function() {
+		window.App = new Playlists.Routers.AppRouter({
+			playlists:#{@playlists.to_json.html_safe}
 		});
+		
+		Backbone.history.start({pushState: true});
+
+		soundManager.url = '/';
+		soundManager.flashVersion = 9;
+		soundManager.onready( function() {
+			window.App.player = new Playlists.Models.Player();
+		});
+	});
 
 
 

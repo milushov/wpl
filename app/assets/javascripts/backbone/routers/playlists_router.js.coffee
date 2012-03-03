@@ -1,4 +1,4 @@
-class Playlists.Routers.PlaylistsRouter extends Backbone.Router
+class Playlists.Routers.AppRouter extends Backbone.Router
 	initialize: (options) ->
 		@vk = new Playlists.Models.Vk
 		
@@ -22,10 +22,30 @@ class Playlists.Routers.PlaylistsRouter extends Backbone.Router
 		"/:id/edit" : "edit"
 		"/:id"      : "show"
 
+
+
+
+
+
+
+
 	index: ->
 		console.log('index route')
-		@view = new Playlists.Views.Playlists.IndexView( playlists: @playlists )
-		$("#playlists").html( @view.render().el )
+
+		# передаем главной вьюхе ВСЮ коллекцию плейлистов
+		@view = new Playlists.Views.Playlists.IndexView( collection: @playlists )
+
+
+
+		$("#app").html( @view.render().el )
+
+
+
+
+
+
+
+
 
 	startPage: ->
 		console.log('Routers.PlaylistsRouter startPage')

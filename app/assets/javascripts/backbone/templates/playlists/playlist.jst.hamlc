@@ -1,0 +1,8 @@
+%h2
+	= @name
+%h3
+	= @description
+%h3
+	= @tags
+
+.tracks
