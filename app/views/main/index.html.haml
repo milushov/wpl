@@ -69,6 +69,10 @@
 		soundManager.onready( function() {
 			window.App.player = new Playlists.Models.Player();
 		});
+
+		soundManager.ontimeout(function() {
+		  alert('Плеер завис, перезагрузите страницу! (F5)');
+		});
 	});
 
 

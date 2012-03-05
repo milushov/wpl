@@ -8,7 +8,6 @@ class Playlists.Views.Playlists.IndexView extends Backbone.View
 
 	tagName: 'div'
 	id: 'playlists'
-	#el: $('#playlists123')
 
 	initialize: () ->
 		console.log 'Playlists/IndexView initialize( @options )'

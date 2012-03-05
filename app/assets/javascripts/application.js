@@ -27,4 +27,10 @@
 //= require_tree .
 
 window.debug = 0
-if (debug) console.log = function(){}
+window.l = function() {
+	console.log( arguments )
+}
+if (debug) {
+	console.log = function(){}
+	window.l = function(){}
+}

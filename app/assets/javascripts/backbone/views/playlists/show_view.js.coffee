@@ -20,10 +20,10 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
 		this.remove()
 		return false
 
-
 	playAll: ()->
 		console.log 'Views.Playlists.ShowView playAll()'
-
+		tracks = @model.tracks.getThreeTracksForPlaying()
+		App.player.loadAndPlay tracks
 
 	render: ->
 		$(@el).html( @template(

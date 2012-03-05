@@ -8,21 +8,17 @@ class Playlists.Models.Playlist extends Backbone.Model
 		url: null
 		creator: null
 
-
 	initialize: (options)->
 		console.log( 'Playlist model created' )
 		@tracks = @nestCollection('tracks', new Playlists.Collections.TracksCollection(options.tracks))
-
 
 
 class Playlists.Collections.PlaylistsCollection extends Backbone.Collection
 	model: Playlists.Models.Playlist
 	url: '/api/playlists'
 
-
 	initialize: ()->
 		console.log 'Playlist collection created'
-
 
 	getByUrl: (url)->
 		ret = {}

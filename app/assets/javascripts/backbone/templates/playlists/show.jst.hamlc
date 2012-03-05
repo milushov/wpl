@@ -1,5 +1,5 @@
 %h2= @name
-%a#play_all.btn Play all
+%a#play_all.btn ♫ Play all
 %h3= @description
 %h3= @tags
 

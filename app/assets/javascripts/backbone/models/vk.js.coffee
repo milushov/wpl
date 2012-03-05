@@ -68,6 +68,19 @@ class Playlists.Models.Vk extends Backbone.Model
 			audios: id
 		@ajax @makeUrl('audio.getById', params), success
 
+	getThreeTrackData: (ids, success)->
+		if !ids then return false
+		for key, val of ids
+			ids[key] = '"' + val + '"'
+		params = 
+			code:
+			 'var audios = [' + ids.join(',') + '];
+				var prev = API.audio.getById({ audios: audios[0] });
+				var current = API.audio.getById({ audios: audios[1] });
+				var next = API.audio.getById({ audios: audios[2] });
+				return { prev: prev[0], current: current[0], next: next[0] };'
+		@ajax @makeUrl('execute', params), success
+
 	searchTrack: (track_name, offset = 0, success)->
 		if !track_name then return false 
 		params = 
