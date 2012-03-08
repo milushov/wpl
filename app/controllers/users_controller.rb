@@ -4,15 +4,29 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    
-
-    render json: User.all, content_type: 'application/json'
+    render json: User.all.desc(:_id).limit(10), content_type: 'application/json'
   end
 
   # GET /users/1
   # GET /users/1.json
   def show
-    render json: User.find(params[:id]), content_type: 'application/json'
+    id = params[:id]
+    @user = Hash.new {0}
+    @user[:info] = User.any_of({vk_id: id}, {_id: id}).first
+    if !@user[:info].nil?
+      @user[:followers_count] = @user[:info].followers_count_by_model('User')
+      @user[:followers] = @user[:info].all_followers_by_model('User')
+
+      @user[:followees_count] = @user[:info].followees_count_by_model('User')
+      @user[:followees] = @user[:info].all_followees_by_model('User')
+
+      @user[:playlists_count] = @user[:info].followees_count_by_model('Playlist')
+      @user[:playlists] = @user[:info].all_followees_by_model('Playlist')
+    else
+      redirect_to action: :not_found
+      return
+    end
+    render json: @user, content_type: 'application/json'
   end
 
   # GET /users/new

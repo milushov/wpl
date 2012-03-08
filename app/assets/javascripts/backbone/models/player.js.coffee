@@ -11,46 +11,48 @@ class Playlists.Models.Player extends Backbone.Model
 	reset: ->
 		soundManager.reboot()
 
-	loadAndPlay: (current_tracks)->
-		@current_tracks = current_tracks
+	loadAndPlay: (playlist, track_id)->
+		if @playlist != playlist.get '_id'
+			@playlist = playlist
+
+		@current_tracks = @playlist.tracks.getThreeTracksForPlaying track_id
+
+		# выбираем id'шники трех текущмх треков
 		ids = [
 			@current_tracks.prev.get('audio_id')
 			@current_tracks.current.get('audio_id')
 			@current_tracks.prev.get('audio_id')
 		]
 
+		# получаем ссылку для воспроизведения для каждого из трех треков
 		App.vk.getThreeTrackData ids, (data)=>
 			data = data.response
-			cur_tracks = App.player.current_tracks
+			cur_tracks = App.player.model.current_tracks
 			if !data.prev then @urlSrcError() else
 				cur_tracks.prev.set url: data.prev.url
-				cur_tracks.prev.set lyrics_id: data.prev.lyrics_id
 			if !data.current then @urlSrcError() else
 				cur_tracks.current.set url: data.current.url
-				cur_tracks.current.set lyrics_id: data.current.lyrics_id
 			if !data.next then @urlSrcError() else
 				cur_tracks.next.set url: data.next.url
-				cur_tracks.next.set lyrics_id: data.next.lyrics_id
 
-			App.player.set prevTrack: cur_tracks.prev
-			App.player.set currentTrack: cur_tracks.current
-			App.player.set nextTrack: cur_tracks.next
+			App.player.model.set prevTrack: cur_tracks.prev
+			App.player.model.set currentTrack: cur_tracks.current
+			App.player.model.set nextTrack: cur_tracks.next
 
-			App.player.get('currentTrack').set sound: soundManager.createSound
+			App.player.model.get('currentTrack').set sound: soundManager.createSound
 				id: cur_tracks.prev.get '_id'
 				url: cur_tracks.prev.get 'url'
 				onpause: ()->
-					App.player.trigger("changed")
+					App.player.model.trigger("changed")
 				onresume: ()->
-					App.player.trigger("changed")
+					App.player.model.trigger("changed")
 				onfinish: ()->
-					App.player.trigger("changed")
+					App.player.model.trigger("changed")
 
-			App.player.play()
+			App.player.model.play()
 
 	play: ()->
 		currentTrack = @get('currentTrack')
-		l currentTrack
 		currentTrack.get('sound').play( @get('currentTrack').get('_id') )
 
 	render: ->
@@ -60,10 +62,13 @@ class Playlists.Models.Player extends Backbone.Model
 		console.log 'prev'
 
 	togglePause: ->
-		currentTrack = @get('currentTrack').get('sound').togglePause()
+		if @get('currentTrack').get('sound').togglePause() then @trigger("changed")
 
 	next: ->
-		console.log 'next'
+		currentTrack = @get('nextTrack')
+		currentTrack.get('sound').play( @get('nextTrack').get('_id') )
+
+
 
 	urlSrcError: ()->
 		alert 'o_O Вы нашли очень редкую ошибку. Экземпляр данного трека был удален из VK.'

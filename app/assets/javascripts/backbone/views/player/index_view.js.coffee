@@ -5,18 +5,22 @@ class Playlists.Views.Player.IndexView extends Backbone.View
 		'click #play_btn': 'togglePause'
 		'click #next_btn': 'next'
 
+	el: '#player_ui'
+
 	initialize: ->
-		console.log 'Player.IndexView init'
-		@player = new Playlists.Models.Player()
+		console.log 'Player.IndexView init', @model, @el, '-----------------------------'
+
+	loadAndPlay: (playlist)->
+		@model.loadAndPlay(playlist)
 
 	prev: ->
-		@player.prev()
+		@model.prev()
 
 	togglePause: ->
-		@player.togglePause()
+		@model.togglePause()
 
 	next: ->
-		@player.next()
+		@model.next()
 
 	# Загружаем в плеер треки из текущего плейлиста,
 	# а трек по которому мы щелкнули сразу воспроизводим.

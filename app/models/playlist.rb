@@ -1,6 +1,7 @@
 class Playlist
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Followee
   
   field :name, type: String
   field :image, type: String
@@ -10,6 +11,5 @@ class Playlist
   field :url, type: String
   field :creator, type: Integer # право рекдактировать теги без голосования
 
-  belongs_to :user
   embeds_many :tracks
 end

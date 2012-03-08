@@ -5,9 +5,9 @@ Playlists::Application.routes.draw do
 		resources :playlists do 
 			resources :tracks
 		end
-	end
 
-	resources :users
+		resources :users
+	end
 
 	root :to => 'main#index'
 	match '*path', to: 'main#index'

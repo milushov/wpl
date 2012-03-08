@@ -9,7 +9,6 @@ class Playlists.Models.Playlist extends Backbone.Model
 		creator: null
 
 	initialize: (options)->
-		console.log( 'Playlist model created' )
 		@tracks = @nestCollection('tracks', new Playlists.Collections.TracksCollection(options.tracks))
 
 
@@ -18,10 +17,9 @@ class Playlists.Collections.PlaylistsCollection extends Backbone.Collection
 	url: '/api/playlists'
 
 	initialize: ()->
-		console.log 'Playlist collection created'
 
 	getByUrl: (url)->
-		ret = {}
+		ret = false
 		@each (model)->
 			if model.get('url') == url then ret = model
-		return ret ? ret : false
+		return ret

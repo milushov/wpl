@@ -1,4 +1,13 @@
 class Playlists.Routers.AppRouter extends Backbone.Router
+	routes:
+		'playlist/:id': 'showPlaylist'
+		'index'    : 'index'
+		'i':'startPage'
+		'.*'       : 'index'
+		'new'      : 'newPlaylist'
+		':id/edit' : 'edit'
+		':id'      : 'showProfile' # сюда поставить регулярку
+	
 	initialize: (options) ->
 		@vk = new Playlists.Models.Vk
 		
@@ -14,14 +23,6 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 		@playlists = new Playlists.Collections.PlaylistsCollection options.playlists
 		# @playlists.reset options.playlistsa
 
-	routes:
-		'playlist/:id': 'showPlaylist'
-		'index'    : 'index'
-		'.*'       : 'index'
-		'new'      : 'newPlaylist'
-		':id/edit' : 'edit'
-		':id'      : 'showProfile' # сюда поставить регулярку
-
 	index: ->
 		console.log('index route')
 		# передаем главной вьюхе ВСЮ коллекцию плейлистов
@@ -29,11 +30,15 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 		$("#app").html( @view.render().el )
 
 	showPlaylist: (id) ->
-		console.log 'Routers.AppRouter showPlaylist()', id
+		console.log 'Routers.AppRouter showPlaylist('+id+')'
 
-		console.log playlist = @playlists.getByUrl(id)
-		@view = new Playlists.Views.Playlists.ShowView(model: playlist)
-		$("#app").html( @view.render().el )
+		playlist = @playlists.getByUrl(id)
+		if playlist
+			@view = new Playlists.Views.Playlists.ShowView(model: playlist)
+			$("#app").html( @view.render().el )
+		else
+			alert "Такого( #{id} ) плейлиста нет"
+			return
 
 	startPage: ->
 		console.log('Routers.AppRouter startPage')

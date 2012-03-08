@@ -4,6 +4,8 @@
 .info.fl_l
 	.atrist.fl_l
 		= @artist
+	.fl_l
+		= " – "
 	.title.fl_l
 		= @title
 	.duration.fl_r.clear

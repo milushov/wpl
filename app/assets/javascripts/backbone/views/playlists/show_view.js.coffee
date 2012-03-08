@@ -22,8 +22,8 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
 
 	playAll: ()->
 		console.log 'Views.Playlists.ShowView playAll()'
-		tracks = @model.tracks.getThreeTracksForPlaying()
-		App.player.loadAndPlay tracks
+		# передаем плейлист
+		App.player.loadAndPlay @model
 
 	render: ->
 		$(@el).html( @template(
