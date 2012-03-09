@@ -28,12 +28,12 @@
 					%li.divider-vertical
 					%li
 						.btn-group
-							%a.btn.btn-primary{onclick: 'App.navigate("playlist/test123", true); return false;'} Action
+							%a.btn.btn-primary{onclick: 'App.navigate("playlist/test123", true);'} Action
 							%a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
 								%span.caret,
 							%ul.dropdown-menu
 								%li
-									%a{:href => "#"} Action
+									%a{onclick: 'App.navigate("roma", true);'} roma
 								%li
 									%a{:href => "#"} Another action
 								%li
@@ -53,6 +53,7 @@
 		%img{ src: '/assets/ajax-loader.gif' }
 
 :javascript
+	var auth_key = "#{@auth_key}";
 	$(function() {
 		window.App = new Playlists.Routers.AppRouter({
 			playlists:#{@playlists.to_json.html_safe}

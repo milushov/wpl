@@ -22,11 +22,21 @@ class UsersController < ApplicationController
 
       @user[:playlists_count] = @user[:info].followees_count_by_model('Playlist')
       @user[:playlists] = @user[:info].all_followees_by_model('Playlist')
+
+      @user[:status] = true
     else
-      redirect_to action: :not_found
-      return
+      # redirect_to action: :not_found
+      # return false
+      @error = { status: false, description: "User not found" }
+      render json: @error, content_type: 'application/json'
+      return false
     end
     render json: @user, content_type: 'application/json'
+  end
+
+  def not_found
+    @error = { status: 0, description: "User not found" }
+    render json: @error, content_type: 'application/json'
   end
 
   # GET /users/new
