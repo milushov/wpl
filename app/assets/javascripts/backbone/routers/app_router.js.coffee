@@ -58,11 +58,9 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 	showUserProfile: (user_id) ->
 		if !@isAuth() then return false
 		console.log 'Routers.AppRouter showUserProfile()'
-		
-		
+
 		if @temp.user and !user_id
 			console.log @temp.user
-			
 			#user_view = Playlists.Views.Users.IndexView(  )
 		else if user_id
 			@vk.getProfile user_id

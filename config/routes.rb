@@ -9,6 +9,9 @@ Playlists::Application.routes.draw do
 		resources :users
 	end
 
+	match 'auth', to: 'main#auth'
+	match 'login', to: 'main#login'
+
 	root :to => 'main#index'
 	match '*path', to: 'main#index'
 

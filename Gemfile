@@ -42,3 +42,6 @@ gem 'kaminari'
 gem 'bson_ext'
 gem 'haml-rails'
 gem 'rails-backbone'
+
+#gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
+#gem 'vk-ruby'

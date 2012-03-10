@@ -1,7 +1,7 @@
 class Playlists.Models.Vk extends Backbone.Model
 	defaults:
 		base_url: 'https://api.vkontakte.ru/method/',
-		appId : 2845993
+		appId : 1111000
 		url : "http://playlists.dev:3000/"
 		settings : 1+2+8+1024+2048 #'notify,friends,audio'
 		user_id : null

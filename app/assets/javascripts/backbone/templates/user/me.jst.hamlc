@@ -1,0 +1,9 @@
+#left_block.fl_l
+  #info
+    #photo
+      %img{:src => "http://vk.com/u00001/a_a964f9a2.jpg"}
+#center_block.fl_l
+  #playlists
+#right_block.fl_r
+  #folloewrs
+  #following
