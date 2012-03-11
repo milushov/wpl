@@ -10,8 +10,8 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 		'.*'						: 'index'
 	
 	initialize: (options)->
-		@.on 'user_data_loaded', () =>
-		  @showUserProfile()
+		# подписываем роутер на событие
+		@.on 'user_data_loaded', () => @showUserProfile()
 
 		@vk = new Playlists.Models.Vk
 		# по идее тут будет коллекция всех плейлистов пользовтеля

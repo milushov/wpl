@@ -2,8 +2,8 @@ class Playlists.Models.Vk extends Backbone.Model
 	defaults:
 		base_url: 'https://api.vkontakte.ru/method/',
 		appId : 1111000
-		url : "http://playlists.dev:3000/"
-		settings : 1+2+8+1024+2048 #'notify,friends,audio'
+		url : 'http://playlists.dev:3000/'
+		settings : 'notify,friends,photos,audio' # 1+2+4+8
 		user_id : null
 		access_token : null
 		auth_status : false
@@ -11,6 +11,7 @@ class Playlists.Models.Vk extends Backbone.Model
 	
 	initialize:  ->
 		console.log 'Vk model created'
+		@set auth_status: @isAuth()
 		#@getProfilesData [1,111,23234], [1,2], 1, (data)-> console.log data.response, 'getProfile()'
 		#@getPlaylistData ['1_115553105', '1_138952258', '1_135538161'], (data)-> console.log data.response, 'getPlaylistData()'
 
@@ -75,12 +76,11 @@ class Playlists.Models.Vk extends Backbone.Model
 				return false
 		, 'json'
 
-	# принимает 2 массива id-шников vk и 1 число
+	# принимает 2 массива id-шников vk и 1 id'шник юзера, чей профиль мы смотрим
 	getProfilesData: (followers, followees, user_id, success)->
 		if !followers then followers = '' else followers.join ','
 		if !followees then followees = '' else followees.join ','
 		if !user_id then user_id = @getCookies().user_id
-
 		params = 
 			code:
 			 'var user_id = ' + user_id + ';
@@ -91,9 +91,7 @@ class Playlists.Models.Vk extends Backbone.Model
 				var followers = API.users.get({ uids: uids, fields: fields});
 				var followees = API.users.get({ uids: [' + followees + '], fields: fields });
 				return { user: user, followers: followers, followees: followees };'
-
 		@ajax @makeUrl('execute', params), success
-
 
 	getPlaylistData: (tracks, success)->
 		if !tracks then false else tracks = tracks.join ','
@@ -144,8 +142,6 @@ class Playlists.Models.Vk extends Backbone.Model
 				}'
 		@ajax @makeUrl('execute', params), success
 
-
-
 	setCookies: (access_token, expires_in, user_id)->
 		expires_in = expires_in/(24*60*60)
 		$.cookie('access_token', access_token, { expires: expires_in });
@@ -165,7 +161,6 @@ class Playlists.Models.Vk extends Backbone.Model
 					params_arr.push encodeURIComponent(key) + '=' + encodeURIComponent(val)
 				if params_arr.length then url  + '&' + params_arr.join('&') else url
 
-
 	ajax: (url, success) ->
 		if !url then false
 		req = $.ajax
@@ -174,12 +169,11 @@ class Playlists.Models.Vk extends Backbone.Model
 			crossDomain: true
 			dataType: "jsonp"
 
-		if !success then success = (data)-> console.log data.response, 'ajax()'
+		if !success then success = (data)=> console.log data.response, 'ajax()'
 		req.done success
 
-		req.fail (jqXHR, textStatus) ->
+		req.fail (jqXHR, textStatus) =>
 			alert( "Request failed("+url+"): " + textStatus )  
-
 
 	rand: ->
 		Math.random().toString(36).substr(-8)

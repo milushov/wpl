@@ -11,6 +11,7 @@ Playlists::Application.routes.draw do
 
 	match 'auth', to: 'main#auth'
 	match 'login', to: 'main#login'
+	match 'logout', to: 'main#logout'
 
 	root :to => 'main#index'
 	match '*path', to: 'main#index'
