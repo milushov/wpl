@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/zinenko/vk-ruby.git
+  revision: 20f045f0548b5cbb87e965d2d7281571151d356c
+  specs:
+    vk-ruby (0.8.0)
+      multi_json (~> 1.2.0)
+      transformer (~> 0.2.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -29,9 +37,9 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     arel (3.0.2)
-    bson (1.6.0)
-    bson_ext (1.6.0)
-      bson (= 1.6.0)
+    bson (1.6.1)
+    bson_ext (1.6.1)
+      bson (~> 1.6.1)
     builder (3.0.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -60,29 +68,29 @@ GEM
     jquery-rails (2.0.1)
       railties (>= 3.2.0, < 5.0)
       thor (~> 0.14)
-    json (1.6.5)
+    json (1.6.6)
     kaminari (0.13.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
       railties (>= 3.0.0)
-    mail (2.4.1)
+    mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mime-types (1.17.2)
-    mongo (1.6.0)
-      bson (= 1.6.0)
-    mongoid (2.4.5)
+    mime-types (1.18)
+    mongo (1.6.1)
+      bson (~> 1.6.1)
+    mongoid (2.4.7)
       activemodel (~> 3.1)
       mongo (~> 1.3)
       tzinfo (~> 0.3.22)
     mongoid_follow (0.2.3)
       bson_ext
       mongoid
-    multi_json (1.1.0)
+    multi_json (1.2.0)
     polyglot (0.3.3)
     rack (1.4.1)
-    rack-cache (1.1)
+    rack-cache (1.2)
       rack (>= 0.4)
     rack-ssl (1.3.2)
       rack
@@ -96,7 +104,7 @@ GEM
       activesupport (= 3.2.0)
       bundler (~> 1.0)
       railties (= 3.2.0)
-    rails-backbone (0.7.0)
+    rails-backbone (0.7.1)
       coffee-script (~> 2.2.0)
       ejs (~> 1.0.0)
       railties (>= 3.1.0)
@@ -111,7 +119,7 @@ GEM
     rdoc (3.12)
       json (~> 1.4)
     sass (3.1.15)
-    sass-rails (3.2.4)
+    sass-rails (3.2.5)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
@@ -121,14 +129,16 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     thor (0.14.6)
     tilt (1.3.3)
+    transformer (0.2.2)
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
-    uglifier (1.2.3)
+    tzinfo (0.3.32)
+    uglifier (1.2.4)
       execjs (>= 0.3.0)
       multi_json (>= 1.0.2)
     voteable_mongo (0.9.3)
+    yajl-ruby (1.1.0-x86-mingw32)
 
 PLATFORMS
   x86-mingw32
@@ -147,4 +157,6 @@ DEPENDENCIES
   rails-backbone
   sass-rails (~> 3.2.3)
   uglifier (>= 1.0.3)
+  vk-ruby!
   voteable_mongo
+  yajl-ruby

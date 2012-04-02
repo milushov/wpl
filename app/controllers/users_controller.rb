@@ -2,61 +2,71 @@ class UsersController < ApplicationController
   respond_to :json
 
   # GET /users
-  # GET /users.json
   def index
     render json: User.all.desc(:_id).limit(10), content_type: 'application/json'
   end
 
   # GET /users/1
-  # GET /users/1.json
   def show
-    id = params[:id]
-    @user = Hash.new {0}
-    @user[:info] = User.any_of({vk_id: id}, {_id: id}).first
-    if !@user[:info].nil?
-      @user[:followers_count] = @user[:info].followers_count_by_model('User')
-      @user[:followers] = @user[:info].all_followers_by_model('User')
+    id, user_s = params[:id] ? params[:id] : nil, {}
 
-      @user[:followees_count] = @user[:info].followees_count_by_model('User')
-      @user[:followees] = @user[:info].all_followees_by_model('User')
-
-      @user[:playlists_count] = @user[:info].followees_count_by_model('Playlist')
-      @user[:playlists] = @user[:info].all_followees_by_model('Playlist')
-
-      @user[:status] = true
+    user_s[:info] = User.any_of({screen_name: id}, {vk_id: id}, {_id: id}).first
+    
+    if user_s[:info].nil?
+      #error('User not found') #???
+      error = { status: false, description: 'User not found' }
+      render json: error, content_type: 'application/json' and return
     else
-      # redirect_to action: :not_found
-      # return false
-      @error = { status: false, description: "User not found" }
-      render json: @error, content_type: 'application/json'
-      return false
+      user_s[:followers_count] = user_s[:info].followers_count_by_model('User')
+      user_s[:followers] = user_s[:info].all_followers_by_model('User')
+
+      user_s[:followees_count] = user_s[:info].followees_count_by_model('User')
+      user_s[:followees] = user_s[:info].all_followees_by_model('User')
+
+      user_s[:playlists_count] = user_s[:info].followees_count_by_model('Playlist')
+      user_s[:playlists] = user_s[:info].all_followees_by_model('Playlist')
+
+      user_s[:status] = true      
     end
-    render json: @user, content_type: 'application/json'
-  end
 
-  def not_found
-    @error = { status: 0, description: "User not found" }
-    render json: @error, content_type: 'application/json'
-  end
+    user_vk_id = user_s[:info][:vk_id]
 
-  # GET /users/new
-  # GET /users/new.json
-  def new
-    @user = User.new
+    followers_vk_ids = []
+    user_s[:followers].each{ |v| followers_vk_ids << v[:vk_id] }
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @user }
+    followees_vk_ids = []
+    user_s[:followees].each{ |v| followees_vk_ids << v[:vk_id] }
+
+    
+    user_vk_profile = getProfilesData user_vk_id, followers_vk_ids, followees_vk_ids
+    #user_vk_profile = getProfilesData 788157, [1,2], [1,788157]
+
+    user_profile = {}
+    user_profile[:user] = user_vk_profile['user']
+    user_profile[:user][:id] = user_s[:info][:_id]
+    user_profile[:user][:followers_count]= user_s[:followers_count] + user_vk_profile['app_friends'].count
+    user_profile[:user][:followees_count]= user_s[:followees_count] + user_vk_profile['app_friends'].count
+    user_profile[:user][:playlists_count]= user_s[:playlists_count]
+    
+    user_vk_profile['followers'].each do |v|
+      temp = user_s[:followers].select { |val| v['uid'] == val[:vk_id] }
+      v[:id] = temp.empty? ? nil : temp[0][:_id]
     end
-  end
 
-  # GET /users/1/edit
-  def edit
-    @user = User.find(params[:id])
+    user_vk_profile['followees'].each do |v|
+      temp = user_s[:followees].select { |val| v['uid'] == val[:vk_id] }
+      v[:id] = temp.empty? ? nil : temp[0][:_id]
+    end
+    
+    user_profile[:followers] = user_vk_profile['followers']
+    user_profile[:followees] = user_vk_profile['followees']
+    user_profile[:playlists] = user_s[:playlists]
+    user_profile[:status] = true
+
+    render json: user_profile, content_type: 'application/json'
   end
 
   # POST /users
-  # POST /users.json
   def create
     @user = User.new(params[:user])
 
@@ -88,7 +98,6 @@ class UsersController < ApplicationController
   end
 
   # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     @user = User.find(params[:id])
     @user.destroy
@@ -97,5 +106,30 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  # принимает 2 массива id-шников vk и 1 id'шник юзера, чей профиль мы смотрим
+  def getProfilesData(user_id, followers, followees)
+    if user_id.nil? then user_id = session[:user_id] end
+    followers = followers ? followers.join(',') : ''
+    followees = followees ? followees.join(',') : ''
+    
+    code = "
+      var user_id = \"#{user_id}\";
+      var app_friends = API.friends.getAppUsers();
+      var uids = [#{followers}];
+      uids = uids + app_friends;
+
+      var fields = \"screen_name,photo,photo_medium,photo_big\";
+
+      var user = API.users.get({ uids: user_id, fields: fields});
+      var followers = API.users.get({ uids: uids, fields: fields});
+      var followees = API.users.get({ uids: [#{followees}], fields: fields });
+
+      return { user: user[0], followers: followers, followees: followees, app_friends: app_friends };"
+
+    @app.execute code: code
   end
 end

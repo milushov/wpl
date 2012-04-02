@@ -2,11 +2,6 @@ class MainController < ApplicationController
 	require 'open-uri'
 	require 'openssl'
 
-	APP_ID = 1111000
-	APP_SECRET = '1111000key'
-	REDIRECT_URI = 'http://playlists.dev:3000/auth'
-	SETTINGS = 'notify,friends,photos,audio' # 1+2+4+8
-
 	def index
 		if isAuth?
 			# сдесь будем выбирать профиль пользователя по vk_id
@@ -22,64 +17,59 @@ class MainController < ApplicationController
 	end
 
 	def login
-		if ( session[:access_token].nil? || session[:user_id].nil? )
-			if( params[:return_to] ) 
-				requestAuth( params[:return_to] )
-			else
-				requestAuth
-			end
+		if session[:access_token].nil? or session[:user_id].nil?
+			requestAuth params[:return_to]
 		else
-			redirect_to '/'
+			redirect_to action: 'index'
 		end
 	end
 
 	def logout
-		if ( session[:access_token].nil? || session[:user_id].nil? )
-			redirect_to '/'
-		else
-			cookies[:access_token] = session[:access_token] = nil
-			cookies[:user_id] = session[:user_id] = nil
-			redirect_to '/'
-		end
+		cookies[:access_token] = session[:access_token] = nil
+		cookies[:user_id] = session[:user_id] = nil
+		redirect_to action: 'index'
 	end
 
 	# получает код для получения токена
 	def auth(return_to = nil)
 		if params[:code].nil?
-			redirect_to '/' and	return
+			redirect_to action: 'index'
 		elsif params[:error] and params[:error_description]
 			render inline: "#{params[:error]} - #{params[:error_description]}" and return
 		end
+
 		uri = "https://oauth.vk.com/access_token?client_id=#{ APP_ID }&client_secret=#{ APP_SECRET }&code=#{params[:code]}"
-		response = JSON.parse open(uri, :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read
+
+		begin
+			response = open(uri, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
+		rescue => ex
+			render inline: "#{ex.class}: #{ex.message} uri(#{uri}) <b>failed</b>" and return
+		end
+
+		response = JSON.parse response
+
 		if response[:error] and response[:error_description]
 			render inline: "#{params[:error]} - #{params[:error_description]}" and return
 		else
-			saveToken(response['access_token'], response['user_id'])
-			unless params[:return_to] then redirect_to action: 'index' and return else
-				redirect_to "/#{params[:return_to]}" and return
+			saveToken response['access_token'], response['user_id']
+			if params[:return_to]
+				redirect_to "/#{params[:return_to]}"
+			else
+				redirect_to action: 'index'
 			end
 		end
 	end
 
 	private
 
-	def isAuth?
-		if session[:access_token] && session[:user_id] then true else false end
-	end
-
 	# запрашивает код
 	def requestAuth(return_to = nil)
 		redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-		uri = "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scope=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
-		#render inline: uri and return
-		redirect_to uri
-		return false
+		redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scope=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
 	end
 
 	def saveToken( access_token, user_id )
-		cookies[:access_token] = session[:access_token] = access_token
+		@app.access_token = cookies[:access_token] = session[:access_token] = access_token
 		cookies[:user_id] = session[:user_id] = user_id
-		#render inline: "access_token - #{access_token}"
 	end
 end

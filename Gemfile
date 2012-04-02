@@ -44,4 +44,5 @@ gem 'haml-rails'
 gem 'rails-backbone'
 
 #gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
-#gem 'vk-ruby'
+gem 'yajl-ruby'
+gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git' # версия которая работаем у меня на шиндовс
