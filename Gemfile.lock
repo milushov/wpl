@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/zinenko/vk-ruby.git
+  remote: git://github.com/milushov/vk-ruby.git
   revision: 20f045f0548b5cbb87e965d2d7281571151d356c
   specs:
     vk-ruby (0.8.0)

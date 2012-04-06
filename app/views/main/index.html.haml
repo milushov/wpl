@@ -53,7 +53,10 @@
 		%img{ src: '/assets/ajax-loader.gif' }
 
 :javascript
+	var user_profile = #{@user_profile.to_json.html_safe};
+
 	var auth_key = "#{@auth_key}";
+	
 	$(function() {
 		window.App = new Playlists.Routers.AppRouter({
 			playlists:#{@playlists.to_json.html_safe}

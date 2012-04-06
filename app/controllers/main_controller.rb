@@ -5,7 +5,10 @@ class MainController < ApplicationController
 	def index
 		if isAuth?
 			# сдесь будем выбирать профиль пользователя по vk_id
-			@playlists = Playlist.all
+			@user_profile = getProfile(session[:user_id])
+
+			#@playlists = Playlist.all
+			@playlists = @user_profile[:playlists]
 			# auth_key будет посылать в хедаре при каждом запросе к апи
 			@auth_key = Digest::MD5.hexdigest( "#{session[:user_id]}_roma_123_super_salt" )
 			respond_to do |format|
