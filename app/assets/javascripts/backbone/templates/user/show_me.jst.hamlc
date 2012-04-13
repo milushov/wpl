@@ -1,0 +1,22 @@
+#left_block.fl_l
+  #info
+    #photo
+      %img{src: "#{@user.photo_big}"}
+#center_block.fl_l
+  #name
+    = "#{@user.first_name} #{@user.last_name}"
+  #playlists_wrap
+    %img{src: "http://vk.com/u00001/a_a964f9a2.jpg"}
+#right_block.fl_r
+  #followers
+    #title Слушатели
+    - for id, follower of @followers
+      .follower
+        %a{href: "/#{follower.screen_name}"}
+          %img{src: "#{follower.photo}"}
+  #Слушает
+    #title Слушатели
+    - for id, followee of @followees
+      .followee
+        %a{href: "/#{followee.screen_name}"}
+          %img{src: "#{followee.photo}"}

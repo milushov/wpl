@@ -1,5 +1,3 @@
-source 'https://rubygems.org'
-
 gem 'rails', '3.2.0'
 
 # Bundle edge Rails instead:
@@ -46,3 +44,4 @@ gem 'rails-backbone'
 #gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'yajl-ruby'
 gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git' # версия которая работаем у меня на шиндовс
+gem 'pry', group: :development

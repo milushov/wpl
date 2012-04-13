@@ -105,4 +105,12 @@ class ApplicationController < ActionController::Base
 
     @app.execute code: code
   end
+
+  # simple check authorization to app
+  def check_auth
+    unless isAuth?
+      error = { status: false, description: 'auth fail' }
+      render json: error, content_type: 'application/json' and return
+    end
+  end
 end

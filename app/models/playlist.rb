@@ -6,7 +6,7 @@ class Playlist
   field :name, type: String
   field :image, type: String
   field :description, type: String
-  field :tags, type: String
+  field :tags, type: Array
 
   field :url, type: String
   field :creator, type: Integer # право рекдактировать теги без голосования

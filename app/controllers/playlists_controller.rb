@@ -1,6 +1,7 @@
 class PlaylistsController < ApplicationController
 	respond_to :json
 	
+	before_filter :check_auth
 
 	# GET /playlists
 	def index

@@ -1,4 +1,5 @@
 class TracksController < ApplicationController
+  before_filter :check_auth
   # GET /tracks
   # GET /tracks.json
   def index

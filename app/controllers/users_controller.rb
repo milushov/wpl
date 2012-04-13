@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   respond_to :json
 
+  before_filter :check_auth
+
   # GET /users
   def index
     render json: User.all.desc(:_id).limit(10), content_type: 'application/json'

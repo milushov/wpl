@@ -27,8 +27,17 @@
 //= require_tree .
 
 window.debug = 0
-window.l = function() {
-	console.log( arguments )
+window.l = function(a, b) {
+  if(!a || arguments.length == 0) return 'not arguments';
+  if(arguments.length > 2) {
+    console.log(arguments);
+  } else {
+    if(b) {
+      console.log(a, b);
+    } else {
+      console.log(a);
+    }
+  }
 }
 if (debug) {
 	console.log = function(){}

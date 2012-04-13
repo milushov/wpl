@@ -1,6 +1,6 @@
 %h2= @name
 %a#play_all.btn ♫ Play all
 %h3= @description
-%h3= @tags
+%h3= @tags.join ' '
 
 .tracks

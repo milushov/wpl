@@ -4,7 +4,7 @@
     "image": "http://cs9698.userapi.com/u788157/a_84c1043c.jpg",
     "description": "описание листа 1",
     "tags": ["qwe1", "asd", "123"],
-    "url": "test",
+    "url": "test1",
     "creator": 788157,
 
     "tracks": [
@@ -36,7 +36,7 @@
     "image": "http://cs9698.userapi.com/u788157/a_84c1043c.jpg",
     "description": "описание листа 2",
     "tags": ["qwe", "asd", "123aa"],
-    "url": "test",
+    "url": "test2",
     "creator": 10,
 
     "tracks": [
@@ -82,7 +82,7 @@
     "image": "http://cs9698.userapi.com/u788157/a_84c1043c.jpg",
     "description": "описание листа 3",
     "tags": ["qwe", "asd", "123dsf"],
-    "url": "test",
+    "url": "test3",
     "creator": 1,
 
     "tracks": [
@@ -128,7 +128,7 @@
     "image": "http://cs9698.userapi.com/u788157/a_84c1043c.jpg",
     "description": "описание листа 4",
     "tags": ["qwe", "asdfsd", "123"],
-    "url": "test",
+    "url": "test123",
     "creator": 788157,
 
     "tracks": [

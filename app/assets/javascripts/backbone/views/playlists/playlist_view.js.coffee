@@ -25,9 +25,14 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
 			name: @model.get 'name'
 			description: @model.get 'description'
 			tags: @model.get 'tags'
+			image: @model.get 'image'
 		) )
 
+		count_per_list = 2
+
 		@model.tracks.each (track) =>
-			$(@el).find('.tracks').append( new Playlists.Views.Tracks.TrackView(model: track).render().el )
+			return if count_per_list == 0
+			$(@el).find('.tracks').append(new Playlists.Views.Tracks.TrackView(model: track).render().el)
+			count_per_list -= 1
 			
 		return this
