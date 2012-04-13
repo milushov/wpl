@@ -65,19 +65,23 @@ class ApplicationController < ActionController::Base
     user_profile[:user][:playlists_count]= user_s[:playlists_count]
     
     # сохраняем mongo'вские id'шники, вдруг понадобятся
-    user_vk_profile['followers'].each do |v|
-      temp = user_s[:followers].select { |val| v['uid'] == val[:vk_id] }
-      v[:id] = temp.empty? ? nil : temp[0][:_id]
+    if user_vk_profile['followers']
+      user_vk_profile['followers'].each do |v|
+        temp = user_s[:followers].select { |val| v['uid'] == val[:vk_id] }
+        v[:id] = temp.empty? ? nil : temp[0][:_id]
+      end
     end
 
-    user_vk_profile['followees'].each do |v|
-      temp = user_s[:followees].select { |val| v['uid'] == val[:vk_id] }
-      v[:id] = temp.empty? ? nil : temp[0][:_id]
+    if user_vk_profile['followees']
+      user_vk_profile['followees'].each do |v|
+        temp = user_s[:followees].select { |val| v['uid'] == val[:vk_id] }
+        v[:id] = temp.empty? ? nil : temp[0][:_id]
+      end
     end
     
-    user_profile[:followers] = user_vk_profile['followers']
-    user_profile[:followees] = user_vk_profile['followees']
-    user_profile[:playlists] = user_s[:playlists]
+    user_profile[:followers] = user_vk_profile['followers'] || {}
+    user_profile[:followees] = user_vk_profile['followees'] || {}
+    user_profile[:playlists] = user_s[:playlists] || {}
     user_profile[:status] = true
 
     user_profile

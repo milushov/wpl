@@ -14,8 +14,8 @@
       .follower
         %a{href: "/#{follower.screen_name}"}
           %img{src: "#{follower.photo}"}
-  #Слушает
-    #title Слушатели
+  #followee
+    #title Слушает
     - for id, followee of @followees
       .followee
         %a{href: "/#{followee.screen_name}"}
