@@ -5,7 +5,7 @@
 #= require_tree ./routers
 
 window.Playlists =
-	Models: {}
-	Collections: {}
-	Routers: {}
-	Views: {}
+  Models: {}
+  Collections: {}
+  Routers: {}
+  Views: {}

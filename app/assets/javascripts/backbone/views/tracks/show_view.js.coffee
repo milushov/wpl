@@ -4,7 +4,7 @@ class Playlists.Views.Tracks.ShowView extends Backbone.View
   template: JST["backbone/templates/tracks/show"]
 
   initialize: ->
-  	console.log 'tracks/ShowView created'
+    console.log 'tracks/ShowView created'
 
   events :
     "click .actions .up a" : "voteUp"
@@ -15,8 +15,8 @@ class Playlists.Views.Tracks.ShowView extends Backbone.View
     return this
 
   voteUp: ->
-  	console.log @, 'tracks/ShowView voteUp()'
-  	#@model.voteUp()
+    console.log @, 'tracks/ShowView voteUp()'
+    #@model.voteUp()
 
   voteDown: ->
-  	console.log @, 'tracks/ShowView voteDown()'
+    console.log @, 'tracks/ShowView voteDown()'

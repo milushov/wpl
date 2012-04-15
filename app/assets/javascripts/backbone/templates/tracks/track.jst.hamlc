@@ -1,20 +1,20 @@
 .play_btn.fl_l
-	%a.btn.btn-primary.btn-small
-		♫ play
+  %a.btn.btn-primary.btn-small
+    ♫ play
 .info.fl_l
-	.atrist.fl_l
-		= @artist
-	.fl_l
-		= " – "
-	.title.fl_l
-		= @title
-	.duration.fl_r.clear
-		= @duration
+  .atrist.fl_l
+    = @artist
+  .fl_l
+    = " – "
+  .title.fl_l
+    = @title
+  .duration.fl_r.clear
+    = @duration
 .actions.fl_l.clear
-	.up.fl_l
-		%a.btn ▲
-	.down.clear.fl_l
-		%a.btn ▼
-	.destroy
-		〷
+  .up.fl_l
+    %a.btn ▲
+  .down.clear.fl_l
+    %a.btn ▼
+  .destroy
+    〷
 

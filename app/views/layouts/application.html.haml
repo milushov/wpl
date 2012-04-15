@@ -1,14 +1,14 @@
 !!!
 %html
-	%head
-		%title Playlists
-		= stylesheet_link_tag"application"
-		= javascript_include_tag "application"
-		%script{src: 'http://vkontakte.ru/js/api/openapi.js',  type: 'text/javascript'}
-		= csrf_meta_tags
-		%link{ rel: "shortcut icon", href: "/assets/icon.jpg", type: "image/x-icon" }
-	
-	%body
-		= yield
-		:plain
-			<!-- Yandex.Metrika counter --><div style="display:none;"><script type="text/javascript">(function(w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter13060828 = new Ya.Metrika({id:13060828, enableAll: true, webvisor:true}); } catch(e) { } }); })(window, "yandex_metrika_callbacks");</script></div><script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script><noscript><div><img src="//mc.yandex.ru/watch/13060828" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
+  %head
+    %title Playlists
+    = stylesheet_link_tag"application"
+    = javascript_include_tag "application"
+    %script{src: 'http://vkontakte.ru/js/api/openapi.js',  type: 'text/javascript'}
+    = csrf_meta_tags
+    %link{ rel: "shortcut icon", href: "/assets/icon.jpg", type: "image/x-icon" }
+  
+  %body
+    = yield
+    :plain
+      <!-- Yandex.Metrika counter --><div style="display:none;"><script type="text/javascript">(function(w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter13060828 = new Ya.Metrika({id:13060828, enableAll: true, webvisor:true}); } catch(e) { } }); })(window, "yandex_metrika_callbacks");</script></div><script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script><noscript><div><img src="//mc.yandex.ru/watch/13060828" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
