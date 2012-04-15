@@ -18,14 +18,15 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   # request for user profile (!) data
   getUserProfile: (user_id) ->
-    if user_id != my_profile['user']['screen_name']
-      console.log 'Routers.AppRouter getUserProfile()', user_id
-      if user_id == user_profile['user']['screen_name']
-        @showUserProfile(user_profile)
-      else
-        @vk.getProfile user_id
+    console.log 'Routers.AppRouter getUserProfile()', user_id
+    
+    if user_id == my_profile['user']['screen_name'] or user_id == my_profile['user']['uid']
+      @myProfile()
+    else if user_id == user_profile['user']['screen_name'] or user_id == user_profile['user']['uid']
+      @showUserProfile(user_profile)
     else
-      @myProfile()      
+      @vk.getProfile user_id
+      
 
   showUserProfile: (user_data) ->
     console.log 'Routers.AppRouter showUserProfile()', user_data
