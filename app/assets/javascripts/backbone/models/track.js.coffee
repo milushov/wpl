@@ -1,14 +1,6 @@
 class Playlists.Models.Track extends Backbone.Model
   #paramRoot: 'track'
-
   initialize: ->
-
-  defaults:
-    _id: null
-    artist: 'TestArtist'
-    title: 'TestTitle'
-    duration: 123
-    audio_id: '-1_123123'
 
 class Playlists.Collections.TracksCollection extends Backbone.Collection
   model: Playlists.Models.Track

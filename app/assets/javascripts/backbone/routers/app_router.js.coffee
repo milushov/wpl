@@ -6,14 +6,32 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     '.*'                : 'myProfile'
   
   initialize: (options)->
-    # подписываем роутер на событие
+    console.log 'Playlists.Routers.AppRouter'
+    @vk = new Playlists.Models.Vk
+    if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
+
+    # подписываем роутер на события
     @.on 'playlist_loaded', (playlist) => @showPlaylist(playlist)
     @.on 'user_data_loaded', (user_data) => @showUserProfile(user_data)
 
-    @vk = new Playlists.Models.Vk
-
-    # по идее тут будет коллекция всех плейлистов пользовтеля
     @playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
+
+  # request for user profile (!) data
+  getUserProfile: (user_id) ->
+    if user_id != my_profile['user']['screen_name']
+      console.log 'Routers.AppRouter getUserProfile()', user_id
+      if user_id == user_profile['user']['screen_name']
+        @showUserProfile(user_profile)
+      else
+        @vk.getProfile user_id
+    else
+      @myProfile()      
+
+  showUserProfile: (user_data) ->
+    console.log 'Routers.AppRouter showUserProfile()', user_data
+    window.user_profile = user_data
+    $("#app").html( new Playlists.Views.User.ShowView(user_data).render().el )
+    @ok()
 
   # request for playlist model
   getPlaylist: (url) ->
@@ -25,45 +43,24 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   showPlaylist: (playlist) ->
     console.log 'Routers.AppRouter showPlaylist()', playlist
-    playlist_view = new Playlists.Views.Playlists.ShowView(
-      model: new Playlists.Models.Playlist (
-        model: playlist
-      )
-    )
-    $("#app").html( playlist_view.render().el )
-    bind_urls()
-    loading('off')
-
-
-  getUserProfile: (user_id) ->
-    console.log 'Routers.AppRouter getUserProfile()', user_id
-    @vk.getProfile user_id
-
-  showUserProfile: (user_data) ->
-    console.log 'Routers.AppRouter showUserProfile()', user_data
-    user_view = new Playlists.Views.User.ShowView(
-        user_data
-    )
-    $("#app").html(user_view.render().el)
-    bind_urls()
-    loading('off')
-
+    $("#app").html( new Playlists.Views.Playlists.ShowView(
+      model: playlist
+    ).render().el )
+    @ok()
 
   myProfile: ->
-    console.log 'Routers.AppRouter myProfile()', user_profile
-
-    if user_profile
-      @startPageView = new Playlists.Views.User.ShowMeView(user_profile)
-      $("#app").html( @startPageView.render().el )
-    bind_urls()
-    loading('off')
+    console.log 'Routers.AppRouter myProfile()', my_profile
+    $("#app").html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
+    @ok()
 
   newPlaylist: ->
-    @view = new Playlists.Views.Playlists.NewView(collection: @playlists)
-    $("#playlists").html(@view.render().el)
-    loading('off')
+    $("#app").html( new Playlists.Views.Playlists.NewView().render().el )
 
-  isAuth: ()->
-    if @vk.isAuth() then true else
-      console.error 'Вы не залогинены! Атата! Как не стыдно!'
-      false
+  ok: ()->
+    # чтобы всегда была доступна коллекция плейлистов текущего пользователя
+    # и сожно было сделать @playlists.getByUrl(url)
+    if user_profile['playlists']
+      @playlists = new Playlists.Collections.PlaylistsCollection(user_profile['playlists'])
+    bind_urls()
+    loading('off')
+    true

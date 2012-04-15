@@ -55,13 +55,13 @@
     %img{ src: '/assets/ajax-loader.gif' }
 
 :javascript
-  var user_profile = #{@user_profile.to_json.html_safe};
-
   var auth_key = "#{@auth_key}";
+  var my_profile = #{@user_profile.to_json};
+  var user_profile = my_profile;
   
   $(function() {
     window.App = new Playlists.Routers.AppRouter({
-      playlists:#{@playlists.to_json.html_safe}
+      playlists: my_profile['playlists']
     });
     
     Backbone.history.start({pushState: true});
@@ -82,9 +82,7 @@
     */
   });
 
-
-
 %footer
   %p
-    made with ♥ by
-    %a{href:'http://vk.com/milushov'} roma
+    сделано с ♥ 
+    %a{href:'http://vk.com/milushov'} мной

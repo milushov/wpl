@@ -3,14 +3,14 @@ Playlists.Views.User ||= {}
 class Playlists.Views.User.ShowMeView extends Backbone.View
   template: JST["backbone/templates/users/show_me"]
 
-  initialize: (options) ->
-    console.log 'User.ShowMeView nitialize()'
+  initialize: () ->
+    console.log 'Views.User.ShowMeView itialize()'
 
   settings: () ->
-    console.log 'User.ShowMeView settings'
+    console.log 'Views.User.ShowMeView settings'
 
   render: =>
-    console.log 'User.ShowMeView render', @el
+    console.log 'Views.User.ShowMeView render(@el)', @el
 
     $(@el).html( @template(
       user: @options.user

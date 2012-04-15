@@ -26,7 +26,7 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     App.player.loadAndPlay @model
 
   render: ->
-    console.log 'Views.Playlists.ShowView render()', @model, 123123
+    console.log 'Views.Playlists.ShowView render()', @model
 
     $(@el).html( @template(
       name: @model.get 'name'

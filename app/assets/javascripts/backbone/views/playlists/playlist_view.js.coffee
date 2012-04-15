@@ -9,10 +9,9 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   tagName: 'div'
   className: 'playlist'
 
-  initialize: () ->
-    #console.log 'Views.Playlists.PlaylistView initialize(@options)'
-    @model = @options.model
-    @options = null
+  initialize: (options) ->
+    console.log 'Views.Playlists.PlaylistView initialize(options)', options
+    @model = options.model
     $(@el).attr 'id', 'playlistId_'+@model.get '_id'
 
   destroy: () ->
@@ -21,6 +20,7 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
     return false
 
   render: ->
+    console.log 'Views.Playlists.PlaylistView render(@model)', @model
     $(@el).html( @template(
       name: @model.get 'name'
       description: @model.get 'description'
