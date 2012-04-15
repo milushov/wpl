@@ -1,16 +1,16 @@
-Playlists.Views.Profile ||= {}
+Playlists.Views.User ||= {}
 
-class Playlists.Views.Profile.IndexView extends Backbone.View
-  template: JST["backbone/templates/user/show_me"]
+class Playlists.Views.User.ShowMeView extends Backbone.View
+  template: JST["backbone/templates/users/show_me"]
 
   initialize: (options) ->
-    console.log 'Profile.IndexView nitialize()'
+    console.log 'User.ShowMeView nitialize()'
 
   settings: () ->
-    console.log 'Profile.IndexView settings'
+    console.log 'User.ShowMeView settings'
 
   render: =>
-    console.log 'Profile.IndexView render', @el
+    console.log 'User.ShowMeView render', @el
 
     $(@el).html( @template(
       user: @options.user
@@ -18,14 +18,12 @@ class Playlists.Views.Profile.IndexView extends Backbone.View
       followees: @options.followees
     ) )
 
-    $(@el).find('#playlists_wrap').html( 
+    $(@el).find('#playlists').html( 
       new Playlists.Views.Playlists.IndexView(
         collection: new Playlists.Collections.PlaylistsCollection(
           @options.playlists
         )
       ).render().el
     )
-
-    l $(@el)
 
     return this

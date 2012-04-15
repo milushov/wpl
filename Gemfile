@@ -31,15 +31,18 @@ gem 'jquery-rails'
 # Deploy with Capistrano
 # gem 'capistrano'
 
+gem 'thin'
+
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 gem 'mongoid'
-gem 'mongoid_follow'
+gem 'mongoid_follow', git: 'git://github.com/YanhaoYang/mongoid_follow.git'
 gem 'voteable_mongo'
 gem 'kaminari'
 gem 'bson_ext'
 gem 'haml-rails'
 gem 'rails-backbone'
+gem 'awesome_print'
 
 #gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'yajl-ruby'

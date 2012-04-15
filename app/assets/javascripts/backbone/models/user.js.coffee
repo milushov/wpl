@@ -1,6 +1,4 @@
 class Playlists.Models.User extends Backbone.Model
-  paramRoot: 'user'
-
   defaults:
     vk_id: null
 

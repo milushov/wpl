@@ -15,3 +15,9 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
     @set(updateObj)
 
   nestedCollection
+
+window.loading = (ready = false) ->
+  if ready 
+    $('#head_loader').fadeTo('fast', 0)
+  else
+    $('#head_loader').fadeTo('fast', 1)

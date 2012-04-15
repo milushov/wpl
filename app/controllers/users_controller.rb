@@ -5,20 +5,15 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    render json: User.all.desc(:_id).limit(10), content_type: 'application/json'
+    render json: User.all.desc(:_id).limit(10)
   end
 
   # GET /users/1
   def show
-    id = params[:id] ? params[:id] : nil
-
-    user_profile = getProfile(id)
-
-    if user_profile
-      render json: user_profile, content_type: 'application/json'
+    if user_profile = getProfile(params[:id])
+      render json: user_profile
     else
-      error = { status: false, description: 'User not found' }
-      render json: error, content_type: 'application/json'
+      error('User not found')
     end
   end
 
@@ -38,7 +33,6 @@ class UsersController < ApplicationController
   end
 
   # PUT /users/1
-  # PUT /users/1.json
   def update
     @user = User.find(params[:id])
 

@@ -6,13 +6,16 @@ class MainController < ApplicationController
     if isAuth?
       # сдесь будем выбирать профиль пользователя по vk_id
       @user_profile = getProfile(session[:user_id])
+
       unless @user_profile
         render 'main/start' and return
       end
-      #@playlists = Playlist.all
+
       @playlists = @user_profile[:playlists]
+      
       # auth_key будет посылать в хедаре при каждом запросе к апи
       @auth_key = Digest::MD5.hexdigest( "#{session[:user_id]}_roma_123_super_salt" )
+      
       respond_to do |format|
         format.html # index.html.haml
       end

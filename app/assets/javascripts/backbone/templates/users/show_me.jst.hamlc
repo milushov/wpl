@@ -5,18 +5,15 @@
 #center_block.fl_l
   #name
     = "#{@user.first_name} #{@user.last_name}"
-  #playlists_wrap
-    %img{src: "http://vk.com/u00001/a_a964f9a2.jpg"}
+  #playlists
 #right_block.fl_r
   #followers
     #title Слушатели
     - for id, follower of @followers
-      .follower
-        %a{href: "/#{follower.screen_name}"}
-          %img{src: "#{follower.photo}"}
-  #followee
+      %a.follower{href: "/u/#{follower.screen_name}"}
+        %img{src: "#{follower.photo}"}
+  #followees
     #title Слушает
     - for id, followee of @followees
-      .followee
-        %a{href: "/#{followee.screen_name}"}
-          %img{src: "#{followee.photo}"}
+      %a.followee{href: "/u/#{followee.screen_name}"}
+        %img{src: "#{followee.photo}"}

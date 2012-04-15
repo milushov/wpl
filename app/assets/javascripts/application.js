@@ -43,3 +43,16 @@ if (debug) {
 	console.log = function(){}
 	window.l = function(){}
 }
+
+function bind_urls() {
+  $('a').click( function(event) {
+    event.preventDefault();
+    url = $(this).attr('href');
+    cur_url = $.url().attr().relative;
+    if(url != cur_url) {
+      loading();
+      setTimeout( function() { loading('off'); }, 15000 );
+    }
+    App.navigate(url, true);
+  });
+}

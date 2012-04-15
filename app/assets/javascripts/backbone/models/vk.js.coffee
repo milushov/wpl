@@ -12,15 +12,12 @@ class Playlists.Models.Vk extends Backbone.Model
   initialize:  ->
     console.log 'Vk model created'
     @set auth_status: @isAuth()
-    #@getProfilesData [1,111,23234], [1,2], 1, (data)-> console.log data.response, 'getProfile()'
-    #@getPlaylistData ['1_115553105', '1_138952258', '1_135538161'], (data)-> console.log data.response, 'getPlaylistData()'
 
   isAuth: ->
     if @getCookies().access_token and @getCookies().user_id
       true
     else
       false
-
 
   # главная функция авторизации
   auth: ->
@@ -41,55 +38,25 @@ class Playlists.Models.Vk extends Backbone.Model
       @set auth_status: true
       true
 
-  # получаем инфу о пользователе
   getProfile: (id)->
-    $.get "#{@get('url')}/api/users/#{id}", (data)=>
-      if data and data.status == true
-        # вытаскиваем id'шники
-        followers = for key, follower of data.followers
-          follower.uid
-        followees = for key, followee of data.followees
-          followee.uid
-        
-        user_id = data.user.uid
-
-        # сохраняем для контекста
-        @user_data = data
-        
-        @getProfilesData followers, followees, user_id, (data)=>
-          if data.error
-            alert 'Упс! Что-то пошло не так.. ' + data.error.error_msg + ' ' + data.error.error_code
-            console.log 'request_params:', data.error.request_params
-          else if data.response
-            user = 
-              user: data.response.user[0]
-              followers: data.response.followers
-              followees: data.response.followees
-              followers_count: @user_data.user.followers_count # на случай, когда дохрена фоловеров
-              followees_count: @user_data.user.followees_count
-              playlists: @user_data.playlists
-            App.trigger 'user_data_loaded', user
-        , @
+    $.get "#{@get('url')}api/users/#{id}", (data)=>
+      if data && !data.error
+        App.trigger 'user_data_loaded', data
       else
+        console.error data.error
         return false
     , 'json'
 
-  # принимает 2 массива id-шников vk и 1 id'шник юзера, чей профиль мы смотрим
-  getProfilesData: (followers, followees, user_id, success, context = false)->
-    if !followers then followers = '' else followers.join ','
-    if !followees then followees = '' else followees.join ','
-    if !user_id then user_id = @getCookies().user_id
-    params = 
-      code:
-       'var user_id = ' + user_id + ';
-        var fields = "screen_name,photo,photo_medium,photo_big";
-        var app_friends = API.friends.getAppUsers();
-        var uids = [' + followers + '] + app_friends;
-        var user = API.users.get({ uids: user_id, fields: fields});
-        var followers = API.users.get({ uids: uids, fields: fields});
-        var followees = API.users.get({ uids: [' + followees + '], fields: fields });
-        return { user: user, followers: followers, followees: followees };'
-    @ajax @makeUrl('execute', params), success, context
+  getPlaylist: (id)->
+    $.get "#{@get('url')}api/playlists/#{id}", (data)=>
+      if data && !data.error
+        playlist = new Playlists.Models.Playlist(data)
+        App.trigger 'playlist_loaded', playlist
+        console.log "Playlists.Models.Vk getPlaylist()", playlist
+      else
+        console.error data.error
+        return false
+    , 'json'
 
   getPlaylistData: (tracks, success)->
     if !tracks then false else tracks = tracks.join ','

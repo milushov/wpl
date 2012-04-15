@@ -1,24 +1,24 @@
 #left_block.fl_l
   #info
     #photo
-      %img{src: "#{@image}"}
+      %img{src: "#{@user.photo_big}"}
     #follow
       %button.btn.btn-success{onclick: 'alert("слушать");'}
         <i class="icon-plus icon-white"></i>
         Подписаться
 #center_block.fl_l
   #name
-    %h2.fl_l
-      = @name
-    %a#play_all.btn.btn-primary.fl_r ♫ Play all
+    %h2
+      = "#{@user.first_name} #{@user.last_name}"
   #playlists
-    %h3= @description
-    %h3= @tags.join ' '
-
-    .tracks
 #right_block.fl_r
   #followers
     #title Слушатели
     - for id, follower of @followers
       %a.follower{href: "/u/#{follower.screen_name}"}
         %img{src: "#{follower.photo}"}
+  #followees
+    #title Слушает
+    - for id, followee of @followees
+      %a.followee{href: "/u/#{followee.screen_name}"}
+        %img{src: "#{followee.photo}"}

@@ -1,85 +1,90 @@
 .navbar.navbar-fixed-top
-	.navbar-inner
-		.container
-			%a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
-			%a.brand{href: "/", onclick: 'App.navigate("", true); return false;'} 
-				Wiki
-				%strong{style: 'color:#2AB2E2;'} Playlists
-			.nav-collapse
-				%ul.nav
-					%li.active
-						%a{href: "/new"} Новые
-					%li
-						%a{href: "/popular"} Популярные
-					%li
-						#player_ui
-							%a#play_btn
-							%a#prev_btn
-							%a#next_btn
-							%a#repeat_btn
-					%li
-						#track_info
-							#artist	Roma
-							%div.fl_l –
-							#title test123
-							#duration 4:15
+  .navbar-inner
+    .container
+      %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
+      %img#head_loader{src: '/assets/head_loader.gif'}
+      %a.brand{href: '/'} 
+        Wiki
+        %strong{style: 'color:#2AB2E2;'} Playlists
+      .nav-collapse
+        %ul.nav
+          %li.active
+            %a{href: "/new"} Новые
+          %li
+            %a{href: "/popular"} Популярные
+          %li
+            #player_ui
+              %a#play_btn
+              %a#prev_btn
+              %a#next_btn
+              %a#repeat_btn
+          %li
+            #track_info
+              #artist Roma
+              %div.fl_l –
+              #title test123
+              #duration 4:15
 
-				%ul.nav.pull-right
-					%li.divider-vertical
-					%li
-						.btn-group
-							%a.btn.btn-primary{onclick: 'App.navigate("playlist/test123", true);'} Action
-							%a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-								%span.caret,
-							%ul.dropdown-menu
-								%li
-									%a{onclick: 'App.navigate("roma", true);'} roma
-								%li
-									%a{:href => "#"} Another action
-								%li
-									%a{:href => "#"} Something else here
-								%li.divider
-								%li
-									%a{:href => "#"} Separated link
-						
-			/ /.nav-collapse
-	#progress_line{style:'margin-top:10px;'}
-		#load
-		#play
-		#slider.ui-draggable
-		
+        %ul.nav.pull-right
+          %li.divider-vertical
+          %li
+            .btn-group
+              %a.btn.btn-primary{href: '/'}
+                =@user_profile[:user]['first_name']
+              %a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
+                %span.caret,
+              %ul.dropdown-menu
+                %li
+                  %a{onclick: 'App.navigate("roma", true);'} roma
+                %li
+                  %a{:href => "#"} Another action
+                %li
+                  %a{:href => "#"} Something else here
+                %li.divider
+                %li
+                  %a{:href => "#"} Separated link
+            
+      / /.nav-collapse
+  #progress_line{style:'margin-top:10px;'}
+    #load
+    #play
+    #slider.ui-draggable
+    
 #app.container
-	%center
-		%img{ src: '/assets/ajax-loader.gif' }
+  %center
+    %img{ src: '/assets/ajax-loader.gif' }
 
 :javascript
-	var user_profile = #{@user_profile.to_json.html_safe};
+  var user_profile = #{@user_profile.to_json.html_safe};
 
-	var auth_key = "#{@auth_key}";
-	
-	$(function() {
-		window.App = new Playlists.Routers.AppRouter({
-			playlists:#{@playlists.to_json.html_safe}
-		});
-		
-		Backbone.history.start({pushState: true});
+  var auth_key = "#{@auth_key}";
+  
+  $(function() {
+    window.App = new Playlists.Routers.AppRouter({
+      playlists:#{@playlists.to_json.html_safe}
+    });
+    
+    Backbone.history.start({pushState: true});
 
-		soundManager.url = 'http://playlists.dev:3000';
-		soundManager.flashVersion = 9;
-		soundManager.onready( function() {
-			window.App.player = new Playlists.Views.Player.IndexView(
-				{model: new Playlists.Models.Player()}
-			)
-		});
+    bind_urls();
+    /*
+    soundManager.url = 'http://playlists.dev:3000';
+    soundManager.flashVersion = 9;
+    soundManager.onready( function() {
+      window.App.player = new Playlists.Views.Player.IndexView(
+        {model: new Playlists.Models.Player()}
+      )
+    });
 
-		soundManager.ontimeout(function() {
-		  alert('Плеер завис, перезагрузите страницу! (F5)');
-		});
-	});
+    soundManager.ontimeout(function() {
+      alert('Плеер завис, перезагрузите страницу! (F5)');
+    });
+    */
+  });
 
 
 
 %footer
-	%p
-		made with ♥ by
-		%a{href:'http://vk.com/milushov'} roma
+  %p
+    made with ♥ by
+    %a{href:'http://vk.com/milushov'} roma

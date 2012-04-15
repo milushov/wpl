@@ -26,6 +26,7 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
 			description: @model.get 'description'
 			tags: @model.get 'tags'
 			image: @model.get 'image'
+			url: @model.get 'url'
 		) )
 
 		count_per_list = 2
