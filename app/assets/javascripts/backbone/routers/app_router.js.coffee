@@ -6,7 +6,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     '.*'                : 'myProfile'
   
   initialize: (options)->
-    console.log 'Playlists.Routers.AppRouter'
+    console.log 'Routers.AppRouter initialize()'
     @vk = new Playlists.Models.Vk
     if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
 
@@ -19,7 +19,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   # request for user profile (!) data
   getUserProfile: (user_id) ->
     console.log 'Routers.AppRouter getUserProfile()', user_id
-    
+
     if user_id == my_profile['user']['screen_name'] or user_id == my_profile['user']['uid']
       @myProfile()
     else if user_id == user_profile['user']['screen_name'] or user_id == user_profile['user']['uid']
@@ -31,6 +31,15 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   showUserProfile: (user_data) ->
     console.log 'Routers.AppRouter showUserProfile()', user_data
     window.user_profile = user_data
+
+    # to avaible always a collection playlists of current user
+    # and it was possiply to make like this: @playlists.getByUrl(url)
+    # тут какой-то ПИЗДЕЦ
+    if user_profile['playlists']
+      playlists_both = user_profile['playlists']
+      playlists_both.push pl for pl in my_profile['playlists']
+      @playlists = new Playlists.Collections.PlaylistsCollection(playlists_both)
+
     $("#app").html( new Playlists.Views.User.ShowView(user_data).render().el )
     @ok()
 
@@ -58,10 +67,6 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     $("#app").html( new Playlists.Views.Playlists.NewView().render().el )
 
   ok: ()->
-    # чтобы всегда была доступна коллекция плейлистов текущего пользователя
-    # и сожно было сделать @playlists.getByUrl(url)
-    if user_profile['playlists']
-      @playlists = new Playlists.Collections.PlaylistsCollection(user_profile['playlists'])
     bind_urls()
     loading('off')
     true

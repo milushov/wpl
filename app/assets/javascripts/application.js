@@ -41,6 +41,8 @@ window.l = function(a, b) {
 }
 if (debug) {
 	console.log = function(){}
+  console.warn = function(){}
+  console.info = function(){}
 	window.l = function(){}
 }
 
@@ -48,11 +50,13 @@ function bind_urls() {
   $('a').click( function(event) {
     event.preventDefault();
     url = $(this).attr('href');
-    cur_url = $.url().attr().relative;
-    if(url != cur_url) {
-      loading();
-      setTimeout( function() { loading('off'); }, 15000 );
+    if(url) {
+      current_url = $.url().attr().relative;
+      if(url != current_url) {
+        loading();
+        setTimeout( function() { loading('off'); }, 15000 );
+      }    
+      App.navigate(url, true);
     }
-    App.navigate(url, true);
   });
 }

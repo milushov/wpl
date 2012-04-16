@@ -16,8 +16,34 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
   nestedCollection
 
+
+$(document).ajaxError (e, jqxhr, settings, exception) =>
+  # console.error arguments
+  alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
+  history.back()
+
+window.too_late = 0
 window.loading = (ready = false) ->
-  if ready 
-    $('#head_loader').fadeTo('fast', 0)
+  fast_operation = 10
+  loader = $('#head_loader')
+  if ready
+    console.warn "загрузилось", window.too_late
+    # hide loader
+    loader.fadeTo('fast', 0)
+    window.too_late = 1
+    42
   else
-    $('#head_loader').fadeTo('fast', 1)
+    console.warn "ждем #{fast_operation}", window.too_late
+    # show loader
+    setTimeout ()=>
+      # if loader show,
+      if loader.css('opacity') != '1' and not window.too_late
+        console.warn "быстрая операция < #{fast_operation}", window.too_late
+        loader.fadeTo('fast', 1)
+      else
+        console.warn "долгая операция > #{fast_operation}", window.too_late
+      window.too_late = 0
+      42
+    , fast_operation
+    42
+

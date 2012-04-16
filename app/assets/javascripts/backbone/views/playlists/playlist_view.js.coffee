@@ -12,7 +12,7 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   initialize: (options) ->
     console.log 'Views.Playlists.PlaylistView initialize(options)', options
     @model = options.model
-    $(@el).attr 'id', 'playlistId_'+@model.get '_id'
+    $(@el).attr 'id', 'playlist_id-'+@model.get '_id'
 
   destroy: () ->
     @model.destroy()
@@ -36,4 +36,4 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
       $(@el).find('.tracks').append(new Playlists.Views.Tracks.TrackView(model: track).render().el)
       count_per_list -= 1
       
-    return this
+    return this 

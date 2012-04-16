@@ -4,7 +4,7 @@ class Playlists.Views.User.ShowMeView extends Backbone.View
   template: JST["backbone/templates/users/show_me"]
 
   initialize: () ->
-    console.log 'Views.User.ShowMeView itialize()'
+    console.log 'Views.User.ShowMeView itialize()', @options
 
   settings: () ->
     console.log 'Views.User.ShowMeView settings'

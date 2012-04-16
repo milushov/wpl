@@ -44,7 +44,7 @@ class Playlists.Models.Vk extends Backbone.Model
         App.trigger 'user_data_loaded', data
       else
         console.error data.error
-        return false
+        false
     , 'json'
 
   getPlaylist: (id)->
@@ -55,7 +55,7 @@ class Playlists.Models.Vk extends Backbone.Model
         console.log "Playlists.Models.Vk getPlaylist()", playlist
       else
         console.error data.error
-        return false
+        false
     , 'json'
 
   getPlaylistData: (tracks, success)->
