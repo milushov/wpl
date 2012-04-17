@@ -10,7 +10,7 @@ class Playlists.Views.Playlists.IndexView extends Backbone.View
   #id: 'playlists'
 
   initialize: () ->
-    console.log 'Playlists.IndexView initialize( @options )', @options
+    #console.log 'Playlists.IndexView initialize( @options )', @options
     @playlists = @options.collection
     @options = null
     @playlists.bind('reset', @addAll)
@@ -24,7 +24,7 @@ class Playlists.Views.Playlists.IndexView extends Backbone.View
     $(@el).append( new Playlists.Views.Playlists.PlaylistView(model: playlist).render().el)
 
   render: =>
-    console.log 'Playlists.IndexView render()'
+    #console.log 'Playlists.IndexView render()'
     l $(@el) # Почему блеать тут УЖЕ отрисованный шаблон!!???!?!? АААаАаА!!!
     $(@el).html @template()
     

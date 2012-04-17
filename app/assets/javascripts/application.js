@@ -26,7 +26,8 @@
 //= require soundmanager2
 //= require_tree .
 
-window.debug = 0
+window.debug = 1
+
 window.l = function(a, b) {
   if(!a || arguments.length == 0) return 'not arguments';
   if(arguments.length > 2) {
@@ -39,7 +40,8 @@ window.l = function(a, b) {
     }
   }
 }
-if (debug) {
+
+if (!debug) {
 	console.log = function(){}
   console.warn = function(){}
   console.info = function(){}
@@ -54,9 +56,10 @@ function bind_urls() {
       current_url = $.url().attr().relative;
       if(url != current_url) {
         loading();
-        setTimeout( function() { loading('off'); }, 15000 );
+        /* чтобы не мазолило глаза, если запрос будет ооочень долгий */
+        //setTimeout( function() { loading('off'); }, 15000 );
       }    
       App.navigate(url, true);
     }
-  });
+  } );
 }

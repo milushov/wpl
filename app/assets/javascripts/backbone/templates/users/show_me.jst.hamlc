@@ -4,7 +4,8 @@
       %img{src: "#{@user.photo_big}"}
 #center_block.fl_l
   #name
-    = "#{@user.first_name} #{@user.last_name}"
+    %h2
+      = "#{@user.first_name} #{@user.last_name}"
   #playlists
 #right_block.fl_r
   #followers

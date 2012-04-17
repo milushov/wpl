@@ -3,20 +3,76 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $pw: 180px; // playlist_width
+$ph: 180px;
 
+@mixin box-shadow($blur: 23px, $spread: 2px, $color: #cecece ) {
+  -webkit-box-shadow: 0px 0px $blur $spread $color;
+  -moz-box-shadow: 0px 0px $blur $spread $color;
+  box-shadow: 0px 0px $blur $spread $color;
+}
 
+@mixin border-radius($radius: 5px) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
 
 .playlist {
-	background-color: #fff;
-	overflow: hidden;
-	padding: 5px;
-	border: 1px dashed #ccc;
+  width: $pw; height: $ph;
+	background-color: #fefefe;
+  overflow: hidden;
   display: inline-block;
-	width: $pw;
-  margin: 5px 3px 0 0;
+  margin: 5px 6px;
+  
+  .info {
+    //@include box-shadow();
+    @include border-radius(5px);
+    overflow: hidden;
+    background-color: #fdfdfd;
 
-  .image {
-    width: 160px;
-    height: 160px;
+    a {
+      color: #fcfcfc;
+      text-decoration: none;
+      cursor: pointer;
+      
+      img {
+        width: $pw; height: $ph;
+      }
+    } // end a
+
+    a:hover {
+      color: #6291ED;
+      text-decoration: none;
+      //font-weight: bold;
+    }
+
+    .details {
+      position: relative;
+      bottom: 45px;
+      width: 160px; height: 20px;
+      overflow: hidden;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+
+      .name {
+        float: left;
+      }
+
+      .followers_info {
+        float: right;
+      }
+    } // end .details
+
+      
+  } // end .info
+  
+
+  .tracks {
+
+
+    .track {
+
+    }
   }
 }

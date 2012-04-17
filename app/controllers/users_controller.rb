@@ -10,10 +10,16 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+    # spesial for alex.strigin :-)
+    if params[:format] and not %w{json xml html atom rss}.include? params[:format]
+      params[:id] << ".#{params[:format]}"
+      params[:format] = nil
+    end
+    
     if user_profile = getProfile(params[:id])
       render json: user_profile
     else
-      error('User not found')
+      error("user #{params[:id]} not found")
     end
   end
 

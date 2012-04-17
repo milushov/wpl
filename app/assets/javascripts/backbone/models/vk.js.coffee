@@ -10,7 +10,7 @@ class Playlists.Models.Vk extends Backbone.Model
 
   
   initialize:  ->
-    console.log 'Vk model created'
+    console.log 'Models.Vk initialize()'
     @set auth_status: @isAuth()
 
   isAuth: ->
@@ -39,22 +39,28 @@ class Playlists.Models.Vk extends Backbone.Model
       true
 
   getProfile: (id)->
-    $.get "#{@get('url')}api/users/#{id}", (data)=>
-      if data && !data.error
+    $.get "#{@get('url')}api/users/#{id}", (data)->
+      if data and not data.error
+        l data, 'from App.vk.getProfile()'
         App.trigger 'user_data_loaded', data
+        true
       else
         console.error data.error
+        history.back()
+        alert data.error
         false
     , 'json'
 
   getPlaylist: (id)->
-    $.get "#{@get('url')}api/playlists/#{id}", (data)=>
+    $.get "#{@get('url')}api/playlists/#{id}", (data)->
       if data && !data.error
         playlist = new Playlists.Models.Playlist(data)
         App.trigger 'playlist_loaded', playlist
         console.log "Playlists.Models.Vk getPlaylist()", playlist
       else
         console.error data.error
+        history.back()
+        alert data.error
         false
     , 'json'
 

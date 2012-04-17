@@ -10,8 +10,12 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/url
   def show
-    playlist = getPlaylist(params[:id])
-    render json: playlist, content_type: 'application/json'
+    
+    if playlist = getPlaylist(params[:id])
+      render json: playlist, content_type: 'application/json'
+    else
+      error("playlist #{params[:id]} not found")
+    end
   end
 
   def not_found

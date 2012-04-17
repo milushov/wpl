@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Playlist.delete_all and User.delete_all
+Playlist.delete_all and User.delete_all and Follow.delete_all
 
 p 'creating playlists...'
 playlists = []

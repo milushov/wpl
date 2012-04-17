@@ -42,6 +42,6 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
 
 
   render: ->
-    console.log 'Views.Tracks.TrackView render()'
+    #console.log 'Views.Tracks.TrackView render()'
     $(@el).html( @template( @model.toJSON() ) )
     return this

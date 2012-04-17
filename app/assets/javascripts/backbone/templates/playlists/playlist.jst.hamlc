@@ -1,7 +1,10 @@
-%h2
-  = @name
-.image
+.info
   %a{href: "/#{@url}"}
     %img{src: "#{@image}"}
+  .details
+    %a.name{href: "/#{@url}"}
+      = @name
+    .followers_info
+      = @followers_count
 
 .tracks{style: "display:none;"}

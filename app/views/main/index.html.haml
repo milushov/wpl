@@ -57,7 +57,7 @@
 :javascript
   var auth_key = "#{@auth_key}";
   var my_profile = #{@user_profile.to_json};
-  var user_profile = my_profile;
+  var user_profile = {};
   
   $(function() {
     window.App = new Playlists.Routers.AppRouter({

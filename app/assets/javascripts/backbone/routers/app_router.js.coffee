@@ -7,38 +7,41 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   
   initialize: (options)->
     console.log 'Routers.AppRouter initialize()'
-    @vk = new Playlists.Models.Vk
+    @vk = new Playlists.Models.Vk()
     if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
 
     # подписываем роутер на события
-    @.on 'playlist_loaded', (playlist) => @showPlaylist(playlist)
-    @.on 'user_data_loaded', (user_data) => @showUserProfile(user_data)
+    @.on 'playlist_loaded', (playlist) -> @showPlaylist(playlist)
+    @.on 'user_data_loaded', (user_data2) -> @showUserProfile(user_data2)
 
+    # тут мои плейлиста
     @playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
 
   # request for user profile (!) data
   getUserProfile: (user_id) ->
     console.log 'Routers.AppRouter getUserProfile()', user_id
 
-    if user_id == my_profile['user']['screen_name'] or user_id == my_profile['user']['uid']
+    mid = if not $.isEmptyObject(my_profile) then my_profile['user']['screen_name'] else ''
+    uid = if not $.isEmptyObject(user_profile) then user_profile['user']['screen_name'] else ''
+
+    if user_id == mid
       @myProfile()
-    else if user_id == user_profile['user']['screen_name'] or user_id == user_profile['user']['uid']
+    else if user_id == uid
       @showUserProfile(user_profile)
     else
-      @vk.getProfile user_id
+      @vk.getProfile(user_id)
       
-
   showUserProfile: (user_data) ->
     console.log 'Routers.AppRouter showUserProfile()', user_data
     window.user_profile = user_data
-
-    # to avaible always a collection playlists of current user
+    
+    # to available always a collection playlists of current user
     # and it was possiply to make like this: @playlists.getByUrl(url)
-    # тут какой-то ПИЗДЕЦ
-    if user_profile['playlists']
-      playlists_both = user_profile['playlists']
-      playlists_both.push pl for pl in my_profile['playlists']
-      @playlists = new Playlists.Collections.PlaylistsCollection(playlists_both)
+    playlists_both_people = _.clone(user_profile['playlists'])
+    
+    my_profile['playlists'].forEach (pl)-> playlists_both_people.push(pl)
+
+    @playlists = new Playlists.Collections.PlaylistsCollection( playlists_both_people )
 
     $("#app").html( new Playlists.Views.User.ShowView(user_data).render().el )
     @ok()
@@ -69,4 +72,3 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   ok: ()->
     bind_urls()
     loading('off')
-    true

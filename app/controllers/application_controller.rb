@@ -36,8 +36,8 @@ class ApplicationController < ActionController::Base
     user_followees_count = user.followees_count_by_model('User') || 0
     
     playlists_data = user.all_followees_by_model('Playlist')
-    
-    playlists = []; playlists_followers_ids = []
+
+    playlists, playlists_followers_ids = [], []
 
     playlists_data.each do |playlist|
       followers = []; playlist.followers.to_a.each { |f| followers << f[:follower_id].to_s }
@@ -76,9 +76,10 @@ class ApplicationController < ActionController::Base
     profile[:user][:followees_count] = user_followees_count + vk_data['app_friends'].count
     profile[:user][:playlists_count] = playlists_count
     
-    temp = {}
-    vk_data['playlists_followers'].each { |f| id = playlists_followers[f['uid'].to_s]; temp[id] = f }
-    vk_data['playlists_followers'] = temp; temp = nil
+    if vk_data['playlists_followers']
+      temp = {}; vk_data['playlists_followers'].each { |f| id = playlists_followers[f['uid'].to_s]; temp[id] = f }
+      vk_data['playlists_followers'], temp = temp, nil
+    end
 
     playlists.each do |playlist|
       followers = []; playlist[:followers].each { |f| followers << vk_data['playlists_followers'][f] }
@@ -127,12 +128,10 @@ class ApplicationController < ActionController::Base
 
     playlist = Playlist.any_of({url: url_or_id}, {_id: url_or_id}).first
     
-    if playlist
-      followers = playlist.all_followers_by_model('User')
-    else
-      error("user #{url_or_id} not found") and return
-    end
+    return false unless playlist
     
+    followers = playlist.all_followers_by_model('User') 
+       
     if followers
       # вытаскиваем id'шники
       followers_vk_ids = followers.map { |v| v[:vk_id] }
@@ -156,10 +155,10 @@ class ApplicationController < ActionController::Base
           v[:id] = temp.empty? ? nil : temp[0][:_id]
         end
       else
-        followers_vk = {}
+        followers_vk = []
       end
     else
-      followers_vk = {}
+      followers_vk = []
     end
 
     p = {
