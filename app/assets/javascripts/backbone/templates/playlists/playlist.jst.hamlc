@@ -5,6 +5,9 @@
     %a.name{href: "/#{@url}"}
       = @name
     .followers_info
-      = @followers_count
+      %a.flip
+        = @followers_count
 
 .tracks{style: "display:none;"}
+  %a.flip
+    назад

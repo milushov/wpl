@@ -12,7 +12,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
     # подписываем роутер на события
     @.on 'playlist_loaded', (playlist) -> @showPlaylist(playlist)
-    @.on 'user_data_loaded', (user_data2) -> @showUserProfile(user_data2)
+    @.on 'user_data_loaded', (user_data) -> @showUserProfile(user_data)
 
     # тут мои плейлиста
     @playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)

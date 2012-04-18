@@ -1,27 +1,4 @@
-#track_info {
-	overflow: hidden;
-	width: 200px;
-	background-color: #fcfcfc;
-	margin: 6px 5px 0 25px;
-	padding: 4px;
-	color: #2AB2E2;
-	font-weight: bold;
-	border-radius: 5px;
-	
-	#artist {
-		float: left;
-		margin-right: 5px;
-	}
 
-	#title {
-		float: left;
-		margin-left: 5px;
-	}
-
-	#duration {
-		float: right;
-	}
-}
 
 #progress_line {
 	//overflow: hidden;
@@ -63,6 +40,7 @@
 }
 #player_ui {
 	margin: 9px 0 0 25px;
+	overflow: hidden;
 
 	a {
 		display: block;
@@ -100,5 +78,27 @@
 		background-position: 0px -80px;
 		height: 15px;
 		margin: 4px 0 0 7px;
+	}
+
+	#track_info {
+		float: left;
+		overflow: hidden;
+		width: 200px; height: 16px;
+		background-color: #fcfcfc;
+		margin-left: 25px;
+		padding: 3px 7px;
+		color: #2AB2E2;
+		font-weight: bold;
+		border-radius: 5px;
+		
+		#name {
+			float: left;
+			margin-right: 5px;
+		}
+
+		#duration {
+			float: right;
+			cursor: pointer;
+		}
 	}
 }

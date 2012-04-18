@@ -4,7 +4,9 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   template: JST["backbone/templates/playlists/playlist"]
 
   events:
-    "click .destroy" : "destroy"
+    'click .destroy' : 'destroy'
+    'click .flip' : 'flip'
+
 
   tagName: 'div'
   className: 'playlist'
@@ -18,6 +20,16 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
     @model.destroy()
     this.remove()
     return false
+
+  flip: () ->
+    # просто красивая фича
+    # будет красиво "переворачивать" обложку на список трех треков
+    if $(@el).find('.tracks').is(':hidden')
+      $(@el).find('.info').hide()
+      $(@el).find('.tracks').show()
+    else
+      $(@el).find('.tracks').hide()
+      $(@el).find('.info').show();
 
   render: ->
     #console.log 'Views.Playlists.PlaylistView render(@model)', @model
@@ -34,7 +46,7 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
 
     @model.tracks.each (track) =>
       return if count_per_list == 0
-      $(@el).find('.tracks').append(new Playlists.Views.Tracks.TrackView(model: track).render().el)
+      $(@el).find('.tracks').append(new Playlists.Views.Tracks.MiniTrackView(model: track).render().el)
       count_per_list -= 1
       
     return this 

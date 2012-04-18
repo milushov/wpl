@@ -34,6 +34,8 @@ $ph: 180px;
       color: #fcfcfc;
       text-decoration: none;
       cursor: pointer;
+      overflow: hidden;
+      display: block;
       
       img {
         width: $pw; height: $ph;
@@ -62,6 +64,10 @@ $ph: 180px;
       .followers_info {
         float: right;
       }
+
+      .flip {
+
+      }
     } // end .details
 
       
@@ -69,7 +75,9 @@ $ph: 180px;
   
 
   .tracks {
-
+    @include border-radius(5px);
+    overflow: hidden;
+    background-color: #fсfсfс;
 
     .track {
 

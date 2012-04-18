@@ -12,7 +12,13 @@ class Playlists.Collections.PlaylistsCollection extends Backbone.Collection
     # console.log 'Collections.PlaylistsCollection initialize()', options
 
   getByUrl: (url)->
-    ret = false
+    ret = null
     @each (model)->
       if model.get('url') == url then ret = model
+    return ret
+
+  getById: (id)->
+    ret = null
+    @each (model)->
+      if model.get('_id') == id then ret = model
     return ret

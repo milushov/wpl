@@ -4,20 +4,26 @@ class Playlists.Models.Player extends Backbone.Model
     prevTrack: null
     currentTrack: null
     nextTrack: null
+    duration_mode: 'pos' # 'neg'
 
   initialize: ->
     console.log 'Player model created'
 
+
+
   reset: ->
     soundManager.reboot()
 
-  loadAndPlay: (playlist, track_id)->
-    if @playlist != playlist.get '_id'
-      @playlist = playlist
+  # грузит плейлист, берет из него 3 трека, получает для каждого url,
+  # сохраняет в модели и инициирует проигрывание текущего трека
+  loadAndPlay: (playlist, audio_id)->
+    if playlist
+      if @playlist != playlist.get('_id')
+        @playlist = playlist
 
-    @current_tracks = @playlist.tracks.getThreeTracksForPlaying track_id
+    @current_tracks = @playlist.tracks.getThreeTracksForPlaying(audio_id)
 
-    # выбираем id'шники трех текущмх треков
+    # выбираем id'шники трех текущих треков
     ids = [
       @current_tracks.prev.get('audio_id')
       @current_tracks.current.get('audio_id')
@@ -25,50 +31,64 @@ class Playlists.Models.Player extends Backbone.Model
     ]
 
     # получаем ссылку для воспроизведения для каждого из трех треков
-    App.vk.getThreeTrackData ids, (data)=>
+    App.vk.getThreeTrackData ids, (data)->
       data = data.response
+      
       cur_tracks = App.player.model.current_tracks
-      if !data.prev then @urlSrcError() else
-        cur_tracks.prev.set url: data.prev.url
-      if !data.current then @urlSrcError() else
-        cur_tracks.current.set url: data.current.url
-      if !data.next then @urlSrcError() else
-        cur_tracks.next.set url: data.next.url
+      
+      if data.prev then cur_tracks.prev.set(url: data.prev.url) else @urlSrcError()
+      if data.current then cur_tracks.current.set(url: data.current.url) else @urlSrcError()
+      if data.next then cur_tracks.next.set(url: data.next.url) else @urlSrcError()
 
-      App.player.model.set prevTrack: cur_tracks.prev
-      App.player.model.set currentTrack: cur_tracks.current
-      App.player.model.set nextTrack: cur_tracks.next
+      # сохраняем текщие треки
+      App.player.model.set(
+        prevTrack: cur_tracks.prev
+        currentTrack: cur_tracks.current
+        nextTrack: cur_tracks.next
+      )
 
-      App.player.model.get('currentTrack').set sound: soundManager.createSound
-        id: cur_tracks.prev.get '_id'
-        url: cur_tracks.prev.get 'url'
-        onpause: ()->
-          App.player.model.trigger("changed")
-        onresume: ()->
-          App.player.model.trigger("changed")
-        onfinish: ()->
-          App.player.model.trigger("changed")
+      soundManager.createSound(
+        id: cur_tracks.prev.get('audio_id')
+        url: cur_tracks.prev.get('url')
+      )
 
-      App.player.model.play()
+      soundManager.createSound(
+        id: cur_tracks.current.get('audio_id')
+        url: cur_tracks.current.get('url')
+      )
 
-  play: ()->
-    currentTrack = @get('currentTrack')
-    currentTrack.get('sound').play( @get('currentTrack').get('_id') )
+      soundManager.createSound(
+        id: cur_tracks.next.get('audio_id')
+        url: cur_tracks.next.get('url')
+      )
 
-  render: ->
-    console.log 'render'
+      # обращаемся к вьюхе, чтобы не нарушать концепцию MVC
+      App.player.play()
+
+  play: (audio_id)->
+    if audio_id
+      if audio_id == @get('currentTrack').get('audio_id')
+        soundManager.play @get('currentTrack').get('audio_id')
+      else
+        @loadAndPlay(null, audio_id)
+    else
+      soundManager.play @get('currentTrack').get('audio_id')
+
+  togglePause: ()->
+    soundManager.togglePause @get('currentTrack').get('audio_id')
 
   prev: ->
-    console.log 'prev'
-
-  togglePause: ->
-    if @get('currentTrack').get('sound').togglePause() then @trigger("changed")
+    l 'prev'
+    id = @get('prevTrack').get('audio_id')
+    soundManager.play(id)
 
   next: ->
-    currentTrack = @get('nextTrack')
-    currentTrack.get('sound').play( @get('nextTrack').get('_id') )
-
-
+    l 'next'
+    id = @get('nextTrack').get('audio_id')
+    soundManager.play(id)
+    
+  memory: ->
+    (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
 
   urlSrcError: ()->
     alert 'o_O Вы нашли очень редкую ошибку. Экземпляр данного трека был удален из VK.'

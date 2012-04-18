@@ -2,11 +2,14 @@ class Playlists.Models.Track extends Backbone.Model
   #paramRoot: 'track'
   initialize: ->
 
+  getName: ()->
+    "#{@get('artist')} – #{@get('title')}"
+
 class Playlists.Collections.TracksCollection extends Backbone.Collection
   model: Playlists.Models.Track
   #url: '/api/tracks'
 
-  initialize: ->
+  initialize: (options)->
 
   getThreeTracksForPlaying: (id)->
     if !id
@@ -24,8 +27,8 @@ class Playlists.Collections.TracksCollection extends Backbone.Collection
       next: @models[next_ind]
 
   getById: (id)->
-    ret = {}
+    ret = null
     @each (model)->
-      if model.get('_id') == id then ret = model
-    return ret ? ret : false
+      if model.get('_id') == id or model.get('audio_id') == id then ret = model
+    ret
 

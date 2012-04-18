@@ -18,13 +18,9 @@
               %a#prev_btn
               %a#next_btn
               %a#repeat_btn
-          %li
-            #track_info
-              #artist Roma
-              %div.fl_l –
-              #title test123
-              #duration 4:15
-
+              #track_info
+                #name
+                #duration{data: {duration_mode: 'pos'}}
         %ul.nav.pull-right
           %li.divider-vertical
           %li
@@ -58,30 +54,10 @@
   var auth_key = "#{@auth_key}";
   var my_profile = #{@user_profile.to_json};
   var user_profile = {};
-  
-  $(function() {
-    window.App = new Playlists.Routers.AppRouter({
-      playlists: my_profile['playlists']
-    });
-    
-    Backbone.history.start({pushState: true});
-
-    bind_urls();
-    /*
-    soundManager.url = 'http://playlists.dev:3000';
-    soundManager.flashVersion = 9;
-    soundManager.onready( function() {
-      window.App.player = new Playlists.Views.Player.IndexView(
-        {model: new Playlists.Models.Player()}
-      )
-    });
-
-    soundManager.ontimeout(function() {
-      alert('Плеер завис, перезагрузите страницу! (F5)');
-    });
-    */
-  });
 
 %footer
   %center
-    %a{href:'http://vk.com/milushov'}сделано с ♥
+    %a{href:'http://vk.com/milushov'}сделано
+    с ♥
+  #dev
+    123

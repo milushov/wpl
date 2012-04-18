@@ -13,7 +13,7 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     console.log 'Views.Playlists.ShowView initialize()', @options
     @model = @options.model
     @options = null
-    $(@el).attr('id', 'playlistId_'+@model.get '_id')
+    $(@el).attr('id', 'playlist_id:'+@model.get '_id')
 
   destroy: () ->
     @model.destroy()

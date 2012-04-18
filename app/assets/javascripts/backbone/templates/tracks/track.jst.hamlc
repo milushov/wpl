@@ -1,6 +1,5 @@
-.play_btn.fl_l
-  %a.btn.btn-primary.btn-small
-    ♫ play
+%a.play_btn.fl_l.btn.btn-primary.btn-mini{ data: {audio_id: @audio_id} }
+  ♫ play
 .info.fl_l
   .atrist.fl_l
     = @artist
