@@ -10,49 +10,13 @@
           %li.active
             %a{href: "/new"} Новые
           %li
-            %a{href: "/popular"} Популярные
-          %li
-            #player_ui
-              %a#play_btn
-              %a#prev_btn
-              %a#next_btn
-              %a#repeat_btn
-          %li
-            #track_info
-              #artist Roma
-              %div.fl_l –
-              #title test123
-              #duration 4:15
-
-        %ul.nav.pull-right
-          %li.divider-vertical
-          %li
-            .btn-group
-              %a.btn.btn-primary{onclick: 'App.navigate("playlist/test123", true);'} Action
-              %a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-                %span.caret,
-              %ul.dropdown-menu
-                %li
-                  %a{onclick: 'App.navigate("roma", true);'} roma
-                %li
-                  %a{:href => "#"} Another action
-                %li
-                  %a{:href => "#"} Something else here
-                %li.divider
-                %li
-                  %a{:href => "#"} Separated link
-            
-      / /.nav-collapse
-  #progress_line{style:'margin-top:10px;'}
-    #load
-    #play
-    #slider.ui-draggable
-    
+            %a{href: "/popular"} Популярные  
 #app.container
-  %center
-    %h1 Это супер сервис, скорей регистрируйся!
-    %a.btn.btn-primary.btn-large{href: '/login', style: 'font-size: 23px;'} Войти с помощюь аккаунта Вконтакте!
-
+  .hero-unit
+    %h1 wikiPlaylists
+    %p Это супер сервис коллективных плейлистов, скорей заходи и слушай классные плейлисты, которые составили и отобрали для тебя опытные меломаны! лол
+    %p
+      %a.btn.btn-primary.btn-large{href: '/login', style: 'font-size: 23px;'} Войти с помощюь аккаунта Вконтакте!
 %footer
   %center
     %a{href:'http://vk.com/milushov'}сделано с ♥

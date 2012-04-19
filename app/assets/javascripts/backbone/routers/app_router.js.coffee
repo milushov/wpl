@@ -1,6 +1,7 @@
 class Playlists.Routers.AppRouter extends Backbone.Router
   routes:
     'u/:user_id'        : 'getUserProfile'
+    'tag/:tag'          : 'getPlaylistsByTag'
     'new'               : 'newPlaylist'
     ':url'              : 'getPlaylist' 
     '.*'                : 'myProfile'
@@ -61,13 +62,24 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     ).render().el )
     @ok()
 
+  getPlaylistsByTag: (tag) ->
+    console.log 'Routers.AppRouter getPlaylistsByTag()', tag
+    history.back()
+
   myProfile: ->
     console.log 'Routers.AppRouter myProfile()', my_profile
     $("#app").html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
     @ok()
 
   newPlaylist: ->
-    $("#app").html( new Playlists.Views.Playlists.NewView().render().el )
+    $("#app").html( new Playlists.Views.Playlists.NewView(me: my_profile.user).render().el )
+
+    $.get '/api/tags', (data)->
+      $('#edit_tags').tagit
+        availableTags: data
+    , 'json'
+
+    @ok()
 
   ok: ()->
     bind_urls()

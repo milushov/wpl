@@ -90,6 +90,39 @@
       min-height: 380px;
       padding: 10px;
     }
+
+    #playlist_name {
+      width: 130px;
+      margin-right: 10px;
+    }
+
+    #playlist_url {
+      width: 130px;
+    }
+
+    #playlist_description {
+      width: 570px;
+      margin-bottom: 10px;
+    }
+
+    .ui-autocomplete-input {
+      box-shadow: none;
+    }
+
+    .ui-autocomplete-input:focus {
+      box-shadow: none;
+    }
+
+    #edit_tags {
+      display: block;
+      width: 570px; min-height: 30px;
+      font-size: 13px;
+      color: #555555;
+      border: 1px solid #cccccc;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+    }
   }
 
   #right_block {
@@ -99,15 +132,15 @@
     #followers {
       margin-bottom: 10px;
       .follower {
+        overflow: hidden;
         text-decoration: none;
-        width: 30px;
-        height: 30px;
         display: inline-block;
         margin-right: 1px;
-        @include rounded(2px);
+        margin-bottom: 2px;
+        @include rounded(3px);
 
         img {
-          @include rounded(2px);
+          width: 30px; height: 30px;
         } 
       }
     }
@@ -115,15 +148,15 @@
     #followees {
       margin-bottom: 10px;
       .followee {
+        overflow: hidden;
         text-decoration: none;
-        width: 30px;
-        height: 30px;
         display: inline-block;
         margin-right: 1px;
-        @include rounded(2px);
+        margin-bottom: 2px;
+        @include rounded(3px);
 
         img {
-          @include rounded(2px);
+          width: 30px; height: 30px;
         } 
       }
     }
@@ -145,4 +178,5 @@
   margin: 5px;
   padding: 5px;
   background-color: #fff;
+  display: none;
 }

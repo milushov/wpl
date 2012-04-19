@@ -7,6 +7,7 @@ Playlists::Application.routes.draw do
     end
 
     resources :users
+    match 'tags', to: 'main#tags'
   end
 
   match 'auth', to: 'main#auth'

@@ -39,15 +39,16 @@ window.curUrl = ()->
 
 window.bind_urls = ()->
   $('a').click (event)->
-    event.preventDefault()
-    url = $(this).attr('href');
-    if url
-      current_url = curUrl()
-      if url != current_url
-        loading();
-        #чтобы не мазолило глаза, если запрос будет ооочень долгий 
-        #setTimeout( function() { loading('off'); }, 15000 )
-      App.navigate(url, true)
+    if $(this).data('type') != 'ext'
+      event.preventDefault()
+      url = $(this).attr('href');
+      if url
+        current_url = curUrl()
+        if url != current_url
+          loading();
+          #чтобы не мазолило глаза, если запрос будет ооочень долгий 
+          setTimeout (()->loading('off')), 15000
+        App.navigate(url, true)
 
 
 window.too_late = 0
@@ -59,7 +60,6 @@ window.loading = (ready = false) ->
     # hide loader
     loader.fadeTo('fast', 0)
     window.too_late = 1
-    42
   else
     console.warn "ждем #{fast_operation}", window.too_late
     # show loader
@@ -71,9 +71,7 @@ window.loading = (ready = false) ->
       else
         console.warn "долгая операция > #{fast_operation}", window.too_late
       window.too_late = 0
-      42
     , fast_operation
-    42
 
 $ ()->
   window.App = new Playlists.Routers.AppRouter(
@@ -85,10 +83,12 @@ $ ()->
   bind_urls()
   
   soundManager.url = 'http://playlists.dev:3000';
+  soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
-  #soundManager.debugMode = if debug then true
-  soundManager.flashPollingInterval = 333
-  soundManager.html5PollingInterval = 333
+  soundManager.debugMode = if debug then true
+  #soundManager.flashPollingInterval = 330
+  soundManager.useHighPerformance = true  
+  #soundManager.html5PollingInterval = 33
   soundManager.defaultOptions = 
     onpause:  ()-> App.player.trigger("pause")
     onresume: ()-> App.player.trigger("resume")
@@ -97,7 +97,10 @@ $ ()->
     whileloading: ()-> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
 
   # достасть из localStorage
+  default_volume = 100
   duration_mode = 'pos'
+
+  soundManager.defaultOptions.volume = default_volume;
   
   soundManager.onready ()->
     App.player = new Playlists.Views.Player.IndexView(
@@ -108,7 +111,7 @@ $ ()->
     alert 'Плеер завис, перезагрузите страницу! (F5)'
 
   $(document).ajaxError (e, jqxhr, settings, exception) =>
-    # console.error arguments
+    console.error arguments
     alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
     history.back()
 

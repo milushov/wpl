@@ -24,4 +24,6 @@
 //= require backbone_datalink
 //= require backbone/playlists
 //= require soundmanager2
+//= require jquery-ui.min
+//= require tag-it
 //= require_tree .

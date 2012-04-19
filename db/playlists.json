@@ -27,6 +27,34 @@
         "title": "Last of the Mohicans",
         "duration": 125,
         "audio_id": "1_133515390"
+      },
+
+      {
+        "artist": "The Lonely Island feat. Justin Timberlake",
+        "title": "MotherLover",
+        "duration": 192,
+        "audio_id": "124281120_146985891"
+      },
+
+      {
+        "artist": "Blood Hound Gang",
+        "title": "The Bad Touch",
+        "duration": 124,
+        "audio_id": "124281120_103933484"
+      },
+
+      {
+        "artist": "06 Хамиль и Змей (Каста)",
+        "title": "Закрытый космос",
+        "duration": 125,
+        "audio_id": "124281120_98575746"
+      },
+
+      {
+        "artist": "Френки Шоy",
+        "title": "Карта",
+        "duration": 310,
+        "audio_id": "20195604_115012095"
       }
     ]
   },

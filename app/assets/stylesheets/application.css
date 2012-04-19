@@ -12,3 +12,5 @@
  *= require bootstrap.min
  *= require_tree .
 */
+//= require jquery-ui
+//= require jquery.tagit

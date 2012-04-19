@@ -20,18 +20,13 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
   play: ->
     console.log 'Views.Tracks.TrackView play()', @
 
-    # !!! Придумать как записать каждому треку атрибут - playlist_url
-    #playlist_url = @model.get('playlist_url')
-    playlist_url = 'test1'
+    playlist_url = @model.get('playlist_url')
     audio_id = $(@el).find('.play_btn').data('audio_id')
 
-    if playlist_url == curUrl().substr(1)
-      App.player.loadAndPlay(null, audio_id)
-    else  
-      App.player.loadAndPlay(
-        App.playlists.getByUrl(playlist_url),
-        audio_id
-      )
+    App.player.loadAndPlay(
+      App.playlists.getByUrl(playlist_url),
+      audio_id
+    )
 
   voteUp: ->
     console.log 'Views.Tracks.TrackView voteUp()'

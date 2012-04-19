@@ -38,6 +38,10 @@ class MainController < ApplicationController
     redirect_to action: 'index'
   end
 
+  def tags
+    render json: %w{rock sport sex health thinking love jazz etc}
+  end
+
   # получает код для получения токена
   def auth(return_to = nil)
     if params[:code].nil?

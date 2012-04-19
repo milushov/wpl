@@ -26,7 +26,7 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     App.player.loadAndPlay @model
 
   render: ->
-    console.log 'Views.Playlists.ShowView render()', @model
+    console.log 'Views.Playlists.ShowView render()', @model, '11111111111111111111111111111111123'
 
     $(@el).html( @template(
       name: @model.get 'name'
@@ -36,7 +36,10 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
       followers: @model.get 'followers'
     ) )
 
-    @model.tracks.each (track) =>
+    playlist_url = @model.get('url')
+
+    for i,track of @model.tracks.models
+      track.set(playlist_url: playlist_url)
       $(@el).find('.tracks').append( new Playlists.Views.Tracks.TrackView(model: track).render().el )
-      
-    return this
+    
+    @

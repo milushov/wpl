@@ -13,8 +13,10 @@
     %a#play_all.btn.btn-primary.fl_r ♫ Play all
   #playlists
     %h3= @description
-    %h3= @tags.join ' '
-
+    .tags
+      - for tag, i in @tags
+        %a{href: "/tag/#{tag}"}
+          =tag
     .tracks
 #right_block.fl_r
   #followers

@@ -14,6 +14,11 @@ class Playlists.Views.Player.IndexView extends Backbone.View
 
     @.on 'next', ()-> @next()
 
+  # Загружаем в плеер треки из текущего плейлиста,
+  # а трек по которому мы щелкнули сразу воспроизводим.
+  # Если данный плейлист уже в плеере,
+  # то ищем трек "в модели" плеера.
+  # Если audio_id не задан, берем первый трек из листа.
   loadAndPlay: (playlist, audio_id)->
     @model.loadAndPlay(playlist, audio_id)
 
@@ -33,9 +38,19 @@ class Playlists.Views.Player.IndexView extends Backbone.View
   updatePlayProgress: (pos, dur)->
     pos = Math.round pos/1000
     dur = Math.round dur/1000
-    $('#progress_line #play').width "#{ (pos/dur*100).toFixed(2) }%"
     pers = (pos/dur*100).toFixed(2)
-    $('#progress_line #play').animate width: "#{pers}%", 330, 'easeOutCirc'
+    $('#play').width "#{pers}%"
+    #l pers
+    # $('#progress_line #play').animate width: "#{pers}%", 330, 'easeOutCirc'
+    @updateDuraion()
+
+  updateLoadingProgress: (loaded, total)->
+    loaded = Math.round loaded
+    total = Math.round total
+    pers = (loaded/total*100).toFixed(2)
+    $('#load').width "#{pers}%"
+    l pers
+    # $('#progress_line #play').animate width: "#{pers}%", 330, 'easeOutCirc'
     @updateDuraion()
 
   changeDurationMode: ()->
@@ -58,12 +73,4 @@ class Playlists.Views.Player.IndexView extends Backbone.View
       sec = if ((dur-pos)%60).toString().length == 2 then "#{(dur-pos)%60}" else "0#{(dur-pos)%60}"
       neg_pos = "#{min}:#{sec}"
 
-    $("#track_info #duration").text( dur_pos || neg_pos)
-    console.log(pos)
-
-  # Загружаем в плеер треки из текущего плейлиста,
-  # а трек по которому мы щелкнули сразу воспроизводим.
-  # Если данный плейлист уже в плеере,
-  # то ищем трек во в модели плеера.
-  load_playlist_and_play_track: (e)->
-    console.log e
+    $("#track_info #duration").text(dur_pos || neg_pos)

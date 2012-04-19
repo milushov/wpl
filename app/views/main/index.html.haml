@@ -48,7 +48,7 @@
     
 #app.container
   %center
-    %img{ src: '/assets/ajax-loader.gif' }
+    %img{src: '/assets/ajax-loader.gif'}
 
 :javascript
   var auth_key = "#{@auth_key}";
@@ -57,7 +57,7 @@
 
 %footer
   %center
-    %a{href:'http://vk.com/milushov'}сделано
+    %a{href:'http://vk.com/milushov', data: {type: 'ext'} }сделано
     с ♥
   #dev
     123
