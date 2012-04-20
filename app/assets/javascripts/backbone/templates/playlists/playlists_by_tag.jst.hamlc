@@ -1,0 +1,7 @@
+#left_block.fl_l
+  #info
+#center_block.fl_l
+  #name
+    %h2
+      = "Плейлисты по тегу: #{@tag}"
+  #playlists
