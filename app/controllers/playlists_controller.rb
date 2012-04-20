@@ -5,12 +5,15 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists
   def index
-    render json: Playlist.all.desc(:_id).limit(10), content_type: 'application/json'
+    render json: Playlist.desc(:_id).limit(12)
+  end
+
+  def popular
+    render json: Playlist.desc(:fferc).limit(12)
   end
 
   # GET /playlists/url
   def show
-    
     if playlist = getPlaylist(params[:id])
       render json: playlist, content_type: 'application/json'
     else
@@ -18,9 +21,13 @@ class PlaylistsController < ApplicationController
     end
   end
 
-  def not_found
-    @error = { status: 0, description: "Playlist not found" }
-    render json: @error, content_type: 'application/json'
+  def tags
+    render json: Playlist.all_tags.map{ |p| p[:name] }
+  end
+
+  def playlistsByTag
+    playlists = Playlist.tagged_with(params[:tag])
+    render json: {tag: params[:tag], count: playlists.count, playlists: playlists.last(12)}
   end
 
   # GET /playlists/1/edit

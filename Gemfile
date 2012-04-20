@@ -48,3 +48,5 @@ gem 'awesome_print'
 gem 'yajl-ruby'
 gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git' # версия которая работаем у меня на шиндовс
 gem 'pry', group: :development
+
+# gem 'mongoid-simple-tags', '0.0.5', git: 'git://github.com/thrk/mongoid-simple-tags.git'

@@ -39,7 +39,8 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     console.log 'Views.Playlists.NewView addTrack()'
 
   savePlaylist: ->
-    console.log 'Views.Playlists.NewView savePlaylist()'    
+    console.log 'Views.Playlists.NewView savePlaylist()'
+    tags = $("#edit_tags").tagit("assignedTags");
 
   render: ->
     console.log 'Views.Playlists.NewView render()'

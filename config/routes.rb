@@ -1,20 +1,21 @@
 Playlists::Application.routes.draw do
 
-  
   scope 'api' do
     resources :playlists do 
       resources :tracks
+      get 'last', on: :collection, to: 'playlists#index'
+      get 'popular', on: :collection
+      get 'tags', on: :collection
+      get 'tags/:tag', on: :collection, to: 'playlists#playlistsByTag'
     end
-
     resources :users
-    match 'tags', to: 'main#tags'
   end
 
   match 'auth', to: 'main#auth'
   match 'login', to: 'main#login'
   match 'logout', to: 'main#logout'
 
-  root :to => 'main#index'
+  root to: 'main#index'
   match '*path', to: 'main#index'
 
   # The priority is based upon order of creation:

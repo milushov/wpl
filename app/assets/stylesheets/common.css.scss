@@ -31,7 +31,7 @@
   }
 
   #left_block {
-    width: 200px;
+    width: 200px; min-height: 1px;
 
     #info {
       #photo {
@@ -84,6 +84,10 @@
       overflow: hidden;
       border-bottom: 1px solid #dbdbdb;
       padding: 10px;
+
+      #vk {
+        margin: 7px 7px 0 0;
+      }
     }
 
     #playlists {

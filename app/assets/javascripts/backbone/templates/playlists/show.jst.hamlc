@@ -22,5 +22,5 @@
   #followers
     #title Слушатели
     - for id, follower of @followers
-      %a.follower{href: "/u/#{follower.screen_name}"}
+      %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
         %img{src: "#{follower.photo}"}

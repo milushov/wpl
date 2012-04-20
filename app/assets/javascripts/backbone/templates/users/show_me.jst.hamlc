@@ -4,6 +4,8 @@
       %img{src: "#{@user.photo_big}"}
 #center_block.fl_l
   #name
+    %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", data: {type: 'ext'}}
+      %img{src: '/assets/vk.png'}
     %h2.fl_l
       = "#{@user.first_name} #{@user.last_name}"
     %a#new.btn.btn-success.fl_r{href: "/new"} ♫ Создать плейлист
@@ -12,10 +14,10 @@
   #followers
     #title Слушатели
     - for id, follower of @followers
-      %a.follower{href: "/u/#{follower.screen_name}"}
+      %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
         %img{src: "#{follower.photo}"}
   #followees
     #title Слушает
     - for id, followee of @followees
-      %a.followee{href: "/u/#{followee.screen_name}"}
+      %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
         %img{src: "#{followee.photo}"}

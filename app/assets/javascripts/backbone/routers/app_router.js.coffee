@@ -3,17 +3,20 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'u/:user_id'        : 'getUserProfile'
     'tag/:tag'          : 'getPlaylistsByTag'
     'new'               : 'newPlaylist'
+    'last'              : 'getLastPlaylists'
+    'popular'           : 'getPopularPlaylist'
     ':url'              : 'getPlaylist' 
     '.*'                : 'myProfile'
-  
+
   initialize: (options)->
     console.log 'Routers.AppRouter initialize()'
     @vk = new Playlists.Models.Vk()
     if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
 
     # подписываем роутер на события
-    @.on 'playlist_loaded', (playlist) -> @showPlaylist(playlist)
-    @.on 'user_data_loaded', (user_data) -> @showUserProfile(user_data)
+    @.on 'playlist_loaded', (playlist)-> @showPlaylist(playlist)
+    @.on 'user_data_loaded', (user_data)-> @showUserProfile(user_data)
+    @.on 'playlists_by_tag_data_loaded', (playlists_data)-> @showPlaylistsByTag(playlists_data)
 
     # тут мои плейлиста
     @playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
@@ -45,6 +48,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @playlists = new Playlists.Collections.PlaylistsCollection( playlists_both_people )
 
     $("#app").html( new Playlists.Views.User.ShowView(user_data).render().el )
+        
     @ok()
 
   # request for playlist model
@@ -64,7 +68,25 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   getPlaylistsByTag: (tag) ->
     console.log 'Routers.AppRouter getPlaylistsByTag()', tag
-    history.back()
+    @vk.getPlaylistsByTag(tag)
+
+  showPlaylistsByTag: (playlists_data) ->
+    $("#app").html( new Playlists.Views.Playlists.PlaylistsByTagView(
+      playlists: playlists_data.playlists,
+      tag: playlists_data.tag
+    ).render().el )
+
+    # добавляем модели новых плейлистов
+    @playlists = new Playlists.Collections.PlaylistsCollection( my_profile['playlists'] )
+    @playlists.add playlists_data.playlists
+
+    @ok()
+
+  getLastPlaylists: ()->
+    
+
+  getPopularPlaylist: ()->
+
 
   myProfile: ->
     console.log 'Routers.AppRouter myProfile()', my_profile
@@ -74,13 +96,19 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   newPlaylist: ->
     $("#app").html( new Playlists.Views.Playlists.NewView(me: my_profile.user).render().el )
 
-    $.get '/api/tags', (data)->
+    $.get '/api/playlists/tags', (data)->
       $('#edit_tags').tagit
         availableTags: data
+        allowSpaces: true
+        placeholderText: 'Теги плейлиста'
     , 'json'
 
     @ok()
 
   ok: ()->
+    $('#app').tooltip
+      selector: "a[rel=tooltip]"
+      delay:
+        show: 333, hide: 100
     bind_urls()
     loading('off')

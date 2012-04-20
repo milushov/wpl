@@ -11,8 +11,11 @@ Playlist.delete_all and User.delete_all and Follow.delete_all
 p 'creating playlists...'
 playlists = []
 JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |playlist|
-  playlists << Playlist.create!(playlist)
-  p "create playlist - #{playlist["url"]}"
+  pl = Playlist.new(playlist)
+  pl.tag_list = playlist['tags']
+  pl.save
+  playlists << pl
+  p "create playlist - #{playlist["url"]} with tags: #{pl.tags}"
 end
 
 p '\n'

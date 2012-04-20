@@ -24,16 +24,11 @@ class Playlists.Models.Player extends Backbone.Model
     @current_tracks = @playlist.tracks.getThreeTracksForPlaying(audio_id)
 
     # выбираем id'шники трех текущих треков
-    ids = [
-      @current_tracks.prev.get('audio_id')
-      @current_tracks.current.get('audio_id')
-      @current_tracks.prev.get('audio_id')
-    ]
+    ids = [@current_tracks.prev.get('audio_id'), @current_tracks.current.get('audio_id'), @current_tracks.prev.get('audio_id')]
 
     # получаем ссылку для воспроизведения для каждого из трех треков
     App.vk.getThreeTrackData ids, (data)->
       data = data.response
-      
       cur_tracks = App.player.model.current_tracks
       
       if data.prev then cur_tracks.prev.set(url: data.prev.url) else @urlSrcError()
@@ -41,26 +36,11 @@ class Playlists.Models.Player extends Backbone.Model
       if data.next then cur_tracks.next.set(url: data.next.url) else @urlSrcError()
 
       # сохраняем текщие треки
-      App.player.model.set(
-        prevTrack: cur_tracks.prev
-        currentTrack: cur_tracks.current
-        nextTrack: cur_tracks.next
-      )
+      App.player.model.set( prevTrack: cur_tracks.prev, currentTrack: cur_tracks.current, nextTrack: cur_tracks.next )
 
-      soundManager.createSound(
-        id: cur_tracks.prev.get('audio_id')
-        url: cur_tracks.prev.get('url')
-      )
-
-      soundManager.createSound(
-        id: cur_tracks.current.get('audio_id')
-        url: cur_tracks.current.get('url')
-      )
-
-      soundManager.createSound(
-        id: cur_tracks.next.get('audio_id')
-        url: cur_tracks.next.get('url')
-      )
+      soundManager.createSound( id: cur_tracks.prev.get('audio_id'), url: cur_tracks.prev.get('url') )
+      soundManager.createSound( id: cur_tracks.current.get('audio_id'), url: cur_tracks.current.get('url') )
+      soundManager.createSound( id: cur_tracks.next.get('audio_id'), url: cur_tracks.next.get('url') )
 
       # обращаемся к вьюхе, чтобы не нарушать концепцию MVC
       App.player.play()

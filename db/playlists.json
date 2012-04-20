@@ -3,7 +3,7 @@
     "name": "первый тестовый",
     "image": "/photos/1.jpg",
     "description": "описание листа 1",
-    "tags": ["qwe1", "asd", "123"],
+    "tags": ["tag1", "tag4"],
     "url": "test1",
     "creator": 788157,
 
@@ -63,7 +63,7 @@
     "name": "тестовый 2",
     "image": "/photos/2.jpg",
     "description": "описание листа 2",
-    "tags": ["qwe", "asd", "123aa"],
+    "tags": ["tag1", "tag2", "tag3", "tag4"],
     "url": "test2",
     "creator": 10,
 
@@ -109,7 +109,7 @@
     "name": "тестовый 3",
     "image": "/photos/3.jpg",
     "description": "описание 3",
-    "tags": ["qwe", "asd", "123dsf"],
+    "tags": ["tag1"],
     "url": "test3",
     "creator": 1,
 
@@ -155,7 +155,7 @@
     "name": "тестовый 4",
     "image": "/photos/4.jpg",
     "description": "описание листа 4",
-    "tags": ["qwe", "asd", "123aa"],
+    "tags": ["tag2"],
     "url": "test4",
     "creator": 10,
 
@@ -201,7 +201,7 @@
     "name": "тестовый 5",
     "image": "/photos/5.jpg",
     "description": "описание 5",
-    "tags": ["qwe", "asd", "123dsf"],
+    "tags": ["tag3"],
     "url": "test5",
     "creator": 1,
 
@@ -247,7 +247,7 @@
     "name": "тестовый 6",
     "image": "/photos/6.jpg",
     "description": "описание листа 6",
-    "tags": ["qwe", "asdfsd", "123"],
+    "tags": ["tag2", "tag3"],
     "url": "test6",
     "creator": 788157,
 
@@ -307,7 +307,7 @@
     "name": "тестовый 7",
     "image": "/photos/7.jpg",
     "description": "описание листа 7",
-    "tags": ["qwe", "asd", "123"],
+    "tags": ["tag3"],
     "url": "test7",
     "creator": 788157,
 
@@ -353,7 +353,7 @@
     "name": "тестовый 8",
     "image": "/photos/8.jpg",
     "description": "описание листа 8",
-    "tags": ["qwe", "asdfsd", "123"],
+    "tags": ["tag4"],
     "url": "test8",
     "creator": 788157,
 
@@ -413,7 +413,7 @@
     "name": "тестовый 9",
     "image": "/photos/9.jpg",
     "description": "описание листа 9",
-    "tags": ["qwe", "asd", "19"],
+    "tags": ["tag1"],
     "url": "test9",
     "creator": 788157,
 

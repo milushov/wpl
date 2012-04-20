@@ -93,6 +93,8 @@ $ ()->
     onpause:  ()-> App.player.trigger("pause")
     onresume: ()-> App.player.trigger("resume")
     onfinish: ()-> App.player.trigger('next')
+    onload: ()->
+    onfinish: ()->
     whileplaying: ()-> App.player.updatePlayProgress(this.position, this.duration)
     whileloading: ()-> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
 

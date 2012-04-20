@@ -64,6 +64,18 @@ class Playlists.Models.Vk extends Backbone.Model
         false
     , 'json'
 
+  getPlaylistsByTag: (tag)->
+    $.get "#{@get('url')}api/playlists/tags/#{tag}", (data)->
+      if data && !data.error
+        console.log "Playlists.Models.Vk getPlaylistsByTag()", data
+        App.trigger 'playlists_by_tag_data_loaded', data
+      else
+        console.error data.error
+        history.back()
+        alert data.error
+        false
+    , 'json'
+
   getPlaylistData: (tracks, success)->
     if !tracks then false else tracks = tracks.join ','
     params = 
