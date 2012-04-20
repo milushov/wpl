@@ -20,25 +20,21 @@
               %a#repeat_btn
               #track_info
                 #name
-                #duration{data: {duration_mode: 'pos'}}
+                #duration.unselectable{data: {duration_mode: 'pos'}}
         %ul.nav.pull-right
           %li.divider-vertical
           %li
             .btn-group
               %a.btn.btn-primary{href: '/'}
                 =@user_profile[:user]['first_name']
-              %a.btn.btn-primary.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"}
-                %span.caret,
+              %a.btn.btn-primary.dropdown-toggle{data: {toggle: 'dropdown'}}
+                %span.caret
               %ul.dropdown-menu
                 %li
-                  %a{onclick: 'App.navigate("roma", true);'} roma
-                %li
-                  %a{:href => "#"} Another action
-                %li
-                  %a{:href => "#"} Something else here
+                  %a{href: '/settings'} Тут будут настройки
                 %li.divider
                 %li
-                  %a{:href => "#"} Separated link
+                  %a{href: '/logout', data: {type: 'ext'} } Выход
             
       / /.nav-collapse
   #progress_line{style:'margin-top:10px;'}
@@ -58,6 +54,5 @@
 %footer
   %center
     %a{href:'http://vk.com/milushov', data: {type: 'ext'} }сделано
-    с ♥
-  #dev
-    123
+    с 
+    %span{style: 'color:#EF0063; cursor: pointer;', rel: 'tooltip', title: 'с любовью же, к хорошей музыке'}♥

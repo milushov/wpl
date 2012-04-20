@@ -46,9 +46,9 @@ class Playlists.Models.Vk extends Backbone.Model
         true
       else
         console.error data.error
-        history.back()
-        alert data.error
-        false
+        #history.back()
+        #alert data.error
+        App.notFound()
     , 'json'
 
   getPlaylist: (id)->
@@ -59,9 +59,7 @@ class Playlists.Models.Vk extends Backbone.Model
         console.log "Playlists.Models.Vk getPlaylist()", playlist
       else
         console.error data.error
-        history.back()
-        alert data.error
-        false
+        App.notFound()
     , 'json'
 
   getPlaylistsByTag: (tag)->
@@ -71,9 +69,7 @@ class Playlists.Models.Vk extends Backbone.Model
         App.trigger 'playlists_by_tag_data_loaded', data
       else
         console.error data.error
-        history.back()
-        alert data.error
-        false
+        App.notFound()
     , 'json'
 
   getPlaylistData: (tracks, success)->

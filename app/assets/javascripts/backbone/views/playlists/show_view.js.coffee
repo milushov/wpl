@@ -20,13 +20,13 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     this.remove()
     return false
 
+  # запускает текущий плейлист с первого трека
   playAll: ()->
     console.log 'Views.Playlists.ShowView playAll()'
-    # передаем плейлист
-    App.player.loadAndPlay @model
+    App.player.play()
 
   render: ->
-    console.log 'Views.Playlists.ShowView render()', @model, '11111111111111111111111111111111123'
+    console.log 'Views.Playlists.ShowView render()', @model
 
     $(@el).html( @template(
       name: @model.get 'name'
@@ -36,10 +36,11 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
       followers: @model.get 'followers'
     ) )
 
-    playlist_url = @model.get('url')
+    # добавляю id плейлиста в модель трека
+    playlist_id = @model.get('_id')
 
     for i,track of @model.tracks.models
-      track.set(playlist_url: playlist_url)
+      track.set(playlist_id: playlist_id)
       $(@el).find('.tracks').append( new Playlists.Views.Tracks.TrackView(model: track).render().el )
     
-    @
+    this

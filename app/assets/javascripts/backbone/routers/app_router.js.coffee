@@ -7,7 +7,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'popular'           : 'getPopularPlaylist'
     ':url'              : 'getPlaylist' 
     '.*'                : 'myProfile'
-
+    '*path'             : 'notFound'
   initialize: (options)->
     console.log 'Routers.AppRouter initialize()'
     @vk = new Playlists.Models.Vk()
@@ -61,6 +61,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   showPlaylist: (playlist) ->
     console.log 'Routers.AppRouter showPlaylist()', playlist
+    @playlists.add playlist
     $("#app").html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
@@ -105,10 +106,14 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
     @ok()
 
+  notFound: ->
+    $("#app").html "<center><h1 style='font-size: 600px; margin-top: 250px;'>404</h1></center>"
+
   ok: ()->
+    $('.tooltip').remove()
     $('#app').tooltip
       selector: "a[rel=tooltip]"
       delay:
-        show: 333, hide: 100
+        show: 420, hide: 100
     bind_urls()
     loading('off')

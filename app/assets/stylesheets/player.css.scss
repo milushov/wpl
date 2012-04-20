@@ -1,104 +1,112 @@
 
 
 #progress_line {
-	//overflow: hidden;
-	width: 100%; height: 30px;
-	background-color: #fafafa;
-	
-	#load {
-		position: absolute;
-		overflow: hidden;
-		height: 10px; width: 30%;
-		background-color: #CCCED0;
-		
-	}
+  //overflow: hidden;
+  width: 100%; height: 30px;
+  background-color: #fafafa;
+  
+  #load {
+    position: absolute;
+    overflow: hidden;
+    height: 10px; width: 30%;
+    background-color: #CCCED0;
 
-	#play {
-		position: absolute;
-		//overflow: hidden;
-		height: 10px; width: 10%;
-		background-color: #2AB2E2;	
-	}
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    
+  }
 
-	#slider {
-		//position: absolute;
-		overflow: hidden;
-		width: 40px; height: 20px;
-		background: url(/assets/player_ui/slider.png) 0 -10px no-repeat;
-		margin: -5px -20px 0 -14px;
-		cursor: pointer
-		}
+  #play {
+    position: absolute;
+    //overflow: hidden;
+    height: 10px; width: 10%;
+    background-color: #2AB2E2;
 
-	#slider:hover {
-		background-position: -40px -10px;
-	}
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
 
-	#slider:active {
-		background-position: -80px -10px;
-	}
-		
+  #slider {
+    //position: absolute;
+    overflow: hidden;
+    width: 40px; height: 20px;
+    background: url(/assets/player_ui/slider.png) 0 -10px no-repeat;
+    margin: -5px -20px 0 -14px;
+    cursor: pointer
+    }
+
+  #slider:hover {
+    background-position: -40px -10px;
+  }
+
+  #slider:active {
+    background-position: -80px -10px;
+  }
+    
 }
 #player_ui {
-	margin: 9px 0 0 25px;
-	overflow: hidden;
+  margin: 9px 0 0 25px;
+  overflow: hidden;
 
-	a {
-		display: block;
-		overflow: hidden;
-		width: 18px; height: 17px;
-		background-image: url('/assets/player_ui/player_ui.png');
-		background-repeat: no-repeat;
-		float: left;
-		margin-right: 5px;
-		text-decoration: none;
-		cursor: pointer;
-		opacity: 0.7;
-	}
+  a {
+    display: block;
+    overflow: hidden;
+    width: 18px; height: 17px;
+    background-image: url('/assets/player_ui/player_ui.png');
+    background-repeat: no-repeat;
+    float: left;
+    margin-right: 5px;
+    text-decoration: none;
+    cursor: pointer;
+    opacity: 0.7;
+  }
 
-	a:hover {
-		opacity: 1;
-	}
-	
-	#play_btn {
-		background-position: 0px 0px;
-		height: 23px;
-	}
+  a:hover {
+    opacity: 1;
+  }
+  
+  #play_btn {
+    background-position: 0px 0px;
+    height: 23px;
+  }
 
-	#prev_btn {
-		background-position: 0px -46px;
-		margin: 3px 0 0 3px;
-	}
+  #prev_btn {
+    background-position: 0px -46px;
+    margin: 3px 0 0 3px;
+  }
 
-	#next_btn {
-		background-position: 0px -63px;
-		margin: 3px 0 0 3px;
-	}
+  #next_btn {
+    background-position: 0px -63px;
+    margin: 3px 0 0 3px;
+  }
 
-	#repeat_btn {
-		background-position: 0px -80px;
-		height: 15px;
-		margin: 4px 0 0 7px;
-	}
+  #repeat_btn {
+    background-position: 0px -80px;
+    height: 15px;
+    margin: 4px 0 0 7px;
+  }
 
-	#track_info {
-		float: left;
-		overflow: hidden;
-		width: 200px; height: 16px;
-		background-color: #fcfcfc;
-		margin-left: 25px;
-		padding: 3px 7px;
-		color: #2AB2E2;
-		font-weight: bold;
-		border-radius: 5px;
-		
-		#name {
-			float: left;
-			margin-right: 5px;
-		}
+  #track_info {
+    float: left;
+    overflow: hidden;
+    width: 200px; height: 16px;
+    background-color: #fcfcfc;
+    margin-left: 25px;
+    padding: 3px 7px;
+    color: #2AB2E2;
+    font-weight: bold;
+    border-radius: 5px;
+    
+    #name {
+      float: left;
+      margin-right: 5px;
+      overflow: hidden;
+      width: 160px;
+    }
 
-		#duration {
-			float: right;
-			cursor: pointer;
-		}
-	}
+    #duration {
+      float: right;
+      cursor: pointer;
+    }
+  }
 }

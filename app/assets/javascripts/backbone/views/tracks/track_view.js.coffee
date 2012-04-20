@@ -18,15 +18,8 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
     $(@el).attr 'id', "track_id-#{ @model.get("_id") }"
 
   play: ->
-    console.log 'Views.Tracks.TrackView play()', @
-
-    playlist_url = @model.get('playlist_url')
-    audio_id = $(@el).find('.play_btn').data('audio_id')
-
-    App.player.loadAndPlay(
-      App.playlists.getByUrl(playlist_url),
-      audio_id
-    )
+    console.log 'Views.Tracks.TrackView play()', @model
+    App.player.play @model
 
   voteUp: ->
     console.log 'Views.Tracks.TrackView voteUp()'

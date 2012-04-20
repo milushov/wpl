@@ -10,24 +10,23 @@ class Playlists.Views.Player.IndexView extends Backbone.View
 
   initialize: ->
     console.log 'Player.IndexView init', @model, @el
+
     @duration_mode = @model.get('duration_mode')
 
-    @.on 'next', ()-> @next()
+    @.on 'show_track_name', -> @showTrackName()
+    @.on 'toggle_pause', -> @togglePause('auto')
 
-  # Загружаем в плеер треки из текущего плейлиста,
-  # а трек по которому мы щелкнули сразу воспроизводим.
-  # Если данный плейлист уже в плеере,
-  # то ищем трек "в модели" плеера.
-  # Если audio_id не задан, берем первый трек из листа.
-  loadAndPlay: (playlist, audio_id)->
-    @model.loadAndPlay(playlist, audio_id)
+  togglePause: (how)->
+    if how and how == 'auto'
+      # меняем вид кнопки в влеере и "на треке"
+    else
+      @model.togglePause()
 
-  togglePause: ->
-    @model.togglePause()
-
-  play: (audio_id)->
-    @model.play(audio_id)
-    $("#track_info #name").text @model.get('currentTrack').getName()
+  play: (track)->
+    @model.play(track)
+  
+  showTrackName: ->
+    $("#track_info #name").html @model.get('currentTrack').getName()
 
   prev: ->
     @model.prev()
@@ -49,7 +48,7 @@ class Playlists.Views.Player.IndexView extends Backbone.View
     total = Math.round total
     pers = (loaded/total*100).toFixed(2)
     $('#load').width "#{pers}%"
-    l pers
+    #l pers
     # $('#progress_line #play').animate width: "#{pers}%", 330, 'easeOutCirc'
     @updateDuraion()
 

@@ -17,7 +17,7 @@
 //= require moment
 //= require bootstrap
 //= require underscore
-//= require backbone
+//= require backbone-min
 //= require hamlcoffee
 //= require common
 //= require backbone_rails_sync

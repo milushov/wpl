@@ -29,15 +29,15 @@ window.l = (a, b)->
       console.log(a)
 
 if not debug
-  console.log = ()->
-  console.warn = ()->
-  console.info = ()->
-  window.l = ()->
+  console.log = ->
+  console.warn = ->
+  console.info = ->
+  window.l = ->
 
 window.curUrl = ()->
   $.url().attr().relative
 
-window.bind_urls = ()->
+window.bind_urls = ->
   $('a').click (event)->
     if $(this).data('type') != 'ext'
       event.preventDefault()
@@ -46,8 +46,9 @@ window.bind_urls = ()->
         current_url = curUrl()
         if url != current_url
           loading();
+          $('a[rel=tooltip]').tooltip('hide')
           #чтобы не мазолило глаза, если запрос будет ооочень долгий 
-          setTimeout (()->loading('off')), 15000
+          setTimeout (->loading('off')), 15000
         App.navigate(url, true)
 
 
@@ -86,15 +87,14 @@ $ ()->
   soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
   soundManager.debugMode = if debug then true
-  #soundManager.flashPollingInterval = 330
-  soundManager.useHighPerformance = true  
+  soundManager.flashPollingInterval = 500
+  #soundManager.useHighPerformance = true  
   #soundManager.html5PollingInterval = 33
   soundManager.defaultOptions = 
-    onpause:  ()-> App.player.trigger("pause")
-    onresume: ()-> App.player.trigger("resume")
-    onfinish: ()-> App.player.trigger('next')
-    onload: ()->
-    onfinish: ()->
+    #onpause:  ()-> App.player.model.pause()
+    #onresume: ()-> App.player.model.resume()
+    onfinish: ()-> App.player.model.next()
+    onload: ()-> App.player.model.loadNextTrack()
     whileplaying: ()-> App.player.updatePlayProgress(this.position, this.duration)
     whileloading: ()-> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
 
@@ -116,4 +116,10 @@ $ ()->
     console.error arguments
     alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
     history.back()
+
+  $('footer').tooltip
+    selector: 'span[rel=tooltip]'
+    placement: 'right'
+    delay:
+      show: 420, hide: 100
 
