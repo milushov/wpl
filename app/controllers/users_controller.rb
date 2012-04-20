@@ -1,3 +1,4 @@
+# encoding: utf-8
 class UsersController < ApplicationController
   respond_to :json
 
@@ -20,6 +21,40 @@ class UsersController < ApplicationController
       render json: user_profile
     else
       error("user #{params[:id]} not found")
+    end
+  end
+
+  def follow
+    if user = User.where(vk_id: session[:user_id].to_s).first
+      unless followee = User.any_of({_id: params[:id]}, {vk_id: params[:id]}, {screen_name: params[:id]}).first
+        error 'user not found'
+        return
+      end
+      status = user.follow(followee)
+      if status.nil?
+        render json: {status: true}  
+      elsif status == false
+        error "Вы уже подписаны на этого человека [#{params[:id]}]."
+      else
+        error 'oO'
+      end
+    end
+  end
+
+  def unfollow
+    if user = User.where(vk_id: session[:user_id].to_s).first
+      unless followee = User.any_of({_id: params[:id]}, {vk_id: params[:id]}, {screen_name: params[:id]}).first
+        error 'user not found'
+        return
+      end
+      status = user.unfollow(followee)
+      if status.nil?
+        render json: {status: true}  
+      elsif status == false
+        error "Вы уже отписалить от этого человека [#{params[:id]}]."
+      else
+        error 'oO'
+      end
     end
   end
 

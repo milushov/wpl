@@ -1,3 +1,4 @@
+# encoding: utf-8
 class PlaylistsController < ApplicationController
   respond_to :json
   
@@ -21,6 +22,40 @@ class PlaylistsController < ApplicationController
     end
   end
 
+  def follow
+    if user = User.where(vk_id: session[:user_id].to_s).first
+      unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+        error 'playlist not found'
+        return
+      end
+      status = user.follow(playlist)
+      if status.nil?
+        render json: {status: true}  
+      elsif status == false
+        error "Вы уже подписаны на этот [#{params[:id]}] плейлист."
+      else
+        error 'oO'
+      end
+    end
+  end
+
+  def unfollow
+    if user = User.where(vk_id: session[:user_id].to_s).first
+      unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+        error 'playlist not found'
+        return
+      end
+      status = user.unfollow(playlist)
+      if status.nil?
+        render json: {status: true}  
+      elsif status == false
+        error "Вы уже отписалить от этого плейлиста [#{params[:id]}]."
+      else
+        error 'oO'
+      end
+    end
+  end
+
   def tags
     render json: Playlist.all_tags.map{ |p| p[:name] }
   end
@@ -39,14 +74,10 @@ class PlaylistsController < ApplicationController
   def create
     @playlist = Playlist.new(params[:playlist])
 
-    respond_to do |format|
-      if @playlist.save
-        format.html { redirect_to @playlist, notice: 'Playlist was successfully created.' }
-        format.json { render json: @playlist, status: :created, location: @playlist }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @playlist.errors, status: :unprocessable_entity }
-      end
+    if @playlist.save
+      render json: @playlist, location: @playlist
+    else
+      error "#{params[:playlist][:name]} not created :-("
     end
   end
 

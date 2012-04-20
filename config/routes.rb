@@ -3,12 +3,20 @@ Playlists::Application.routes.draw do
   scope 'api' do
     resources :playlists do 
       resources :tracks
+
       get 'last', on: :collection, to: 'playlists#index'
       get 'popular', on: :collection
       get 'tags', on: :collection
       get 'tags/:tag', on: :collection, to: 'playlists#playlistsByTag'
     end
+
     resources :users
+
+    match 'playlists/:id/follow', to: 'playlists#follow'
+    match 'playlists/:id/unfollow', to: 'playlists#unfollow'
+
+    match 'users/:id/follow', to: 'users#follow'
+    match 'users/:id/unfollow', to: 'users#unfollow'
   end
 
   match 'auth', to: 'main#auth'
