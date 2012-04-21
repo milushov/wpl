@@ -1,19 +1,13 @@
-%a.play_btn.fl_l.btn.btn-primary.btn-mini{ data: {audio_id: @audio_id} }
-  ♫ play
+.play_btn_wrap.fl_l{ style: "background-image: url(#{@artist_photo});"}
+  .play_btn{ data: {audio_id: @audio_id}}
 .info.fl_l
-  .atrist.fl_l
-    = @artist
-  .fl_l
-    = " – "
-  .title.fl_l
-    = @title
+  .track_name.fl_l
+    = "#{@artist} – #{@title}"
   .duration.fl_r.clear
-    = @duration
-.actions.fl_l.clear
+    = dur(@duration)
+.actions.fl_r.clear
   .up.fl_l
     %a.btn ▲
   .down.clear.fl_l
     %a.btn ▼
-  .destroy
-    〷
 

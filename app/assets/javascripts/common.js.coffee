@@ -18,6 +18,59 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
 window.debug = 1
 
+$ ()->
+  window.App = new Playlists.Routers.AppRouter(
+    playlists: my_profile['playlists']
+  )
+  
+  Backbone.history.start(pushState: true)
+
+  bind_urls()
+  
+  soundManager.url = 'http://playlists.dev:3000';
+  soundManager.preferFlash = true;
+  soundManager.flashVersion = 9;
+  soundManager.debugMode = if !debug then true
+  soundManager.flashPollingInterval = 500
+  #soundManager.useHighPerformance = true  
+  #soundManager.html5PollingInterval = 33
+  soundManager.defaultOptions = 
+    #onpause:  ()-> App.player.model.pause()
+    #onresume: ()-> App.player.model.resume()
+    onfinish: ->
+      App.player.model.next()
+      42
+    onload: ->
+      App.player.model.loadNextTrack()
+      42
+    whileplaying: -> App.player.updatePlayProgress(this.position, this.duration)
+    whileloading: -> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
+
+  # достасть из localStorage
+  default_volume = 100
+  duration_mode = 'pos'
+
+  soundManager.defaultOptions.volume = default_volume;
+  
+  soundManager.onready ()->
+    App.player = new Playlists.Views.Player.IndexView(
+      model: new Playlists.Models.Player(duration_mode: duration_mode)
+    )
+
+  soundManager.ontimeout ()->
+    alert 'Плеер завис, перезагрузите страницу! (F5)'
+
+  $(document).ajaxError (e, jqxhr, settings, exception) =>
+    console.error arguments
+    alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
+    history.back()
+
+  $('footer').tooltip
+    selector: 'span[rel=tooltip]'
+    placement: 'right'
+    delay:
+      show: 420, hide: 100
+
 window.l = (a, b)->
   if not a or arguments.length == 0 then return 'not arguments'
   if arguments.length > 2
@@ -74,52 +127,7 @@ window.loading = (ready = false) ->
       window.too_late = 0
     , fast_operation
 
-$ ()->
-  window.App = new Playlists.Routers.AppRouter(
-    playlists: my_profile['playlists']
-  )
-  
-  Backbone.history.start(pushState: true)
-
-  bind_urls()
-  
-  soundManager.url = 'http://playlists.dev:3000';
-  soundManager.preferFlash = true;
-  soundManager.flashVersion = 9;
-  soundManager.debugMode = if !debug then true
-  soundManager.flashPollingInterval = 500
-  #soundManager.useHighPerformance = true  
-  #soundManager.html5PollingInterval = 33
-  soundManager.defaultOptions = 
-    #onpause:  ()-> App.player.model.pause()
-    #onresume: ()-> App.player.model.resume()
-    onfinish: ()-> App.player.model.next()
-    onload: ()-> App.player.model.loadNextTrack()
-    whileplaying: ()-> App.player.updatePlayProgress(this.position, this.duration)
-    whileloading: ()-> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
-
-  # достасть из localStorage
-  default_volume = 100
-  duration_mode = 'pos'
-
-  soundManager.defaultOptions.volume = default_volume;
-  
-  soundManager.onready ()->
-    App.player = new Playlists.Views.Player.IndexView(
-      model: new Playlists.Models.Player(duration_mode: duration_mode)
-    )
-
-  soundManager.ontimeout ()->
-    alert 'Плеер завис, перезагрузите страницу! (F5)'
-
-  $(document).ajaxError (e, jqxhr, settings, exception) =>
-    console.error arguments
-    alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
-    history.back()
-
-  $('footer').tooltip
-    selector: 'span[rel=tooltip]'
-    placement: 'right'
-    delay:
-      show: 420, hide: 100
-
+window.dur = (dur)->
+  min = (dur/60).toFixed(0)
+  sec = if (dur%60).toString().length == 2 then "#{(dur%60)}" else "0#{(dur%60)}"
+  "#{min}:#{sec}"

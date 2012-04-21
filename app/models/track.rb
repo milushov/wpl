@@ -7,6 +7,7 @@ class Track
   field :title, type: String
   field :duration, type: Integer
   field :audio_id, type: String
+  field :artist_photo, type: String
 
   embedded_in :playlist
 

@@ -31,9 +31,11 @@
   }
 
   #left_block {
+    overflow: hidden;
     width: 200px; min-height: 1px;
 
     #info {
+      position: fixed;
       #photo {
         zoom: 1;
         text-align: center;
@@ -130,10 +132,13 @@
   }
 
   #right_block {
-    width: 170px;
+    overflow: hidden;
+    width: 170px; min-height: 300px;
     padding: 0 10px 0 20px;
     
     #followers {
+      position: fixed;
+      width: 170px;
       margin-bottom: 10px;
       .follower {
         overflow: hidden;
@@ -150,6 +155,9 @@
     }
 
     #followees {
+      position: fixed;
+      margin-top: 100px;
+      width: 170px;
       margin-bottom: 10px;
       .followee {
         overflow: hidden;

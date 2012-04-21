@@ -68,6 +68,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
         if f.uid == user_data.user.uid
           i = my_profile.followees.indexOf f
           my_profile.followees.splice i, 1
+          break
       @follow_switch = false
 
     # to available always a collection playlists of current user
@@ -111,15 +112,16 @@ class Playlists.Routers.AppRouter extends Backbone.Router
         if f.uid == my_uid
           i = playlist_followers.indexOf f
           playlist_followers.splice i, 1
+          break
 
       url = playlist.get('url')
       for p in my_profile.playlists
         if p.url == url
           i = my_profile.playlists.indexOf p
           my_profile.playlists.splice i, 1
+          break
 
       @follow_switch = false
-
 
     @playlists.add playlist
     $("#app").html( new Playlists.Views.Playlists.ShowView(

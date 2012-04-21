@@ -8,9 +8,15 @@
 
 Playlist.delete_all and User.delete_all and Follow.delete_all
 
+artists_photos = %w{ http://userserve-ak.last.fm/serve/34s/61520993.png http://userserve-ak.last.fm/serve/34s/71349074.png http://userserve-ak.last.fm/serve/34s/70383082.png http://userserve-ak.last.fm/serve/34s/50183455.png http://userserve-ak.last.fm/serve/34s/74977662.png http://userserve-ak.last.fm/serve/34s/57494593.png }
+
 p 'creating playlists...'
 playlists = []
 JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |playlist|
+  playlist['tracks'].each do |t|
+    t['artist_photo'] = artists_photos[rand 0..artists_photos.size-1]
+    t['duration'] = rand(70..360)
+  end
   pl = Playlist.new(playlist)
   pl.tag_list = playlist['tags']
   pl.save
@@ -37,7 +43,7 @@ users = File.open("#{Rails.root}/db/users.txt") do |users|
     user_action = User.where({vk_id: vk_id}).first
 
     playlists.each do |playlist|
-      if(rand(1..100).even?)
+      if(rand(1..2).even? or rand(1..2).odd?)
         user_action.follow( playlist )
         p "user #{user_action.screen_name} followed playlist #{playlist.url}"
       end
@@ -46,7 +52,7 @@ users = File.open("#{Rails.root}/db/users.txt") do |users|
     p '\n'
 
     followee.split(' ').each do |id|
-      if(rand(1..100).even?)
+      if(rand(1..2).even? or rand(1..2).odd?)
         who_follow = User.where({vk_id: id}).first
         user_action.follow( who_follow )
         p "user #{user_action.screen_name} followed user #{who_follow.screen_name}"

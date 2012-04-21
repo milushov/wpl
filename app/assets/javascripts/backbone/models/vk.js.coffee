@@ -83,17 +83,11 @@ class Playlists.Models.Vk extends Backbone.Model
         App.notFound()
     , 'json'
 
-  getPlaylistData: (tracks, success)->
-    if !tracks then false else tracks = tracks.join ','
-    params = 
-      audios: tracks
-    @ajax @makeUrl('audio.getById', params), success
-
-  getTrackData: (id, success)->
+  getTrackData: (id, success, context)->
     if !id then return false
     params = 
       audios: id
-    @ajax @makeUrl('audio.getById', params), success
+    @ajax @makeUrl('audio.getById', params), success, context
 
   getThreeTrackData: (ids, success)->
     if !ids then return false
@@ -137,7 +131,6 @@ class Playlists.Models.Vk extends Backbone.Model
     $.cookie('access_token', access_token, { expires: expires_in });
     $.cookie('user_id', user_id, { expires: expires_in });
 
-  
   getCookies: ->
     access_token: $.cookie('access_token')
     user_id: $.cookie('user_id')

@@ -23,7 +23,7 @@
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/playlists
-//= require soundmanager2
+//= require soundmanager2-jsmin
 //= require jquery-ui.min
 //= require tag-it
 //= require_tree .
