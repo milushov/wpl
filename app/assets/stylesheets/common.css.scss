@@ -58,7 +58,7 @@
         }
       }
 
-      #follow {
+      .follow {
         margin-top: 10px;
         button {
           width: 150px;
@@ -191,4 +191,8 @@
   -webkit-user-select: none;
   -o-user-select: none;
   user-select: none;
+}
+
+.alert {
+  padding: 7px;
 }

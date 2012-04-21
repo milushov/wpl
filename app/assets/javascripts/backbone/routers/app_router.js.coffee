@@ -17,8 +17,28 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @.on 'playlist_loaded', (playlist)-> @showPlaylist(playlist)
     @.on 'user_data_loaded', (user_data)-> @showUserProfile(user_data)
     @.on 'playlists_by_tag_data_loaded', (playlists_data)-> @showPlaylistsByTag(playlists_data)
+    
+    @.on 'user_follow', (data)->
+      window.user_profile = {} # очищаем, чтобы загрузить обновленные данные
+      @follow_switch = 'user_follow' # чтобы в @showUserProfile() добавить новозафоловленнго юзера в my_profile.followees
+      @getUserProfile data.id
+    
+    @.on 'user_unfollow', (data)->
+      window.user_profile = {}
+      @follow_switch = 'user_unfollow'
+      @getUserProfile data.id
 
-    # тут мои плейлиста
+    @.on 'playlist_follow', (data)->
+      @follow_switch = 'playlist_follow'
+      @getPlaylist data.id
+    
+    @.on 'playlist_unfollow', (data)->
+      @follow_switch = 'playlist_unfollow'
+      @getPlaylist data.id
+
+    @follow_switch = false
+
+    # в начале тут только мои плейлисты
     @playlists = new Playlists.Collections.PlaylistsCollection(options.playlists)
 
   # request for user profile (!) data
@@ -39,11 +59,22 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     console.log 'Routers.AppRouter showUserProfile()', user_data
     window.user_profile = user_data
     
+    # добавляем или удаляем пользователя из нашего списка подписчиков
+    if @follow_switch == 'user_follow'
+      my_profile.followees.push user_data.user
+      @follow_switch = false
+    else if @follow_switch == 'user_unfollow'
+      for f in my_profile.followees
+        if f.uid == user_data.user.uid
+          i = my_profile.followees.indexOf f
+          my_profile.followees.splice i, 1
+      @follow_switch = false
+
     # to available always a collection playlists of current user
     # and it was possiply to make like this: @playlists.getByUrl(url)
-    playlists_both_people = _.clone(user_profile['playlists'])
+    playlists_both_people = _.clone(user_profile.playlists)
     
-    my_profile['playlists'].forEach (pl)-> playlists_both_people.push(pl)
+    my_profile.playlists.forEach (pl)-> playlists_both_people.push(pl)
 
     @playlists = new Playlists.Collections.PlaylistsCollection( playlists_both_people )
 
@@ -51,7 +82,12 @@ class Playlists.Routers.AppRouter extends Backbone.Router
         
     @ok()
 
-  # request for playlist model
+  myProfile: ->
+    console.log 'Routers.AppRouter myProfile()', my_profile
+    $("#app").html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
+    @ok()
+
+  # request for playlist (!) model
   getPlaylist: (url) ->
     console.log 'Routers.AppRouter getPlaylist()', url
     if playlist = @playlists.getByUrl(url)
@@ -61,12 +97,37 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   showPlaylist: (playlist) ->
     console.log 'Routers.AppRouter showPlaylist()', playlist
+
+    # добавляем или удаляем плейлист из нашего списка
+    # и добавляем/удаляем себя из списка фолловеров листа
+    if @follow_switch == 'playlist_follow'
+      playlist.get('followers').push(my_profile.user)
+      my_profile.playlists.push playlist.toJSON()
+      @follow_switch = false
+    else if @follow_switch == 'playlist_unfollow'
+      my_uid = my_profile.user.uid
+      playlist_followers = playlist.get('followers')
+      for f in playlist_followers
+        if f.uid == my_uid
+          i = playlist_followers.indexOf f
+          playlist_followers.splice i, 1
+
+      url = playlist.get('url')
+      for p in my_profile.playlists
+        if p.url == url
+          i = my_profile.playlists.indexOf p
+          my_profile.playlists.splice i, 1
+
+      @follow_switch = false
+
+
     @playlists.add playlist
     $("#app").html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
     @ok()
 
+  # request for playlists data
   getPlaylistsByTag: (tag) ->
     console.log 'Routers.AppRouter getPlaylistsByTag()', tag
     @vk.getPlaylistsByTag(tag)
@@ -88,11 +149,6 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
   getPopularPlaylist: ()->
 
-
-  myProfile: ->
-    console.log 'Routers.AppRouter myProfile()', my_profile
-    $("#app").html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
-    @ok()
 
   newPlaylist: ->
     $("#app").html( new Playlists.Views.Playlists.NewView(me: my_profile.user).render().el )

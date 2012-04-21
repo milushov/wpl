@@ -2,10 +2,15 @@
   #info
     #photo
       %img{src: "#{@image}"}
-    #follow
-      %button.btn.btn-success{onclick: 'alert("слушать");'}
-        <i class="icon-plus icon-white"></i>
-        Подписаться
+    .follow
+      - if @i_follow
+        %button#unfollow.btn.btn-success
+          <i class="icon-ok-sign icon-white"></i>
+          Подписан
+      - else
+        %button#follow.btn.btn-success
+          <i class="icon-plus icon-white"></i>
+          Подписаться
 #center_block.fl_l
   #name
     %h2.fl_l
@@ -20,7 +25,11 @@
     .tracks
 #right_block.fl_r
   #followers
-    #title Слушатели
-    - for id, follower of @followers
-      %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
-        %img{src: "#{follower.photo}"}
+    - if @followers.length
+      #title Слушатели
+      - for id, follower of @followers
+        %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
+          %img{src: "#{follower.photo}"}
+    - else
+      .alert.alert-info
+        = "Этот плейлист еще никто не слушает, можете зафоловить его первым :-)"

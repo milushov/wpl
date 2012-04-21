@@ -19,26 +19,9 @@ class Playlists.Models.Vk extends Backbone.Model
     else
       false
 
-  # главная функция авторизации
-  auth: ->
-    if @isAuth() then true else
-      if @saveNewAccessToken() then true else
-        location.href = "http://api.vk.com/oauth/authorize?client_id=#{ @get 'appId' }&scope=#{ @get 'settings' }&redirect_uri=#{ @get('url') + 'access_token' }&response_type=token"
-        false
-
-  saveNewAccessToken: ()->
-    cur_url = $.url().fparam()
-
-    access_token = cur_url.access_token
-    expires_in = cur_url.expires_in
-    user_id = cur_url.user_id
-
-    if !(access_token and expires_in and user_id) then false else
-      @setCookies access_token, expires_in, user_id
-      @set auth_status: true
-      true
-
   getProfile: (id)->
+    if not id
+      return false
     $.get "#{@get('url')}api/users/#{id}", (data)->
       if data and not data.error
         l data, 'from App.vk.getProfile()'
@@ -49,6 +32,34 @@ class Playlists.Models.Vk extends Backbone.Model
         #history.back()
         #alert data.error
         App.notFound()
+    , 'json'
+
+  follow: (type, id, undo)->
+    if not type or not id then eturn false
+    if type != 'user' and type != 'playlist' then return false
+
+    url = @get('url')
+    action = unless undo then 'follow' else 'unfollow'
+
+    $.get "#{url}api/#{type}s/#{id}/#{action}", (data)->
+      if data and not data.error
+        if type == 'user'
+          if action == 'follow' 
+            App.trigger 'user_follow', data  
+          else
+            App.trigger 'user_unfollow', data  
+        else if type == 'playlist'
+          if action == 'follow'
+            App.trigger 'playlist_follow', data
+          else
+            App.trigger 'playlist_unfollow', data
+        true
+      else
+        console.error data.error
+        #history.back()
+        #alert data.error
+        #App.notFound()
+        false
     , 'json'
 
   getPlaylist: (id)->
@@ -97,7 +108,7 @@ class Playlists.Models.Vk extends Backbone.Model
         return { prev: prev[0], current: current[0], next: next[0] };'
     @ajax @makeUrl('execute', params), success
 
-  searchTrack: (track_name, offset = 0, success)->
+  searchTracks: (track_name, offset = 0, success)->
     if !track_name then return false 
     params = 
       code:

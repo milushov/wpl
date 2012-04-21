@@ -87,9 +87,9 @@ class ApplicationController < ActionController::Base
       playlist[:followers] = followers
     end
 
-    profile[:followers] = vk_data['followers'] || {}
-    profile[:followees] = vk_data['followees'] || {}
-    profile[:playlists] = playlists || {}
+    profile[:followers] = vk_data['followers'] || [] # важно чтобы были пустые массивы
+    profile[:followees] = vk_data['followees'] || []
+    profile[:playlists] = playlists || []
     
     profile
   end
@@ -186,8 +186,7 @@ class ApplicationController < ActionController::Base
     http_code = auth_error ? 403 : 200
     render(
       json: { error: error },
-      status: http_code,
-      content_type: 'application/json'
+      status: http_code
     ) and return
   end
 end

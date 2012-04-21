@@ -12,12 +12,20 @@
   #playlists
 #right_block.fl_r
   #followers
-    #title Слушатели
-    - for id, follower of @followers
-      %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
-        %img{src: "#{follower.photo}"}
+    #title Мои слушатели
+    - if @followers.length
+      - for id, follower of @followers
+        %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
+          %img{src: "#{follower.photo}"}
+    - else
+      .alert.alert-info
+        Вас еще никто не слушает, пригласите друзей :-)
   #followees
-    #title Слушает
-    - for id, followee of @followees
-      %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
-        %img{src: "#{followee.photo}"}
+    #title Я слушаю
+    - if @followees.length
+      - for id, followee of @followees
+        %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
+          %img{src: "#{followee.photo}"}
+    - else
+      .alert.alert-info
+        Вы еще никого не слушаете, зафоловьте кого-нибудь!

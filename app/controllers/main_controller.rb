@@ -20,6 +20,7 @@ class MainController < ApplicationController
         format.html # index.html.haml
       end
     else
+      @return_to = params[:path] ? "?return_to=#{params[:path]}" : nil
       render 'main/start'
     end
   end

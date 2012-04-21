@@ -4,7 +4,9 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
   template: JST["backbone/templates/playlists/show"]
 
   events:
-    "click #play_all" : "playAll"
+    'click #play_all' : 'playAll'
+    'click #follow' : 'followPlaylist'
+    'click #unfollow' : 'unfollowPlaylist'
 
   tagName: 'div'
   id: 'playlist'
@@ -14,6 +16,12 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     @model = @options.model
     @options = null
     $(@el).attr('id', 'playlist_id:'+@model.get '_id')
+
+  followPlaylist: ->
+    App.vk.follow 'playlist', @model.get 'url'
+
+  unfollowPlaylist: ->
+    App.vk.follow 'playlist', @model.get('url'), 'undo'
 
   destroy: () ->
     @model.destroy()
@@ -27,6 +35,10 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
 
   render: ->
     console.log 'Views.Playlists.ShowView render()', @model
+    url = @model.get 'url'
+    i_follow = false
+    if my_profile.playlists.length != 0
+      i_follow = p for p in my_profile.playlists when p.url == url
 
     $(@el).html( @template(
       name: @model.get 'name'
@@ -34,6 +46,7 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
       tags: @model.get 'tags'
       image: @model.get 'image'
       followers: @model.get 'followers'
+      i_follow: i_follow
     ) )
 
     # добавляю id плейлиста в модель трека

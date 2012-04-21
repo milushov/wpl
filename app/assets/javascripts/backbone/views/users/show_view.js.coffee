@@ -3,19 +3,34 @@ Playlists.Views.User ||= {}
 class Playlists.Views.User.ShowView extends Backbone.View
   template: JST["backbone/templates/users/show"]
 
+  events:
+    'click #follow' : 'followUser'
+    'click #unfollow' : 'unfollowUser'
+
   initialize: (options) ->
     console.log 'User.ShowView nitialize()'
 
   settings: () ->
     console.log 'User.ShowView settings'
 
+  followUser: ->
+    App.vk.follow 'user', @options.user.uid
+
+  unfollowUser: ->
+    App.vk.follow 'user', @options.user.uid, 'undo'
+
   render: =>
     console.log 'User.ShowView render', @el
+    cur_uid = @options.user.uid
+    i_follow = false
+    if my_profile.followees.length != 0
+      i_follow = followee for followee in my_profile.followees when followee.uid == cur_uid
 
     $(@el).html( @template(
       user: @options.user
       followers: @options.followers
       followees: @options.followees
+      i_follow: i_follow
     ) )
 
     $(@el).find('#playlists').html( 

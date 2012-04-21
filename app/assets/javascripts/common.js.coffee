@@ -57,20 +57,20 @@ window.loading = (ready = false) ->
   fast_operation = 10
   loader = $('#head_loader')
   if ready
-    console.warn "загрузилось", window.too_late
+    # console.warn "загрузилось", window.too_late
     # hide loader
     loader.fadeTo('fast', 0)
     window.too_late = 1
   else
-    console.warn "ждем #{fast_operation}", window.too_late
+    # console.warn "ждем #{fast_operation}", window.too_late
     # show loader
     setTimeout ()=>
       # if loader show,
       if loader.css('opacity') != '1' and not window.too_late
-        console.warn "быстрая операция < #{fast_operation}", window.too_late
+        # console.warn "быстрая операция < #{fast_operation}", window.too_late
         loader.fadeTo('fast', 1)
       else
-        console.warn "долгая операция > #{fast_operation}", window.too_late
+        # console.warn "долгая операция > #{fast_operation}", window.too_late
       window.too_late = 0
     , fast_operation
 
@@ -86,7 +86,7 @@ $ ()->
   soundManager.url = 'http://playlists.dev:3000';
   soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
-  soundManager.debugMode = if debug then true
+  soundManager.debugMode = if !debug then true
   soundManager.flashPollingInterval = 500
   #soundManager.useHighPerformance = true  
   #soundManager.html5PollingInterval = 33

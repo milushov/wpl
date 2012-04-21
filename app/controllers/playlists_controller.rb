@@ -30,7 +30,7 @@ class PlaylistsController < ApplicationController
       end
       status = user.follow(playlist)
       if status.nil?
-        render json: {status: true}  
+        render json: {status: true, id: params[:id]}
       elsif status == false
         error "Вы уже подписаны на этот [#{params[:id]}] плейлист."
       else
@@ -47,7 +47,7 @@ class PlaylistsController < ApplicationController
       end
       status = user.unfollow(playlist)
       if status.nil?
-        render json: {status: true}  
+        render json: {status: true, id: params[:id]}
       elsif status == false
         error "Вы уже отписалить от этого плейлиста [#{params[:id]}]."
       else

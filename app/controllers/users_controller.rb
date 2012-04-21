@@ -32,7 +32,7 @@ class UsersController < ApplicationController
       end
       status = user.follow(followee)
       if status.nil?
-        render json: {status: true}  
+         render json: {status: true, id: params[:id]}
       elsif status == false
         error "Вы уже подписаны на этого человека [#{params[:id]}]."
       else
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
       end
       status = user.unfollow(followee)
       if status.nil?
-        render json: {status: true}  
+        render json: {status: true, id: params[:id]}  
       elsif status == false
         error "Вы уже отписалить от этого человека [#{params[:id]}]."
       else

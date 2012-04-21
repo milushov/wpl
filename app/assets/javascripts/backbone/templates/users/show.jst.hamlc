@@ -2,10 +2,15 @@
   #info
     #photo
       %img{src: "#{@user.photo_big}"}
-    #follow
-      %button.btn.btn-success{onclick: 'alert("слушать");'}
-        <i class="icon-plus icon-white"></i>
-        Подписаться
+    .follow
+      - if @i_follow
+        %button#unfollow.btn.btn-success
+          <i class="icon-ok-sign icon-white"></i>
+          Подписан
+      - else
+        %button#follow.btn.btn-success
+          <i class="icon-plus icon-white"></i>
+          Подписаться
 #center_block.fl_l
   #name
     %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", data: {type: 'ext'}}
@@ -16,11 +21,19 @@
 #right_block.fl_r
   #followers
     #title Слушатели
-    - for id, follower of @followers
-      %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
-        %img{src: "#{follower.photo}"}
+    - if @followers.length
+      - for id, follower of @followers
+        %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
+          %img{src: "#{follower.photo}"}
+    - else
+      .alert.alert-info
+        = "#{@user.first_name} еще никто не слушает, можете зафоловить его первым :-)"
   #followees
     #title Слушает
-    - for id, followee of @followees
-      %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
-        %img{src: "#{followee.photo}"}
+    - if @followees.length
+      - for id, followee of @followees
+        %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
+          %img{src: "#{followee.photo}"}
+    - else
+      .alert.alert-info
+        = "#{@user.first_name} еще никого не слушает"
