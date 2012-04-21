@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
 
     ufr_ids = []; user_followers.each_key { |key| ufr_ids << key }
     ufe_ids = []; user_followees.each_key { |key| ufe_ids << key }
-    pf_ids = []; playlists_followers.each { |val, _| pf_ids << val }
+    pf_ids = []; playlists_followers.each_key { |key| pf_ids << key }
 
     vk_data = getProfilesData(user[:vk_id], ufr_ids, ufe_ids, pf_ids)
     
@@ -119,7 +119,8 @@ class ApplicationController < ActionController::Base
         followees: followees,
         app_friends: app_friends,
         playlists_followers: playlists_followers
-      };"
+      };
+    "
     @app.execute code: code
   end
 

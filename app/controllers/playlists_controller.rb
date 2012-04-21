@@ -61,7 +61,57 @@ class PlaylistsController < ApplicationController
   end
 
   def playlistsByTag
-    playlists = Playlist.tagged_with(params[:tag])
+    playlists_data = Playlist.tagged_with(params[:tag])
+
+    playlists, playlists_followers_ids = [], []
+
+    playlists_data.each do |playlist|
+      followers = []; playlist.followers.to_a.each { |f| followers << f[:follower_id].to_s }
+      p = {
+        _id: playlist.id.to_s,
+        url: playlist.url,
+        name: playlist.name,
+        description: playlist.description,
+        tags: playlist.tags,
+        image: playlist.image,
+        created_at: playlist.created_at,
+        updated_at: playlist.updated_at,
+        tracks: playlist.tracks,
+        followers_count: playlist.fferc,
+        followers: followers
+      }
+      playlists << p
+      playlists_followers_ids += followers     
+    end
+
+    playlists_followers = {}; User.any_in(_id: playlists_followers_ids.uniq).to_a.each { |follower|
+      playlists_followers[follower[:vk_id].to_s] = follower[:_id].to_s
+    }
+
+    pf_ids = []; playlists_followers.each_key { |key| pf_ids << key }
+
+    pf_ids = !pf_ids.empty? ? pf_ids.join(',') : ''
+    
+    code = "
+      var fields = \"screen_name,photo,photo_big\";
+      var playlists_followers = API.users.get({ uids: [#{pf_ids}], fields: fields });
+      return {
+        playlists_followers: playlists_followers
+      };
+    "
+    
+    vk_data = @app.execute code: code
+
+    if vk_data['playlists_followers']
+      temp = {}; vk_data['playlists_followers'].each { |f| id = playlists_followers[f['uid'].to_s]; temp[id] = f }
+      vk_data['playlists_followers'], temp = temp, nil
+    end
+
+    playlists.each do |playlist|
+      followers = []; playlist[:followers].each { |f| followers << vk_data['playlists_followers'][f] }
+      playlist[:followers] = followers
+    end
+
     render json: {tag: params[:tag], count: playlists.count, playlists: playlists.last(12)}
   end
 
