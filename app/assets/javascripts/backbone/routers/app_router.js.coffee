@@ -153,7 +153,8 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
 
   newPlaylist: ->
-    $("#app").html( new Playlists.Views.Playlists.NewView(me: my_profile.user).render().el )
+    @new_playlist_view = new Playlists.Views.Playlists.NewView(me: my_profile.user)
+    $("#app").html(@new_playlist_view.render().el)
 
     $.get '/api/playlists/tags', (data)->
       $('#edit_tags').tagit

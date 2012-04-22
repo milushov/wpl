@@ -4,17 +4,25 @@
       %img{src: "http://vk.com/images/camera_a.gif"}
 #center_block.fl_l
   #name
-    %input#playlist_name.fl_l{placeholder: 'Название плейлиста'}
-    %input#playlist_url.fl_l{placeholder: 'Ссылка на плейлист'}
-    %a#add_track.btn.btn-success.fl_r ♫ Добавить трек
+    %input#playlist_name.fl_l{placeholder: 'Название плейлиста', onChange: "make_playlist_url(this);"}
+
+    .input-prepend.fl_l
+      %span.add-on{style: 'margin: 0 -4px 0 0;'} wpl.me/
+      %input#playlist_url.span2{:size => "16", :type => "text", placeholder: 'Ссылка на плейлист'}
+
   #playlists
+    %ul#edit_tags
     %textarea#playlist_description.input-xlarge{rows: '3', placeholder: 'Описание плейлиста'}
 
-    %ul#edit_tags
+    #track_seacher.input-append{style: 'margin-left: 135px;'}
+      %input.span3{type: 'text', placeholder: 'Название трека', onkeypress: "if(event.which == 13 || event.keyCode == 13) {$('#track_seacher a').click();}", value: 'каста'} 
+      %a.btn.btn-primary{style: 'margin: 0 0 0 -3px;'} Найти трек
 
-    .tracks
+    #searched_tracks
 
-    .form-actions{style: 'margin-top: 150px;'}
+    #tracks
+
+    .form-actions{style: 'margin-top: 150px; border-radius: 0px 0px 4px 4px;'}
       %a#save_playlist.btn.btn-primary Сохранить плейлист
       %a.btn{onclick: 'history.back();'} Отмена
 

@@ -25,13 +25,20 @@ class Playlists.Views.Player.IndexView extends Backbone.View
   play: (track)->
     @model.play(track)
   
+  playOnce: (track)->
+    @model.playOnce(track)
+
   showTrackName: ->
     $("#track_info #name").html @model.get('currentTrack').getName()
 
   prev: ->
+    if @model.get 'once'
+      return
     @model.prev()
 
   next: ->
+    if @model.get 'once'
+      return
     @model.next()
 
   updatePlayProgress: (pos, dur)->

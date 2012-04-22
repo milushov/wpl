@@ -48,8 +48,20 @@ class Playlists.Models.Player extends Backbone.Model
         autoPlay: true
     ,this
 
+  playOnce: (track)->
+    @set once: track
+    #App.player.trigger 'show_track_name'
+    soundManager.createSound
+      id: track.smid()
+      url: track.get 'url'
+      autoPlay: true
+
   togglePause: ()->
-    soundManager.togglePause @get('currentTrack').smid()
+    if @get 'once'
+      soundManager.togglePause @get('once').smid()
+      return
+
+    soundManager.togglePause @get('currentTrack')?.smid()
     App.player.trigger 'toggle_pause'
 
   prev: ->
@@ -110,8 +122,7 @@ class Playlists.Models.Player extends Backbone.Model
         url: next.get 'url'
         autoLoad: true
     ,this
-
-    
+  
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
 

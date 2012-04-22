@@ -22,6 +22,21 @@ class PlaylistsController < ApplicationController
     end
   end
 
+  # POST /playlists
+  def create
+    playlist = JSON.parse params['playlist']
+
+    @playlist = Playlist.new(playlist)
+    
+    if @playlist.save
+      user = User.where(vk_id: session[:user_id].to_s).first
+      user.follow @playlist
+      render json: {status: true, id: @playlist[:url]}, location: @playlist
+    else
+      error "#{playlist['name']} not created :-("
+    end
+  end
+
   def follow
     if user = User.where(vk_id: session[:user_id].to_s).first
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
@@ -118,17 +133,6 @@ class PlaylistsController < ApplicationController
   # GET /playlists/1/edit
   def edit
     @playlist = Playlist.find(params[:id])
-  end
-
-  # POST /playlists
-  def create
-    @playlist = Playlist.new(params[:playlist])
-
-    if @playlist.save
-      render json: @playlist, location: @playlist
-    else
-      error "#{params[:playlist][:name]} not created :-("
-    end
   end
 
   # PUT /playlists/1

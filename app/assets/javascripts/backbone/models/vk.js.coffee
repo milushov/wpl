@@ -73,6 +73,9 @@ class Playlists.Models.Vk extends Backbone.Model
         App.notFound()
     , 'json'
 
+  saveNewPlaylist: (playlist_data, success, context)->
+    @ajax "#{@get("url")}api/playlists", success, context, playlist_data, true
+
   getPlaylistsByTag: (tag)->
     $.get "#{@get('url')}api/playlists/tags/#{tag}", (data)->
       if data && !data.error
@@ -102,7 +105,7 @@ class Playlists.Models.Vk extends Backbone.Model
         return { prev: prev[0], current: current[0], next: next[0] };'
     @ajax @makeUrl('execute', params), success
 
-  searchTracks: (track_name, offset = 0, success)->
+  searchTracks: (track_name, offset = 0, success, context = null)->
     if !track_name then return false 
     params = 
       code:
@@ -124,7 +127,7 @@ class Playlists.Models.Vk extends Backbone.Model
         } else {
           return { tracks: tracks };
         }'
-    @ajax @makeUrl('execute', params), success
+    @ajax @makeUrl('execute', params), success, context
 
   setCookies: (access_token, expires_in, user_id)->
     expires_in = expires_in/(24*60*60)
@@ -144,13 +147,17 @@ class Playlists.Models.Vk extends Backbone.Model
           params_arr.push encodeURIComponent(key) + '=' + encodeURIComponent(val)
         if params_arr.length then url  + '&' + params_arr.join('&') else url
 
-  ajax: (url, success, context = false) ->
+  ajax: (url, success, context = false, _data = false, nojsonp = false) ->
     if !url then false
+    dataType = if nojsonp then 'json' else 'jsonp'
+    crossDomain = if nojsonp then false else true
+    data = if _data then _data else false
     req = $.ajax
       url: url
       type: "POST"
-      crossDomain: true
-      dataType: "jsonp"
+      crossDomain: crossDomain
+      data: data
+      dataType: dataType
       context: context
 
     if !success then success = (data)=> console.log data.response, 'ajax()'

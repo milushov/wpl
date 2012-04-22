@@ -6,41 +6,69 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
   tagName: 'div'
 
   events:
-    "submit #new-playlist": "save"
-    'click #add_track' : 'addTrack'
+    'click #track_seacher a' : 'addTrack'
     'click #save_playlist' : 'savePlaylist'
 
   initialize: (options) ->
     console.log 'Views.Playlists.NewView initialize()', options
     @me = options.me
-    #super(options)
-    #@model = new @collection.model()
 
-    #@model.bind("change:errors", () =>
-    #  this.render()
-    #)
+    App.new_tracks = new Playlists.Collections.TracksCollection()
 
-  save: (e) ->
-    e.preventDefault()
-    e.stopPropagation()
-
-    @model.unset("errors")
-
-    @collection.create(@model.toJSON(),
-      success: (playlist) =>
-        @model = playlist
-        window.location.hash = "/#{@model.id}"
-
-      error: (playlist, jqXHR) =>
-        @model.set({errors: $.parseJSON(jqXHR.responseText)})
-    )
+    @.on 'track_choosen', -> @updateTracks()
 
   addTrack: ->
     console.log 'Views.Playlists.NewView addTrack()'
 
+    track_name = $('#track_seacher input').val()
+    if track_name.length < 3
+      alert 'Название трека слишком короткое'
+      return
+
+    App.vk.searchTracks track_name, 0, (data)->
+      data.response.tracks?.splice 0, 1 # убираем первый элемент, который содержит кол-во найденных треков
+      window.a = tracks = data.response.tracks
+      if not tracks?
+        alert 'ни одного трека не найдено'
+        return
+      $('#searched_tracks').html(new Playlists.Views.Tracks.FoundTracksView(tracks).render().el)
+    ,this
+
+  updateTracks: ->
+    App.need_ask = true
+    $('#tracks').empty()
+    for track in App.new_tracks.models
+      track.set audio_id: "#{track.get "owner_id"}_#{track.get "aid"}"
+      track.set artist_photo: '/assets/default.jpg'
+      $('#tracks').append(new Playlists.Views.Tracks.TrackView(model: track).render().el)
+    $('#searched_tracks').empty()
+
   savePlaylist: ->
     console.log 'Views.Playlists.NewView savePlaylist()'
-    tags = $("#edit_tags").tagit("assignedTags");
+    
+    for track in App.new_tracks.models
+      track.unset 'lyrics_id'
+      track.unset 'url'
+      track.unset 'owner_id'
+      track.unset 'aid'
+
+    new_playlist = 
+      name: $('#playlist_name').val()
+      url: $('#playlist_url').val()
+      image:  'http://vk.com/images/camera_a.gif'
+      description: $('#playlist_description').val()
+      tags: $("#edit_tags").tagit("assignedTags")
+      creator: my_profile.user.uid
+      tracks: App.new_tracks.toJSON()
+
+    new_playlist = JSON.stringify new_playlist
+
+    App.vk.saveNewPlaylist playlist: new_playlist, (data)->
+      if data.status
+        App.navigate(data.id, true)
+      else
+        alert 'что-то пошло не так'
+    , this
 
   render: ->
     console.log 'Views.Playlists.NewView render()'
@@ -50,7 +78,5 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       screen_name: @me.screen_name
     )
 
-    
-
     #this.$("form").backboneLink(@model)
-    @
+    this

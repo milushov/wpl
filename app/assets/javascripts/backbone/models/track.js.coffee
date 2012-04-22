@@ -1,10 +1,13 @@
 class Playlists.Models.Track extends Backbone.Model
   #paramRoot: 'track'
+  default:
+    playlist_id: '0'
+    
   initialize: ->
 
   getName: ()->
     "#{@get('artist')} – #{@get('title')}"
-    
+
   # специальный двойной id'шник для SoundManager
   smid: ->
     "#{@get "playlist_id"}:#{@get "audio_id"}"

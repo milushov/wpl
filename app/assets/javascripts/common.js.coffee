@@ -63,7 +63,7 @@ $ ()->
   $(document).ajaxError (e, jqxhr, settings, exception) =>
     console.error arguments
     alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
-    history.back()
+    #history.back()
 
   $('footer').tooltip
     selector: 'span[rel=tooltip]'
@@ -102,6 +102,10 @@ window.bind_urls = ->
           $('a[rel=tooltip]').tooltip('hide')
           #чтобы не мазолило глаза, если запрос будет ооочень долгий 
           setTimeout (->loading('off')), 15000
+        
+        if curUrl() == '/new' and App.need_ask
+          if !confirm("#{my_profile.user.first_name}, вы уверены, что хотите покинуть страницу? Несохраненные данные потеряются!")
+            return false
         App.navigate(url, true)
 
 
@@ -131,3 +135,34 @@ window.dur = (dur)->
   min = (dur/60).toFixed(0)
   sec = if (dur%60).toString().length == 2 then "#{(dur%60)}" else "0#{(dur%60)}"
   "#{min}:#{sec}"
+
+window.trackOver = (_this)->
+  $(_this).find(".choose_track").show()
+
+window.trackOut = (_this)->
+  $(_this).find(".choose_track").hide()
+
+window.playOnce = (_this)->
+  json = $(_this).data 'track'
+  track = new Playlists.Models.Track json
+  App.player.playOnce track
+
+window.chooseTrack = (_this)->
+  json = $(_this).data 'track'
+  track = new Playlists.Models.Track json
+  App.new_tracks.add track
+  App.new_playlist_view.trigger 'track_choosen'
+
+window.make_playlist_url = (_this)->
+  name = $(_this).val()
+  $('#playlist_url').val(translitUrl(name))
+
+window.translitUrl = (url)->
+  az = {'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'е':'e', 'ё':'e', 'ж':'zh', 'з':'z', 'и':'i', 'й':'y', 'к':'k', 'л':'l', 'м':'m', 'н':'n', 'о':'o', 'п':'p', 'р':'r', 'с':'s', 'т':'t', 'у':'u', 'ф':'f', 'х':'h', 'ц':'ts', 'ч':'ch', 'ш':'sh', 'щ':'sch', 'ъ':'', 'ь':'', 'ы':'y', 'э':'e', 'ю':'yu', 'я':'ya'}
+  return url.toLowerCase()
+    .replace(/ье|ьё/g, 'je')
+    .replace(/ый/g, 'y')
+    .replace(/[а-яё]/g, (m,k)->return az[m]) 
+    .replace(/[^\w\d\s-_]+/g, '') 
+    .replace(/[\s-_]+/g, '-')
+    .replace(/(^-|-$)+/g,'')
