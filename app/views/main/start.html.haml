@@ -14,9 +14,9 @@
 #app.container
   .hero-unit
     %h1 wikiPlaylists
-    %p Это супер сервис коллективных плейлистов, скорей заходи и слушай классные плейлисты, которые составили и отобрали для тебя опытные меломаны! лол
+    %p Это супер сервис коллективных плейлистов, скорей заходи и слушай классные плейлисты, которые составили и отобрали для тебя опытные меломаны! (Тестовый слоган). лол
     %p
-      %a.btn.btn-primary.btn-large{href: "/login#{ @return_to ? @return_to : "" }", style: 'font-size: 23px;'} Войти с помощюь аккаунта ВKонтакте!
+      %a.btn.btn-primary.btn-large{href: "/login#{ @return_to if @return_to}", style: 'font-size: 23px;'} Войти с помощюь аккаунта ВKонтакте!
 %footer
   %center
     %a{href:'http://vk.com/milushov', data: {type: 'ext'} }сделано

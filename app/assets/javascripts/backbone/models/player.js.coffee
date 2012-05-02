@@ -1,17 +1,20 @@
+Playlists.Models.Player ||= {}
+
 class Playlists.Models.Player extends Backbone.Model
+
   defaults:
     state: 'pause'
-    currentTrack: null
-    duration_mode: 'pos' # 'neg'
+    cur_track: null
+    duration_mode: 'pos' # or 'neg'
 
   initialize: ->
     console.log 'Player model created'
-    @fail = 'http://vk.com/mp3/bb2.mp3'
+    @fail_url = 'http://vk.com/mp3/bb2.mp3'
 
   reset: ->
     soundManager.reboot()
 
-  play: (track = null)->
+  play: (track = null) ->
     if track
       audio_id = track.get 'audio_id'
       playlist_id = track.get 'playlist_id'
@@ -20,111 +23,105 @@ class Playlists.Models.Player extends Backbone.Model
       audio_id = @playlist.tracks.at(0).get 'audio_id'
       playlist_id = @playlist.get '_id'
 
-    if @playlist
-      if @playlist.get('_id') != playlist_id
-        @playlist = App.playlists.getById playlist_id
-    else
+    if not @playlist? or @playlist?.get('_id') isnt playlist_id
       @playlist = App.playlists.getById playlist_id
 
-    # если пытаемя задействовать текущий трек
-    if cur_track = @get('currentTrack')
-      if cur_track.smid() == "#{playlist_id}:#{audio_id}"
+    if cur_track = @get('cur_track') # если пытаемя задействовать текущий трек
+      if cur_track.smid() is "#{playlist_id}:#{audio_id}"
         @togglePause()
         return
 
-    if @get('currentTrack')
-      soundManager.destroySound @get('currentTrack').smid()
+    if cur_track = @get('cur_track')
+      soundManager.destroySound cur_track.smid()
 
     track = @playlist.tracks.getById audio_id
 
-    App.vk.getTrackData track.get('audio_id'), (data)->
-      if data.response
-        track.set url: data.response[0].url || @fail
-      @set currentTrack: track
+    App.vk.getTrackData track.get('audio_id'), (data) ->
+      track.set url: (data.response[0].url || @fail_url) if data.response
+      @set cur_track: track
       App.player.trigger 'show_track_name'
-      soundManager.createSound
-        id: track.smid()
-        url: track.get 'url'
-        autoPlay: true
+      @createSound track, 'play'
     ,this
 
-  playOnce: (track)->
+  playOnce: (track) ->
     @set once: track
     #App.player.trigger 'show_track_name'
-    soundManager.createSound
-      id: track.smid()
-      url: track.get 'url'
-      autoPlay: true
+    @createSound track, 'play'
 
-  togglePause: ()->
-    if @get 'once'
-      soundManager.togglePause @get('once').smid()
+  togglePause: () ->
+    if track = @get 'once'
+      soundManager.togglePause track.smid()
       return
 
-    soundManager.togglePause @get('currentTrack')?.smid()
+    soundManager.togglePause @get('cur_track')?.smid()
     App.player.trigger 'toggle_pause'
 
   prev: ->
-    if not @get('currentTrack')
+    if not @get('cur_track')
       @play()
       return
-    soundManager.destroySound @get('currentTrack').smid()
 
-    prev = @playlist.tracks.getPrev @get('currentTrack').get('audio_id')
+    cur_track =  @get('cur_track')
+    soundManager.destroySound cur_track.smid()
+    prev = @playlist.tracks.getPrev cur_track.get('audio_id')
 
-    App.vk.getTrackData prev.get('audio_id'), (data)->
+    App.vk.getTrackData prev.get('audio_id'), (data) ->
       if data.response
-        prev.set url: data.response[0].url || @fail
-      @set currentTrack: prev
+        prev.set url: data.response[0].url || @fail_url
+      @set cur_track: prev
       App.player.trigger 'show_track_name'
-      soundManager.createSound
-        id: prev.smid()
-        url: prev.get 'url'
-        autoPlay: true
+      @createSound prev, 'play'
     ,this
 
   next: ->
-    if not @get('currentTrack')
+    if not @get('cur_track')
       @play()
       return
-    soundManager.destroySound @get('currentTrack').smid()
 
-    next = @playlist.tracks.getNext @get('currentTrack').get('audio_id')
+    cur_track = @get('cur_track')
+    soundManager.destroySound cur_track.smid()
+    next = @playlist.tracks.getNext cur_track.get('audio_id')
     
+    # если трек был загружен заранее
     if soundManager.getSoundById next.smid()
       soundManager.play next.smid()
-      if @next
-        @set currentTrack: @next
+      @set cur_track: @next if @next
       delete @next
       return
 
-    App.vk.getTrackData next.get('audio_id'), (data)->
+    App.vk.getTrackData next.get('audio_id'), (data) ->
       if data.response
-        next.set url: data.response[0].url || @fail
-      @set currentTrack: next
+        next.set url: data.response[0].url || @fail_url
+      @set cur_track: next
       App.player.trigger 'show_track_name'
-      soundManager.createSound
-        id: next.smid()
-        url: next.get 'url'
-        autoPlay: true
+      @createSound next, 'play'
     ,this
 
   loadNextTrack: ->
-    console.log 'Загружаем следущий трек..'
-    next = @playlist.tracks.getNext @get('currentTrack').get('audio_id')
+    console.info 'Загружаем следущий трек..'
+    next = @playlist.tracks.getNext @get('cur_track').get('audio_id')
 
-    App.vk.getTrackData next.get('audio_id'), (data)->
+    App.vk.getTrackData next.get('audio_id'), (data) ->
       if data.response
-        next.set url: data.response[0].url || @fail
+        next.set url: data.response[0].url || @fail_url
       @set next: next
-      soundManager.createSound
-        id: next.smid()
-        url: next.get 'url'
-        autoLoad: true
+      @createSound next, 'load'
     ,this
   
+  createSound: (track, param) ->
+    switch param
+      when 'play'
+        autoPlay = true
+      when 'load'
+        autoPlay = false
+      else
+        autoPlay = true
+
+    soundManager.createSound
+      id: track.smid()
+      url: track.get 'url'
+      autoPlay: autoPlay
+      autoLoad: true
+
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
-
-  urlSrcError: ()->
-    alert 'o_O Вы нашли очень редкую ошибку. Экземпляр данного трека был удален из VK.'

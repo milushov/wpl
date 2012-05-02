@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def getAuthKey(user_id)
+    Digest::MD5.hexdigest "#{APP_ID}_#{user_id}_#{APP_SECRET}"
+  end
+
+  # at the beginning we need to init VK module for requesting to vk.com api
   def app_init
     @app = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET
     if isAuth?
@@ -19,10 +24,22 @@ class ApplicationController < ActionController::Base
     end   
   end
 
+  # check user authentication by cookies, and if alright - save them to session
   def isAuth?
-    session[:access_token] and session[:user_id]
+    if cookies[:access_token] and cookies[:user_id] and cookies[:auth_key]
+      auth_key, real_auth_key = cookies[:auth_key], getAuthKey(cookies[:user_id])
+      if auth_key == real_auth_key
+        session[:access_token] = cookies[:access_token]
+        session[:user_id] = cookies[:user_id]
+        session[:auth_key] = cookies[:auth_key]
+        true
+      end
+    else
+      false
+    end
   end
 
+  # get id of user and return full profile with all friends and playlists
   def getProfile(id)
     return false unless id
 
@@ -94,7 +111,7 @@ class ApplicationController < ActionController::Base
     profile
   end
 
-  # принимает 2 массива id-шников vk и 1 id'шник юзера, чей профиль мы смотрим
+  # get 1 id of user whom page we need to get, 3 arrays of ids of his friends
   def getProfilesData(user_id, followers, followees, playlists_followers)
     user_id = session[:user_id] unless user_id
     followers = !followers.empty? ? followers.join(',') : ''
@@ -124,7 +141,7 @@ class ApplicationController < ActionController::Base
     @app.execute code: code
   end
 
-
+  # return full playlist by id
   def getPlaylist(url_or_id)
     return false unless url_or_id
 
@@ -152,9 +169,9 @@ class ApplicationController < ActionController::Base
       
       # сохраняем mongo'вские id'шники, вдруг понадобятся
       if followers_vk
-        followers_vk.each do |v|
-          temp = followers.select { |val| v['uid'] == val[:vk_id] }
-          v[:id] = temp.empty? ? nil : temp[0][:_id]
+        followers_vk.each do |fvk|
+          temp = followers.select { |f| f[:vk_id] == fvk['uid'] }
+          fvk[:id] = temp.empty? ? nil : temp[0][:_id]
         end
       else
         followers_vk = []
@@ -163,13 +180,13 @@ class ApplicationController < ActionController::Base
       followers_vk = []
     end
 
-    p = {
+    {
       _id: playlist.id,
       name: playlist.name,
+      url: playlist.url,
       image: playlist.image,
       description: playlist.description,
       tags: playlist.tags,
-      url: playlist.url,
       created_at: playlist.created_at,
       updated_at: playlist.updated_at,
       tracks: playlist.tracks,
@@ -178,11 +195,12 @@ class ApplicationController < ActionController::Base
     }    
   end
 
-  # simple check authorization to app
+  # simple check authorization for actions which rendering json
   def check_auth
     error('auth fail', 'auth') unless isAuth?
   end
-
+  
+  # render error in json format
   def error(error = 'unknown error', auth_error = nil)
     http_code = auth_error ? 403 : 200
     render(

@@ -6,10 +6,6 @@ Playlists::Application.configure do
 	# since you don't have to restart the web server when you make code changes.
 	config.cache_classes = false
 
-
-	#config.assets.enabled = false
-
-
 	# Log error messages when you accidentally call methods on nil.
 	config.whiny_nils = true
 
@@ -31,8 +27,6 @@ Playlists::Application.configure do
 
 	# Expands the lines which load the assets
 	config.assets.debug = true
-	#config.assets.debug = false
-
 
 	# config.assets.compress = true
 	# config.assets.compile = false

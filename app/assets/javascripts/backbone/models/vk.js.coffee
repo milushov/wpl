@@ -1,9 +1,8 @@
 class Playlists.Models.Vk extends Backbone.Model
+
   defaults:
-    base_url: 'https://api.vkontakte.ru/method/',
-    appId : 1111000
-    url : 'http://playlists.dev:3000/'
-    settings : 'notify,friends,photos,audio' # 1+2+4+8
+    base_url: 'https://api.vkontakte.ru/method/' # for makeUrl()
+    url : 'http://playlists.dev:3000/' # (!) with slash
     user_id : null
     access_token : null
     auth_status : false
@@ -129,7 +128,7 @@ class Playlists.Models.Vk extends Backbone.Model
         }'
     @ajax @makeUrl('execute', params), success, context
 
-  setCookies: (access_token, expires_in, user_id)->
+  setCookies: (access_token, user_id, expires_in)->
     expires_in = expires_in/(24*60*60)
     $.cookie('access_token', access_token, { expires: expires_in });
     $.cookie('user_id', user_id, { expires: expires_in });
@@ -139,19 +138,21 @@ class Playlists.Models.Vk extends Backbone.Model
     user_id: $.cookie('user_id')
 
   makeUrl: (method, params)->
-    if !method then false else
+    if not method then false else
       url =  @get('base_url') + method + '?access_token=' + @getCookies().access_token
-      if !params then url else
+      if not params then url else
         params_arr = []
         for key, val of params
           params_arr.push encodeURIComponent(key) + '=' + encodeURIComponent(val)
-        if params_arr.length then url  + '&' + params_arr.join('&') else url
+        if params_arr.length then url + '&' + params_arr.join('&') else url
 
   ajax: (url, success, context = false, _data = false, nojsonp = false) ->
-    if !url then false
+    return false if not url?
+
     dataType = if nojsonp then 'json' else 'jsonp'
     crossDomain = if nojsonp then false else true
     data = if _data then _data else false
+
     req = $.ajax
       url: url
       type: "POST"
@@ -160,11 +161,15 @@ class Playlists.Models.Vk extends Backbone.Model
       dataType: dataType
       context: context
 
-    if !success then success = (data)=> console.log data.response, 'ajax()'
+    if not success?
+      success = (data) =>
+        console.log data.response, 'from App.vk.ajax()'
+    
     req.done success
 
     req.fail (jqXHR, textStatus) =>
-      alert( "Request failed("+url+"): " + textStatus )  
+      console.error "Request failed(#{url}): #{textStatus}"
+      alert "Request failed(#{url}): #{textStatus}"
 
   rand: ->
     Math.random().toString(36).substr(-8)
