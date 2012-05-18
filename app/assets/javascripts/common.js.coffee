@@ -17,6 +17,7 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
   nestedCollection
 
 window.debug = 1
+window.imgur_key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
 
 $ ()->
   window.App = new Playlists.Routers.AppRouter(

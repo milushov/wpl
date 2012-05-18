@@ -3,6 +3,14 @@ class MainController < ApplicationController
   require 'openssl'
 
   def index
+    # render text: params and return
+    # spesial for alex.strigin :-)
+    if params[:format] and not %w{json xml html atom rss}.include? params[:format]
+      params[:path] << ".#{params[:format]}" if params[:path]
+      params[:id] << ".#{params[:format]}" if params[:id]
+      params[:format] = nil
+    end
+
     if isAuth?
       # here we will be select user profile by vk_id,
       # if profile don't extst (@user_profile will be equal false),
@@ -26,11 +34,6 @@ class MainController < ApplicationController
           render 'main/start' and return
         end
       end
-
-      @playlists = @user_profile[:playlists]
-      
-      # auth_key будет посылать в хедаре при каждом запросе к апи
-      @auth_key = Digest::MD5.hexdigest( "#{session[:user_id]}_roma_123_super_salt" )
       
       respond_to do |format|
         format.html # index.html.haml

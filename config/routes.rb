@@ -4,10 +4,12 @@ Playlists::Application.routes.draw do
     resources :playlists do 
       resources :tracks
 
-      get 'last', on: :collection, to: 'playlists#index'
-      get 'popular', on: :collection
-      get 'tags', on: :collection
-      get 'tags/:tag', on: :collection, to: 'playlists#playlistsByTag'
+      collection do
+        get 'last', to: 'playlists#index'
+        get 'popular'
+        get 'tags'
+        get 'tags/:tag', to: 'playlists#playlistsByTag'
+      end
     end
 
     resources :users
@@ -19,6 +21,7 @@ Playlists::Application.routes.draw do
     match 'users/:id/unfollow', to: 'users#unfollow'
   end
 
+  match 'u/:id', to: 'main#index'
   match 'auth', to: 'main#auth'
   match 'login', to: 'main#login'
   match 'logout', to: 'main#logout'

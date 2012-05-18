@@ -86,7 +86,11 @@ class ApplicationController < ActionController::Base
     ufe_ids = []; user_followees.each_key { |key| ufe_ids << key }
     pf_ids = []; playlists_followers.each_key { |key| pf_ids << key }
 
-    vk_data = getProfilesData(user[:vk_id], ufr_ids, ufe_ids, pf_ids)
+    if user[:vk_id].to_s == session[:user_id] and user.vk_data and Time.now - user.updated_at < 0.5.hour
+      vk_data = JSON.parse user.vk_data
+    else
+      vk_data = getProfilesData user[:vk_id], ufr_ids, ufe_ids, pf_ids, user
+    end
     
     profile = {}
     profile[:user] = vk_data['user'];
@@ -112,7 +116,7 @@ class ApplicationController < ActionController::Base
   end
 
   # get 1 id of user whom page we need to get, 3 arrays of ids of his friends
-  def getProfilesData(user_id, followers, followees, playlists_followers)
+  def getProfilesData(user_id, followers, followees, playlists_followers, user)
     user_id = session[:user_id] unless user_id
     followers = !followers.empty? ? followers.join(',') : ''
     followees = !followees.empty? ? followees.join(',') : ''
@@ -138,7 +142,15 @@ class ApplicationController < ActionController::Base
         playlists_followers: playlists_followers
       };
     "
-    @app.execute code: code
+
+    if user_id.to_s == session[:user_id]
+      temp = @app.execute code: code
+      user.vk_data = temp.to_json
+      user.save!
+      temp
+    else
+      @app.execute code: code
+    end
   end
 
   # return full playlist by id

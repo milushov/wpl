@@ -8,4 +8,5 @@ class User
 
   field :vk_id, type: Integer
   field :screen_name, type: String
+  field :vk_data, type: String
 end
