@@ -12,4 +12,6 @@ class Playlist
   field :creator, type: Integer # право рекдактировать теги без голосования
 
   embeds_many :tracks
+
+  # scope :find2, ->(id_or_url) { self.any_of({url: id_or_url}, {_id: id_or_url}).first }
 end

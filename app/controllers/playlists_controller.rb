@@ -42,6 +42,7 @@ class PlaylistsController < ApplicationController
   def follow
     if user = User.where(vk_id: session[:user_id].to_s).first
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+        # playlist = Playlist.find2 params[:id]
         error 'playlist not found'
         return
       end
@@ -82,7 +83,8 @@ class PlaylistsController < ApplicationController
   # GET /playlists/tags/sport
   def playlistsByTag
     limit = (params[:limit] ? (3..3*10).include?(params[:limit].to_i) : false) ? params[:limit].to_i : PER_PAGE
-    skip = (params[:skip] ? (1..15).include?(params[:skip].to_i) : false) ? params[:skip].to_i*count : 0 
+    skip = (params[:skip] ? (1..15).include?(params[:skip].to_i) : false) ? params[:skip].to_i*PER_PAGE : 0 
+    # binding.pry
     
     playlists_data = Playlist.tagged_with(params[:tag].to_s, skip, limit)
 

@@ -8,7 +8,7 @@ class Playlists.Models.Track extends Backbone.Model
   getName: () ->
     "#{@get('artist')} – #{@get('title')}"
 
-  # специальный двойной id'шник для SoundManager
+  # special double id for SoundManager
   smid: ->
     "#{@get "playlist_id"}:#{@get "audio_id"}"
 

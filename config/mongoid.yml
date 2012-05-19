@@ -1,10 +1,12 @@
 development:
   host: localhost
   database: playlists_development
+  raise_not_found_error: false
 
 test:
   host: localhost
   database: playlists_test
+  raise_not_found_error: false
 
 production:
   uri: <%= ENV['MONGOLAB_URI'] %>

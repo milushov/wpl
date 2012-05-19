@@ -1,88 +1,57 @@
 class TracksController < ApplicationController
-  before_filter :check_auth
-  # GET /tracks
-  # GET /tracks.json
-  def index
-    @tracks = Track.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @tracks }
-    end
-  end
-
-  # GET /tracks/1
-  # GET /tracks/1.json
+  before_filter :check_auth, :prepare
+  
+  # GET api/playlists/:playlist_id/tracks/:audio_id
   def show
-    @track = Track.find(params[:id])
+    render json: @track
+  end
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @track }
+  # GET api/playlists/:playlist_id/tracks/:audio_id/like
+  def like
+    if @track.lovers.include? @uid
+      error "you already like this track:#{@tid}"
+    else
+      vote :like and render json: @track
     end
   end
 
-  # GET /tracks/new
-  # GET /tracks/new.json
-  def new
-    @track = Track.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @track }
+  # GET api/playlists/:playlist_id/tracks/:audio_id/hate
+  def hate    
+    if @track.haters.include? @uid
+      error "you already hate this track:#{@tid}"
+    else
+      vote :hate and render json: @track
     end
   end
 
-  # GET /tracks/1/edit
-  def edit
-    @track = Track.find(params[:id])
-  end
+  private
+    def prepare
+      @pid = params[:playlist_id]
+      @tid = params[:id]
+      @uid = session[:user_id].to_i
 
-  # POST /tracks
-  # POST /tracks.json
-  def create
-    @track = Track.new(params[:track])
+      unless @playlist = Playlist.any_of({url: @pid}, {_id: @pid}).first
+        error("playlist:#{@pid} not found") and return
+      end
+      
+      unless @track = @playlist.tracks.any_of({audio_id: @tid}, {_id: @tid}).first
+        error("playlist:#{@tid} not found") and return
+      end
 
-    @plyalist = Playlist.find(params[:playlist_id])
-    @track = @plyalist.tracks.create(params[:track])
-    redirect_to playlist_path(@plyalist)
-
-    # respond_to do |format|
-    #   if @track.save
-    #     format.html { redirect_to @track, notice: 'Track was successfully created.' }
-    #     format.json { render json: @track, status: :created, location: @track }
-    #   else
-    #     format.html { render action: "new" }
-    #     format.json { render json: @track.errors, status: :unprocessable_entity }
-    #   end
-    # end
-  end
-
-  # PUT /tracks/1
-  # PUT /tracks/1.json
-  def update
-    @track = Track.find(params[:id])
-
-    respond_to do |format|
-      if @track.update_attributes(params[:track])
-        format.html { redirect_to @track, notice: 'Track was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @track.errors, status: :unprocessable_entity }
+      unless @user = User.any_of({screen_name: @uid}, {vk_id: @uid}, {_id: @uid}).first
+        error("user:#{@uid} not found") and return
       end
     end
-  end
 
-  # DELETE /tracks/1
-  # DELETE /tracks/1.json
-  def destroy
-    @track = Track.find(params[:id])
-    @track.destroy
-
-    respond_to do |format|
-      format.html { redirect_to tracks_url }
-      format.json { head :no_content }
+    def vote(act)
+      case act
+        when :like
+          @track.pull :haters, @uid and @track.inc :haters_count, -1 if @track.haters.include? @uid
+          @track.push :lovers, @uid and @track.inc :lovers_count, 1
+        when :hate
+          @track.pull :lovers, @uid and @track.inc :lovers_count, -1 if @track.lovers.include? @uid
+          @track.push :haters, @uid and @track.inc :haters_count, 1
+        end
+      @playlist.updated_at = @track.updated_at = Time.now.utc
     end
-  end
 end

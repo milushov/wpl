@@ -17,7 +17,18 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
   nestedCollection
 
 window.debug = 1
-window.imgur_key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
+
+window.imgur = {}
+window.imgur.api_url = 'http://api.imgur.com/2/upload.json'
+window.imgur.key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
+
+window.ondragover = (e) ->
+  e.preventDefault()
+  l 'ondragover'
+window.ondrop = (e) ->
+  e.preventDefault()
+  App.vk.uploadImage e.dataTransfer.files[0]
+  l 'ondrop'
 
 $ ()->
   window.App = new Playlists.Routers.AppRouter(

@@ -61,6 +61,10 @@ class Playlists.Models.Vk extends Backbone.Model
         false
     , 'json'
 
+  vote: (action, pid, tid, success, context) ->
+    return if action isnt 'like' and action isnt 'hate' or not pid or not tid
+    @ajax "#{@get('url')}api/playlists/#{pid}/tracks/#{tid}/#{action}", success, context, false, true, true
+
   getPlaylist: (id)->
     $.get "#{@get('url')}api/playlists/#{id}", (data)->
       if data && !data.error
@@ -74,6 +78,24 @@ class Playlists.Models.Vk extends Backbone.Model
 
   saveNewPlaylist: (playlist_data, success, context)->
     @ajax "#{@get("url")}api/playlists", success, context, playlist_data, true
+
+  uploadImage: (file) ->
+    if not file or not file.type.match /image.*/
+      alert 'Выберите изображение!'
+      return false
+    
+    fd = new FormData()
+    fd.append('image', file)
+    fd.append('key', imgur.key)
+
+    xhr = new XMLHttpRequest
+    xhr.open("POST", imgur.api_url)
+
+    xhr.onload = ()->
+      image_data = JSON.parse xhr.responseText
+      App.new_playlist_view.trigger 'image_uploaded', image_data
+
+    xhr.send fd
 
   getPlaylistsByTag: (tag)->
     $.get "#{@get('url')}api/playlists/tags/#{tag}", (data)->
@@ -146,16 +168,17 @@ class Playlists.Models.Vk extends Backbone.Model
           params_arr.push encodeURIComponent(key) + '=' + encodeURIComponent(val)
         if params_arr.length then url + '&' + params_arr.join('&') else url
 
-  ajax: (url, success, context = false, _data = false, nojsonp = false) ->
+  ajax: (url, success, context = false, _data = false, nojsonp = false, type = false) ->
     return false if not url?
 
     dataType = if nojsonp then 'json' else 'jsonp'
     crossDomain = if nojsonp then false else true
     data = if _data then _data else false
+    type = if type then 'GET' else 'POST'
 
     req = $.ajax
       url: url
-      type: "POST"
+      type: type
       crossDomain: crossDomain
       data: data
       dataType: dataType
@@ -173,4 +196,3 @@ class Playlists.Models.Vk extends Backbone.Model
 
   rand: ->
     Math.random().toString(36).substr(-8)
-

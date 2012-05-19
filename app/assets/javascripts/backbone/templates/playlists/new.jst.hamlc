@@ -2,13 +2,16 @@
   #info
     #photo
       %img{src: "http://vk.com/images/camera_a.gif"}
+      .btn%a{onclick: "$(':file').click();", style: 'position: relative; top: -93px;'} Загрузить
+      %input{onchange: "App.vk.uploadImage(this.files[0]);", type: 'file', hidden: true}
+
 #center_block.fl_l
   #name
     %input#playlist_name.fl_l{placeholder: 'Название плейлиста', onChange: "make_playlist_url(this);"}
 
     .input-prepend.fl_l
       %span.add-on{style: 'margin: 0 -4px 0 0;'} wpl.me/
-      %input#playlist_url.span2{:size => "16", :type => "text", placeholder: 'Ссылка на плейлист'}
+      %input#playlist_url.span2{size: "16", type: "text", placeholder: 'Ссылка на плейлист'}
 
   #playlists
     %ul#edit_tags

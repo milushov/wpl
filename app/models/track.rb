@@ -1,7 +1,6 @@
 class Track
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongo::Voteable
 
   field :artist, type: String
   field :title, type: String
@@ -9,7 +8,11 @@ class Track
   field :audio_id, type: String
   field :artist_photo, type: String
 
-  embedded_in :playlist
+  field :lovers, type: Array, default: []
+  field :lovers_count, type: Integer, default: 0
 
-  voteable self, :up => +1, :down => -1, :index => true
+  field :haters, type: Array, default: []
+  field :haters_count, type: Integer, default: 0
+
+  embedded_in :playlist
 end

@@ -16,6 +16,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     App.new_tracks = new Playlists.Collections.TracksCollection()
 
     @.on 'track_choosen', -> @updateTracks()
+    @.on 'image_uploaded', (image_data)-> @imageUploaded(image_data)
 
   addTrack: ->
     console.log 'Views.Playlists.NewView addTrack()'
@@ -69,6 +70,11 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       else
         alert 'что-то пошло не так'
     , this
+
+  imageUploaded: (imageUploaded) ->
+    console.log imageUploaded
+    @image = imageUploaded
+    $('#photo img')[0].src = @image.upload.links.large_thumbnail
 
   render: ->
     console.log 'Views.Playlists.NewView render()'

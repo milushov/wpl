@@ -1,13 +1,13 @@
 Playlists.Views.Tracks ||= {}
 
 class Playlists.Views.Tracks.TrackView extends Backbone.View
-  template: JST["backbone/templates/tracks/track"]
+  template: JST['backbone/templates/tracks/track']
 
   events :
     'click .play_btn' : 'play'
-    'click .up a' : 'voteUp'
-    'click .down a' : 'voteDown'
-    'click .destroy' : 'destroy'
+    'click .up a'     : 'like'
+    'click .down a'   : 'hate'
+    'click .destroy'  : 'destroy'
 
   tagName: 'div'
   className: 'track'
@@ -21,15 +21,23 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
     console.log 'Views.Tracks.TrackView play()', @model
     App.player.play @model
 
-  voteUp: ->
-    console.log 'Views.Tracks.TrackView voteUp()'
-    @model.voteUp()
+  like: ->
+    pid = @model.get 'playlist_id'
+    tid = @model.get '_id'
+    App.vk.vote 'like', pid, tid, (data)->
+      console.log data
+    ,this
 
-  voteDown: ->
-    console.log 'Views.Tracks.TrackView voteDown()'
-    @model.voteDown()
+  hate: ->
+    pid = @model.get 'playlist_id'
+    tid = @model.get '_id'
+    App.vk.vote 'hate', pid, tid, (data)->
+      console.log data
+      # @destroy if not App.settings.show_hidden_tracks
 
-  destroy: () ->
+    ,this
+
+  destroy: ->
     @model.destroy()
     this.remove()
     return false

@@ -2,7 +2,10 @@ Playlists::Application.routes.draw do
 
   scope 'api' do
     resources :playlists do 
-      resources :tracks
+      resources :tracks do
+        get 'like', to: 'tracks#like', on: :member
+        get 'hate', to: 'tracks#hate', on: :member
+      end
 
       collection do
         get 'last', to: 'playlists#index'
