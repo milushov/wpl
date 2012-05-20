@@ -3,34 +3,17 @@ class MainController < ApplicationController
   require 'openssl'
 
   def index
-    # render text: params and return
-    # spesial for alex.strigin :-)
-    if params[:format] and not %w{json xml html atom rss}.include? params[:format]
-      params[:path] << ".#{params[:format]}" if params[:path]
-      params[:id] << ".#{params[:format]}" if params[:id]
-      params[:format] = nil
-    end
+    format_fix if params[:format]
 
     if isAuth?
-      # here we will be select user profile by vk_id,
+      # here we will be select user profile by id,
       # if profile don't extst (@user_profile will be equal false),
       # we create user...
-      @user_profile = getProfile(session[:user_id])
+      @user_profile = getProfile session[:user_id]
 
       unless @user_profile
-        user_info = @app.users.get(
-          uids: session[:user_id],
-          fields: 'screen_name'
-        )[0]
-
-        User.create!(
-          vk_id: user_info['uid'].to_i,
-          screen_name: user_info['screen_name']
-        )
-
-        @user_profile = getProfile(session[:user_id])
-
-        unless @user_profile
+        create_user
+        unless(@user_profile = getProfile session[:user_id])
           render 'main/start' and return
         end
       end
@@ -48,9 +31,8 @@ class MainController < ApplicationController
   def login
     if isAuth?
       redirect_to action: 'index'
-    elsif
-      # try to get auth_token
-      requestAuth params[:return_to]
+    else
+      requestAuth params[:return_to] # try to get auth_token
     end
   end
 
@@ -61,7 +43,7 @@ class MainController < ApplicationController
     redirect_to action: 'index'
   end
 
-  # получает код для получения токена
+  # step2: obtain and save access token
   def auth
     if params[:code].nil?
       redirect_to action: 'index'
@@ -92,17 +74,28 @@ class MainController < ApplicationController
   end
 
   private
+    def create_user
+      user_info = @vk.users.get(
+        uids: session[:user_id],
+        fields: 'photo_big,screen_name'
+      )[0]
 
-  # запрашивает код, нужный для получения токена
-  def requestAuth(return_to = nil)
-    redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-    redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scope=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
-  end
+      user_info[:id] = user_info[:uid]
+      user_info.delete 'uid'
 
-  # сохраняет access_token, user_id, auth_key в сессии, куке
-  def saveToken( access_token, user_id )
-    cookies[:access_token] = session[:access_token] = access_token
-    cookies[:user_id] = session[:user_id] = user_id
-    cookies[:auth_key] = session[:auth_key] = getAuthKey user_id
-  end
+      User.create! user_info
+    end
+
+    # first step: request code, which is required for getting auth token
+    def requestAuth(return_to = nil)
+      redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
+      redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scope=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
+    end
+
+    # сохраняет access_token, user_id, auth_key в сессии, куке
+    def saveToken( access_token, user_id )
+      cookies[:access_token] = session[:access_token] = access_token
+      cookies[:user_id] = session[:user_id] = user_id.to_i
+      cookies[:auth_key] = session[:auth_key] = getAuthKey user_id.to_i
+    end
 end

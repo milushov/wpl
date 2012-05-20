@@ -1,0 +1,1 @@
+Playlist.delete_all and User.delete_all and Follow.delete_all

@@ -84,55 +84,36 @@ class PlaylistsController < ApplicationController
   def playlistsByTag
     limit = (params[:limit] ? (3..3*10).include?(params[:limit].to_i) : false) ? params[:limit].to_i : PER_PAGE
     skip = (params[:skip] ? (1..15).include?(params[:skip].to_i) : false) ? params[:skip].to_i*PER_PAGE : 0 
-    # binding.pry
     
     playlists_data = Playlist.tagged_with(params[:tag].to_s, skip, limit)
 
     playlists, playlists_followers_ids = [], []
 
     playlists_data.each do |playlist|
-      followers = []; playlist.followers.to_a.each { |f| followers << f[:follower_id].to_s }
-      p = {
+      fs = []
+      playlist.followers.to_a.each { |f| fs << f[:follower_id] }
+      playlists << {
         _id: playlist.id.to_s,
         url: playlist.url,
         name: playlist.name,
         description: playlist.description,
         tags: playlist.tags,
         image: playlist.image,
-        created_at: playlist.created_at,
-        updated_at: playlist.updated_at,
         tracks: playlist.tracks,
         followers_count: playlist.fferc,
-        followers: followers
+        followers: fs
       }
-      playlists << p
-      playlists_followers_ids += followers     
+      playlists_followers_ids += fs
     end
 
-    playlists_followers = {}; User.any_in(_id: playlists_followers_ids.uniq).to_a.each do |follower|
-      playlists_followers[follower[:vk_id].to_s] = follower[:_id].to_s
-    end
+    playlists_followers = {};
 
-    pf_ids = []; playlists_followers.each_key { |key| pf_ids << key }
-
-    pf_ids = !pf_ids.empty? ? pf_ids.join(',') : ''
-    
-    code = "
-      var fields = \"screen_name,photo,photo_big\";
-      var playlists_followers = API.users.get({ uids: [#{pf_ids}], fields: fields });
-      return {
-        playlists_followers: playlists_followers
-      };
-    "
-
-    if playlists_followers = @app.execute(code: code)['playlists_followers']
-      temp = {}; playlists_followers.each { |f| id = playlists_followers[f['uid']]; temp[id] = f }
-      playlists_followers = temp
+    User.any_in(_id: playlists_followers_ids.uniq).to_a.each do |follower|
+      playlists_followers[follower[:_id]] = follower
     end
 
     playlists.each do |playlist|
-      followers = []; playlist[:followers].each { |f| followers << playlists_followers[f] }
-      playlist[:followers] = followers
+      playlist[:followers].map! { |id| some_of playlists_followers[id] }
     end
 
     render json: {

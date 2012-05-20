@@ -1,3 +1,6 @@
+# не понимаю, почему рельсы перестали подгужить этот файл
+require 'mongoid-simple-tags'
+
 class Playlist
   include Mongoid::Document
   include Mongoid::Timestamps

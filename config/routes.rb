@@ -17,6 +17,7 @@ Playlists::Application.routes.draw do
 
     resources :users
 
+    # todo: переместить роуты в ресурсы
     match 'playlists/:id/follow', to: 'playlists#follow'
     match 'playlists/:id/unfollow', to: 'playlists#unfollow'
 

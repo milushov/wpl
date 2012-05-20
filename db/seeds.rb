@@ -6,6 +6,8 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+require "#{Rails.root}/app/models/mongoid-simple-tags.rb"
+
 Playlist.delete_all and User.delete_all and Follow.delete_all
 
 artists_photos = %w{ http://userserve-ak.last.fm/serve/34s/61520993.png http://userserve-ak.last.fm/serve/34s/71349074.png http://userserve-ak.last.fm/serve/34s/70383082.png http://userserve-ak.last.fm/serve/34s/50183455.png http://userserve-ak.last.fm/serve/34s/74977662.png http://userserve-ak.last.fm/serve/34s/57494593.png }
@@ -24,41 +26,32 @@ JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |play
   p "create playlist - #{playlist["url"]} with tags: #{pl.tags}"
 end
 
-p '\n'
+p ''
 
 p 'creating users...'
-users = File.open("#{Rails.root}/db/users.txt") do |users|
-  users.read.each_line do |user|
-    vk_id, screen_name, followee = user.split('|')
-    new_user = User.create!(vk_id: vk_id, screen_name: screen_name)
-    p "user #{new_user.screen_name} created"
-  end
+users = []
+JSON.parse(File.open("#{Rails.root}/db/users.json").read.to_s)['response'].each do |user|
+  user['id'] = user['uid']
+  user.delete 'uid'
+  new_user = User.create! user
+  users << new_user
+  p "user #{new_user.screen_name} created"
 end
 
-p '\n'
+p ''
 
-users = File.open("#{Rails.root}/db/users.txt") do |users|
-  users.read.each_line do |user|
-    vk_id, screen_name, followee = user.split('|')
-    user_action = User.where({vk_id: vk_id}).first
-
-    playlists.each do |playlist|
-      if(rand(1..2).even? or rand(1..2).odd?)
-        user_action.follow( playlist )
-        p "user #{user_action.screen_name} followed playlist #{playlist.url}"
-      end
+users.each do |user|
+  playlists.each do |playlist|
+    if rand(1..2).even? or rand(1..2).even?
+      user.follow(playlist)
+      p "user #{user.screen_name} followed playlist #{playlist.url}"
     end
-    
-    p '\n'
-
-    followee.split(' ').each do |id|
-      if(rand(1..2).even? or rand(1..2).odd?)
-        who_follow = User.where({vk_id: id}).first
-        user_action.follow( who_follow )
-        p "user #{user_action.screen_name} followed user #{who_follow.screen_name}"
-      end
+  end
+  
+  users.each do |followee|
+    if rand(1..2).even? or rand(1..2).even?
+      user.follow(followee) if user.id != followee.id
+      p "user #{user.screen_name} followed user #{followee.screen_name}"
     end
-
-    p '\n'
   end
 end

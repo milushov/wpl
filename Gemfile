@@ -37,16 +37,19 @@ gem 'thin'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 gem 'mongoid'
 gem 'mongoid_follow', git: 'git://github.com/YanhaoYang/mongoid_follow.git'
-gem 'voteable_mongo'
-gem 'kaminari'
+# gem 'voteable_mongo'
+# gem 'kaminari'
 gem 'bson_ext'
 gem 'haml-rails'
 gem 'rails-backbone'
-gem 'awesome_print'
 
 #gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'yajl-ruby'
 gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git' # версия которая работаем у меня на шиндовс
-gem 'pry', group: :development
 
 # gem 'mongoid-simple-tags', '0.0.5', git: 'git://github.com/thrk/mongoid-simple-tags.git'
+
+group :development do
+  gem 'awesome_print'
+  gem 'pry'
+end

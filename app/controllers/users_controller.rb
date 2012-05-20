@@ -10,14 +10,10 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1
-  def show
-    # spesial for alex.strigin :-)
-    if params[:format] and not %w{json xml html atom rss}.include? params[:format]
-      params[:id] << ".#{params[:format]}"
-      params[:format] = nil
-    end
+  def show   
+    format_fix if params[:format]
     
-    if user_profile = getProfile(params[:id])
+    if(user_profile = getProfile params[:id])
       render json: user_profile
     else
       error("user #{params[:id]} not found")
@@ -58,21 +54,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # POST /users
-  def create
-    @user = User.new(params[:user])
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render json: @user, status: :created, location: @user }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # PUT /users/1
   def update
     @user = User.find(params[:id])
@@ -88,14 +69,19 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
+  # GET /users/1/bun?days=1&hours=10&minutes=1
+  def ban
+    days = params[:days] || 0
+    hours = params[:hours] || 0
+    minutes = params[:minutes] || 0
 
-    respond_to do |format|
-      format.html { redirect_to users_url }
-      format.json { head :no_content }
-    end
+    @user = User.find2 params[:id]
+    @user.ban = true
+    @user.unban_date = Time.now + 1.days + 1.hours + 1.minutes
+    @user.save!
+  end
+
+  def unban
+    User.find2(params[:id]).set bun: false
   end
 end

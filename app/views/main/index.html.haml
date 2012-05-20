@@ -26,7 +26,7 @@
           %li
             .btn-group
               %a.btn.btn-primary{href: '/'}
-                =@user_profile[:user]['first_name']
+                =@user_profile[:user][:first_name]
               %a.btn.btn-primary.dropdown-toggle{data: {toggle: 'dropdown'}}
                 %span.caret
               %ul.dropdown-menu

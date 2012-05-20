@@ -78,17 +78,11 @@ module Mongoid
           results.find().to_a.map{ |item| { :name => item['_id'], :count => item['value'].to_i } }
         end
         
-        # def tagged_with(tags)
-        #   tags = [tags] unless tags.is_a? Array
-        #   criteria.in(:tags => tags).to_a
-        # end
-
         def tagged_with(tags, skip = 0, limit = 12)
           tags = [tags] unless tags.is_a? Array
           criteria.in(tags: tags).skip(skip).limit(limit).to_a
         end
-      end
-      
+      end      
     end
   end
 end

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   before_filter :app_init
-
+  SHOW_FIELDS = %w{ id screen_name first_name last_name photo photo_big}
   APP_ID = 1111000
   APP_SECRET = '1111000key'
   REDIRECT_URI = 'http://playlists.dev:3000/auth'
@@ -17,11 +17,9 @@ class ApplicationController < ActionController::Base
 
   # at the beginning we need to init VK module for requesting to vk.com api
   def app_init
-    @app = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET
-    if isAuth?
-      @app.access_token = session[:access_token]
-      #@app.settings = SETTINGS
-    end   
+    @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET    
+    @vk.access_token = session[:access_token] if isAuth?
+    #@vk.settings = SETTINGS
   end
 
   # check user authentication by cookies, and if alright - save them to session
@@ -42,81 +40,84 @@ class ApplicationController < ActionController::Base
   # get id of user and return full profile with all friends and playlists
   def getProfile(id)
     return false unless id
+    return false unless user = User.any_of({screen_name: id}, {_id: id.to_i}).first
 
-    user = User.any_of({screen_name: id}, {vk_id: id}, {_id: id}).first
-    
-    return false unless user
+    # mini statisctics
+    if user.me? session[:user_id]
+      user.app_friends = @vk.friends.getAppUsers if user.last_visit < Time.now - 3.hour
+      user.last_visit = Time.now
+      user.visits_count = user.visits_count + 1
+      user.save
+    end   
 
-    user_followers = {}; user.all_followers_by_model('User').to_a.each { |f| user_followers[f[:vk_id]] = f[:_id].to_s }
-    user_followers_count = user.followers_count_by_model('User') || 0
+    followers = user.all_followers_by_model('User').to_a
+    followers_count = user.followers_count_by_model('User') || 0
     
-    user_followees = {}; user.all_followees_by_model('User').to_a.each { |f| user_followees[f[:vk_id]] = f[:_id].to_s }
-    user_followees_count = user.followees_count_by_model('User') || 0
+    followees = user.all_followees_by_model('User').to_a
+    followees_count = user.followees_count_by_model('User') || 0
     
     playlists_data = user.all_followees_by_model('Playlist')
-
+    playlists_count = user.followees_count_by_model('Playlist') || 0
+    
     playlists, playlists_followers_ids = [], []
 
-    playlists_data.each do |playlist|
-      followers = []; playlist.followers.to_a.each { |f| followers << f[:follower_id].to_s }
-      p = {
+    playlists_data.each do |playlist| # for loop for new scope
+      fs = []
+      # playlist.followers store following relations
+      playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
+
+      playlists << {
         _id: playlist.id.to_s,
         url: playlist.url,
+        image: playlist.image,
         name: playlist.name,
         description: playlist.description,
         tags: playlist.tags,
-        image: playlist.image,
-        created_at: playlist.created_at,
-        updated_at: playlist.updated_at,
         tracks: playlist.tracks,
         followers_count: playlist.fferc,
-        followers: followers
+        followers: fs
       }
-      playlists << p
-      playlists_followers_ids += followers     
+      playlists_followers_ids += fs
     end
 
-    playlists_followers = {}; User.any_in(_id: playlists_followers_ids.uniq).to_a.each { |follower|
-      playlists_followers[follower[:vk_id].to_s] = follower[:_id].to_s
-    }
-    
-    playlists_count = user.followees_count_by_model('Playlist') || 0
+    playlists_followers = {};
+    User.any_in(_id: playlists_followers_ids | user.app_friends).to_a.each do |follower|
+      playlists_followers[follower[:_id]] = some_of follower
+    end
 
-    ufr_ids = []; user_followers.each_key { |key| ufr_ids << key }
-    ufe_ids = []; user_followees.each_key { |key| ufe_ids << key }
-    pf_ids = []; playlists_followers.each_key { |key| pf_ids << key }
+    user.app_friends.each do |friend_id|
+      followers.unshift playlists_followers[friend_id]
+      followees.unshift playlists_followers[friend_id]
+    end 
 
-    if user[:vk_id].to_s == session[:user_id] and user.vk_data and Time.now - user.updated_at < 0.5.hour
-      vk_data = JSON.parse user.vk_data
-    else
-      vk_data = getProfilesData user[:vk_id], ufr_ids, ufe_ids, pf_ids, user
+    playlists.each do |playlist|
+      playlist[:followers].map! { |f| playlists_followers[f] }
     end
     
     profile = {}
-    profile[:user] = vk_data['user'];
-    profile[:user][:followers_count] = user_followers_count + vk_data['app_friends'].count
-    profile[:user][:followees_count] = user_followees_count + vk_data['app_friends'].count
-    profile[:user][:playlists_count] = playlists_count
-    
-    if vk_data['playlists_followers']
-      temp = {}; vk_data['playlists_followers'].each { |f| id = playlists_followers[f['uid'].to_s]; temp[id] = f }
-      vk_data['playlists_followers'], temp = temp, nil
-    end
 
-    playlists.each do |playlist|
-      followers = []; playlist[:followers].each { |f| followers << vk_data['playlists_followers'][f] }
-      playlist[:followers] = followers
-    end
-
-    profile[:followers] = vk_data['followers'] || [] # важно чтобы были пустые массивы
-    profile[:followees] = vk_data['followees'] || []
+    profile[:user] = some_of user
+    profile[:followers] = followers.map { |f| some_of f } || [] # important to have empty arrays if no followers
+    profile[:followees] = followees.map { |f| some_of f } || [] 
     profile[:playlists] = playlists || []
+    profile[:user][:followers_count] = followers_count + user.app_friends.count
+    profile[:user][:followees_count] = followees_count + user.app_friends.count
+    profile[:user][:playlists_count] = playlists_count
     
     profile
   end
 
+  def some_of from
+    obj = {}
+    SHOW_FIELDS.each do |field|
+      field = field.to_sym
+      obj[field] = from[field == :id ? :_id : field]
+    end
+    obj
+  end
+
   # get 1 id of user whom page we need to get, 3 arrays of ids of his friends
-  def getProfilesData(user_id, followers, followees, playlists_followers, user)
+  def getProfilesData(user_id, followers, followees, playlists_followers)
     user_id = session[:user_id] unless user_id
     followers = !followers.empty? ? followers.join(',') : ''
     followees = !followees.empty? ? followees.join(',') : ''
@@ -143,14 +144,7 @@ class ApplicationController < ActionController::Base
       };
     "
 
-    if user_id.to_s == session[:user_id]
-      temp = @app.execute code: code
-      user.vk_data = temp.to_json
-      user.save!
-      temp
-    else
-      @app.execute code: code
-    end
+    @vk.execute code: code
   end
 
   # return full playlist by id
@@ -177,7 +171,7 @@ class ApplicationController < ActionController::Base
         var followers = API.users.get({ uids: uids, fields: fields});
         return followers;"
 
-      followers_vk = @app.execute code: code
+      followers_vk = @vk.execute code: code
       
       # сохраняем mongo'вские id'шники, вдруг понадобятся
       if followers_vk
@@ -219,5 +213,14 @@ class ApplicationController < ActionController::Base
       json: { error: error },
       status: http_code
     ) and return
+  end
+
+  # spesial for alex.strigin :-)
+  def format_fix
+    unless %w{json html rss}.include? params[:format]
+      params[:path] << ".#{params[:format]}" if params[:path]
+      params[:id] << ".#{params[:format]}" if params[:id]
+      params.delete 'format'
+    end
   end
 end
