@@ -41,7 +41,8 @@ class ApplicationController < ActionController::Base
   def getProfile(id)
     return false unless id
     return false unless user = User.any_of({screen_name: id}, {_id: id.to_i}).first
-
+    session['ban'] = user.unban_date and return -1 if user.ban
+    
     # mini statisctics
     if user.me? session[:user_id]
       user.app_friends = @vk.friends.getAppUsers if user.last_visit < Time.now - 3.hour
@@ -204,6 +205,7 @@ class ApplicationController < ActionController::Base
   # simple check authorization for actions which rendering json
   def check_auth
     error('auth fail', 'auth') unless isAuth?
+    error("ban up to #{session['ban']}", 'auth') if session['ban']
   end
   
   # render error in json format

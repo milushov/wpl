@@ -31,6 +31,10 @@ window.ondrop = (e) ->
   l 'ondrop'
 
 $ ()->
+  if my_profile == -1
+    $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>"
+    return false
+
   window.App = new Playlists.Routers.AppRouter(
     playlists: my_profile['playlists']
   )

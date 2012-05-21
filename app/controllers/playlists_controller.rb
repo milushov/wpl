@@ -40,11 +40,9 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/test/follow
   def follow
-    if user = User.where(vk_id: session[:user_id].to_s).first
+    if user = User.find(session[:user_id].to_i)
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
-        # playlist = Playlist.find2 params[:id]
         error 'playlist not found'
-        return
       end
       status = user.follow(playlist)
       if status.nil?
@@ -59,10 +57,9 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/test/unfollow
   def unfollow
-    if user = User.where(vk_id: session[:user_id].to_s).first
+    if user = User.find(session[:user_id].to_i)
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
         error 'playlist not found'
-        return
       end
       status = user.unfollow(playlist)
       if status.nil?

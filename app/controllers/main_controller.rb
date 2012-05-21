@@ -40,6 +40,7 @@ class MainController < ApplicationController
     cookies[:access_token] = session[:access_token] = nil
     cookies[:user_id] = session[:user_id] = nil
     cookies[:auth_key] = session[:auth_key] = nil
+    session['ban'] = nil
     redirect_to action: 'index'
   end
 

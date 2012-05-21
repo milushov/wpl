@@ -13,7 +13,8 @@ class UsersController < ApplicationController
   def show   
     format_fix if params[:format]
     
-    if(user_profile = getProfile params[:id])
+    if user_profile = getProfile(params[:id])
+      check_auth if user_profile == -1
       render json: user_profile
     else
       error("user #{params[:id]} not found")
