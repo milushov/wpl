@@ -14,6 +14,10 @@ class PlaylistsController < ApplicationController
     render json: Playlist.desc(:fferc).limit(PER_PAGE)
   end
 
+  def last
+    render json: Playlist.desc(:fferc).limit(PER_PAGE)
+  end
+
   # GET /playlists/url
   def show
     if playlist = getPlaylist(params[:id])
@@ -40,36 +44,12 @@ class PlaylistsController < ApplicationController
 
   # GET /playlists/test/follow
   def follow
-    if user = User.find(session[:user_id].to_i)
-      unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
-        error 'playlist not found'
-      end
-      status = user.follow(playlist)
-      if status.nil?
-        render json: {status: true, id: params[:id]}
-      elsif status == false
-        error "Вы уже подписаны на этот [#{params[:id]}] плейлист."
-      else
-        error 'oO'
-      end
-    end
+    do_follow
   end
 
   # GET /playlists/test/unfollow
   def unfollow
-    if user = User.find(session[:user_id].to_i)
-      unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
-        error 'playlist not found'
-      end
-      status = user.unfollow(playlist)
-      if status.nil?
-        render json: {status: true, id: params[:id]}
-      elsif status == false
-        error "Вы уже отписалить от этого плейлиста [#{params[:id]}]."
-      else
-        error 'oO'
-      end
-    end
+    do_follow :undo
   end
 
   # GET /playlists/tags
@@ -134,5 +114,26 @@ class PlaylistsController < ApplicationController
   def destroy
     # @playlist = Playlist.find(params[:id])
     # @playlist.destroy
+  end
+
+  private
+  
+  def do_follow undo = nil
+    if user = User.find(session[:user_id].to_i)
+      unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+        error "playlist:#{params[:id]} not found"
+        return
+      end
+      
+      status = !undo ? user.follow(playlist) : user.unfollow(playlist)
+      
+      if status.nil?
+         render json: {status: true, id: params[:id]}
+      elsif status == false
+        error "Вы уже #{ !undo ? 'подписаны на этот' : 'отписаны от этого'} плейлиста:#{params[:id]}."
+      else
+        error 'o_O'
+      end
+    end
   end
 end

@@ -22,37 +22,11 @@ class UsersController < ApplicationController
   end
 
   def follow
-    if user = User.where(vk_id: session[:user_id].to_s).first
-      unless followee = User.any_of({_id: params[:id]}, {vk_id: params[:id]}, {screen_name: params[:id]}).first
-        error 'user not found'
-        return
-      end
-      status = user.follow(followee)
-      if status.nil?
-         render json: {status: true, id: params[:id]}
-      elsif status == false
-        error "Вы уже подписаны на этого человека [#{params[:id]}]."
-      else
-        error 'oO'
-      end
-    end
+    do_follow
   end
 
   def unfollow
-    if user = User.where(vk_id: session[:user_id].to_s).first
-      unless followee = User.any_of({_id: params[:id]}, {vk_id: params[:id]}, {screen_name: params[:id]}).first
-        error 'user not found'
-        return
-      end
-      status = user.unfollow(followee)
-      if status.nil?
-        render json: {status: true, id: params[:id]}  
-      elsif status == false
-        error "Вы уже отписалить от этого человека [#{params[:id]}]."
-      else
-        error 'oO'
-      end
-    end
+    do_follow :undo
   end
 
   # PUT /users/1
@@ -84,5 +58,26 @@ class UsersController < ApplicationController
 
   def unban
     User.find2(params[:id]).set bun: false
+  end
+
+  private
+  
+  def do_follow undo = nil
+    if user = User.find(session[:user_id].to_i)
+      unless followee = User.any_of({_id: params[:id].to_i}, {screen_name: params[:id]}).first
+        error "user:#{params[:id]} not found"
+        return
+      end
+      
+      status = !undo ? user.follow(followee) : user.unfollow(followee)
+      
+      if status.nil?
+         render json: {status: true, id: params[:id]}
+      elsif status == false
+        error "Вы уже #{ !undo ? 'подписаны на' : 'отписаны от'} этого человека:#{params[:id]}."
+      else
+        error 'o_O'
+      end
+    end
   end
 end

@@ -1,28 +1,51 @@
 Playlists::Application.routes.draw do
 
+  # # TODO: make blacklist, like this
+  # # http://guides.rubyonrails.org/routing.html
+
+  # class BlacklistConstraint
+  #   def initialize
+  #     @ips = Blacklist.retrieve_ips
+  #   end
+   
+  #   def matches?(request)
+  #     @ips.include?(request.remote_ip)
+  #   end
+  # end
+   
+  # TwitterClone::Application.routes.draw do
+  #   match "*path" => "blacklist#index",
+  #     :constraints => BlacklistConstraint.new
+  # end
+
   scope 'api' do
     resources :playlists do 
-      resources :tracks do
-        get 'like', to: 'tracks#like', on: :member
-        get 'hate', to: 'tracks#hate', on: :member
-      end
-
       collection do
-        get 'last', to: 'playlists#index'
+        get 'last'
         get 'popular'
         get 'tags'
         get 'tags/:tag', to: 'playlists#playlistsByTag'
       end
+
+      member do
+        get 'follow'
+        get 'unfollow'
+      end
+
+      resources :tracks do
+        member do
+          get 'like'
+          get 'hate'
+        end
+      end
     end
 
-    resources :users
-
-    # todo: переместить роуты в ресурсы
-    match 'playlists/:id/follow', to: 'playlists#follow'
-    match 'playlists/:id/unfollow', to: 'playlists#unfollow'
-
-    match 'users/:id/follow', to: 'users#follow'
-    match 'users/:id/unfollow', to: 'users#unfollow'
+    resources :users do
+      member do
+        get 'follow'
+        get 'unfollow'
+      end
+    end
   end
 
   match 'u/:id', to: 'main#index'

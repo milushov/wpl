@@ -35,6 +35,9 @@ gem 'thin'
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+
+gem 'debugger', group: [:development, :test]
+
 gem 'mongoid'
 gem 'mongoid_follow', git: 'git://github.com/YanhaoYang/mongoid_follow.git'
 # gem 'voteable_mongo'

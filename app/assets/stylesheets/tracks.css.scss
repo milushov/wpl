@@ -70,6 +70,25 @@
       text-align: right;
     }
   }
+
+  .lovers {
+    width: 170px;
+    margin-bottom: 10px;
+
+    .lover {
+      overflow: hidden;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 1px;
+      margin-bottom: 2px;
+      @include rounded(3px);
+
+      img {
+        width: 30px; height: 30px;
+      } 
+    }
+  }
+
   .actions {
     
   }

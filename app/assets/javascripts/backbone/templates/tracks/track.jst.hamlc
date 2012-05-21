@@ -5,6 +5,11 @@
     = "#{@artist} – #{@title}"
   .duration.fl_r.clear
     = dur(@duration)
+.lovers.fl_r.clear
+  - if @lovers.length
+    - for id, lover of @lovers
+      %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
+        %img{src: "#{lover.photo}"}
 .actions.fl_r.clear
   .up.fl_l
     %a.btn ▲

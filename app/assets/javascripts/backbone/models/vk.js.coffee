@@ -34,7 +34,7 @@ class Playlists.Models.Vk extends Backbone.Model
     , 'json'
 
   follow: (type, id, undo)->
-    if not type or not id then eturn false
+    if not type or not id then return false
     if type != 'user' and type != 'playlist' then return false
 
     url = @get('url')

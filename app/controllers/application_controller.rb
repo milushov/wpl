@@ -64,8 +64,15 @@ class ApplicationController < ActionController::Base
 
     playlists_data.each do |playlist| # for loop for new scope
       fs = []
+      ts = []
       # playlist.followers store following relations
       playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
+
+      playlist.tracks.to_a.map! do |track|
+        track[:lovers] = track[:lovers].reverse[0...5]
+        ts += track[:lovers]
+        track
+      end
 
       playlists << {
         _id: playlist.id.to_s,
@@ -78,7 +85,7 @@ class ApplicationController < ActionController::Base
         followers_count: playlist.fferc,
         followers: fs
       }
-      playlists_followers_ids += fs
+      playlists_followers_ids += fs + ts
     end
 
     playlists_followers = {};
@@ -92,7 +99,12 @@ class ApplicationController < ActionController::Base
     end 
 
     playlists.each do |playlist|
-      playlist[:followers].map! { |f| playlists_followers[f] }
+      playlist[:followers].map! { |id| playlists_followers[id] }
+      playlist[:tracks].each do |track|
+        track[:lovers].map! do |id|
+          some_of playlists_followers[id], %w{ photo_big last_name }
+        end
+      end
     end
     
     profile = {}
@@ -104,48 +116,23 @@ class ApplicationController < ActionController::Base
     profile[:user][:followers_count] = followers_count + user.app_friends.count
     profile[:user][:followees_count] = followees_count + user.app_friends.count
     profile[:user][:playlists_count] = playlists_count
-    
+
     profile
   end
 
-  def some_of from
+  def some_of from, without = nil
+    show_fields = SHOW_FIELDS.map(&:to_sym)
+    show_fields -= without.map!(&:to_sym) if without
+
     obj = {}
-    SHOW_FIELDS.each do |field|
-      field = field.to_sym
+
+    show_fields.each do |field|
       obj[field] = from[field == :id ? :_id : field]
     end
-    obj
-  end
-
-  # get 1 id of user whom page we need to get, 3 arrays of ids of his friends
-  def getProfilesData(user_id, followers, followees, playlists_followers)
-    user_id = session[:user_id] unless user_id
-    followers = !followers.empty? ? followers.join(',') : ''
-    followees = !followees.empty? ? followees.join(',') : ''
-    playlists_followers = playlists_followers ? playlists_followers.join(',') : ''
     
-    code = "
-      var user_id = \"#{user_id}\";
-      var app_friends = API.friends.getAppUsers();
-      var uids = [#{followers}] + app_friends;
+    obj[:id] = from[:id] if obj[:id].nil?
 
-      var fields = \"screen_name,photo,photo_big\";
-
-      var user = API.users.get({ uids: user_id, fields: fields});
-      var followers = API.users.get({ uids: uids, fields: fields});
-      var followees = API.users.get({ uids: [#{followees}], fields: fields });
-      var playlists_followers = API.users.get({ uids: [#{playlists_followers}], fields: fields });
-
-      return { 
-        user: user[0],
-        followers: followers,
-        followees: followees,
-        app_friends: app_friends,
-        playlists_followers: playlists_followers
-      };
-    "
-
-    @vk.execute code: code
+    obj
   end
 
   # return full playlist by id
