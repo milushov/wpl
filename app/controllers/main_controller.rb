@@ -14,10 +14,12 @@ class MainController < ApplicationController
       unless @user_profile
         create_user
         unless(@user_profile = getProfile session[:user_id])
-          render 'main/start' and return
+          return render 'main/start'
         end
       end
       
+      @count_friends = ApplicationController::COUNT_FRIENDS.max + 1
+
       respond_to do |format|
         format.html # index.html.haml
       end
@@ -49,7 +51,7 @@ class MainController < ApplicationController
     if params[:code].nil?
       redirect_to action: 'index'
     elsif params[:error] and params[:error_description]
-      render inline: "#{params[:error]} - #{params[:error_description]}" and return
+      return render inline: "#{params[:error]} - #{params[:error_description]}"
     end
 
     uri = "https://oauth.vk.com/access_token?client_id=#{ APP_ID }&client_secret=#{ APP_SECRET }&code=#{params[:code]}"
@@ -57,13 +59,13 @@ class MainController < ApplicationController
     begin
       response = open(uri, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
     rescue => ex
-      render inline: "#{ex.class}: #{ex.message} uri(#{uri}) <b>failed</b>" and return
+      return render inline: "#{ex.class}: #{ex.message} uri(#{uri}) <b>failed</b>" 
     end
 
     response = JSON.parse response
 
     if response[:error] and response[:error_description]
-      render inline: "#{params[:error]} - #{params[:error_description]}" and return
+      return render inline: "#{params[:error]} - #{params[:error_description]}"
     else
       saveToken response['access_token'], response['user_id']
       if params[:return_to]
@@ -72,6 +74,10 @@ class MainController < ApplicationController
         redirect_to action: 'index'
       end
     end
+  end
+
+  def blacklist
+    error 'you in blacklist by ip'
   end
 
   private

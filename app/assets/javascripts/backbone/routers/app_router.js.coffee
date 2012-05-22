@@ -65,7 +65,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @follow_switch = false
     else if @follow_switch == 'user_unfollow'
       for f in my_profile.followees
-        if f.uid == user_data.user.uid
+        if f.id == user_data.user.id
           i = my_profile.followees.indexOf f
           my_profile.followees.splice i, 1
           break
@@ -106,10 +106,10 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       my_profile.playlists.push playlist.toJSON()
       @follow_switch = false
     else if @follow_switch == 'playlist_unfollow'
-      my_uid = my_profile.user.uid
+      my_id = my_profile.user.id
       playlist_followers = playlist.get('followers')
       for f in playlist_followers
-        if f.uid == my_uid
+        if f.id == my_id
           i = playlist_followers.indexOf f
           playlist_followers.splice i, 1
           break

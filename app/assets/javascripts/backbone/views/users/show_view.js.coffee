@@ -14,6 +14,7 @@ class Playlists.Views.User.ShowView extends Backbone.View
     console.log 'User.ShowView settings'
 
   followUser: ->
+    alert 123
     App.vk.follow 'user', @options.user.uid
 
   unfollowUser: ->

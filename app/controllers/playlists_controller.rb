@@ -121,8 +121,7 @@ class PlaylistsController < ApplicationController
   def do_follow undo = nil
     if user = User.find(session[:user_id].to_i)
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
-        error "playlist:#{params[:id]} not found"
-        return
+        return error "playlist:#{params[:id]} not found"
       end
       
       status = !undo ? user.follow(playlist) : user.unfollow(playlist)

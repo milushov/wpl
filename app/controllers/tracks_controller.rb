@@ -11,7 +11,7 @@ class TracksController < ApplicationController
     if @track.lovers.include? @uid
       error "you already like this track:#{@tid}"
     else
-      vote :like and render json: @track
+      vote :like and render json: {status: true, id: @tid}
     end
   end
 
@@ -20,7 +20,7 @@ class TracksController < ApplicationController
     if @track.haters.include? @uid
       error "you already hate this track:#{@tid}"
     else
-      vote :hate and render json: @track
+      vote :hate and render json: {status: true, id: @tid}
     end
   end
 
@@ -31,15 +31,15 @@ class TracksController < ApplicationController
       @uid = session[:user_id].to_i
 
       unless @playlist = Playlist.any_of({url: @pid}, {_id: @pid}).first
-        error("playlist:#{@pid} not found") and return
+        return error("playlist:#{@pid} not found")
       end
       
       unless @track = @playlist.tracks.any_of({audio_id: @tid}, {_id: @tid}).first
-        error("playlist:#{@tid} not found") and return
+        return error("playlist:#{@tid} not found")
       end
 
       unless @user = User.any_of({screen_name: @uid}, {vk_id: @uid}, {_id: @uid}).first
-        error("user:#{@uid} not found") and return
+        return error("user:#{@uid} not found")
       end
     end
 
@@ -53,5 +53,6 @@ class TracksController < ApplicationController
           @track.push :haters, @uid and @track.inc :haters_count, 1
         end
       @playlist.updated_at = @track.updated_at = Time.now.utc
+      @playlist.save
     end
 end

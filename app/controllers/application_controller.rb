@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
 
   before_filter :app_init
-  SHOW_FIELDS = %w{ id screen_name first_name last_name photo photo_big}
+  COUNT_FRIENDS = 0...15
   APP_ID = 1111000
   APP_SECRET = '1111000key'
   REDIRECT_URI = 'http://playlists.dev:3000/auth'
@@ -63,12 +63,11 @@ class ApplicationController < ActionController::Base
     playlists, playlists_followers_ids = [], []
 
     playlists_data.each do |playlist| # for loop for new scope
-      fs = []
-      ts = []
+      fs, ts = [], []
       # playlist.followers store following relations
       playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
 
-      playlist.tracks.to_a.map! do |track|
+      playlist.tracks.map! do |track|
         track[:lovers] = track[:lovers].reverse[0...5]
         ts += track[:lovers]
         track
@@ -83,15 +82,12 @@ class ApplicationController < ActionController::Base
         tags: playlist.tags,
         tracks: playlist.tracks,
         followers_count: playlist.fferc,
-        followers: fs
+        followers: fs.reverse
       }
       playlists_followers_ids += fs + ts
     end
 
-    playlists_followers = {};
-    User.any_in(_id: playlists_followers_ids | user.app_friends).to_a.each do |follower|
-      playlists_followers[follower[:_id]] = some_of follower
-    end
+    playlists_followers = User.getByIds playlists_followers_ids | user.app_friends
 
     user.app_friends.each do |friend_id|
       followers.unshift playlists_followers[friend_id]
@@ -99,19 +95,19 @@ class ApplicationController < ActionController::Base
     end 
 
     playlists.each do |playlist|
-      playlist[:followers].map! { |id| playlists_followers[id] }
+      playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
       playlist[:tracks].each do |track|
         track[:lovers].map! do |id|
-          some_of playlists_followers[id], %w{ photo_big last_name }
+          playlists_followers[id].show without: %w{ photo_big last_name }
         end
       end
     end
     
     profile = {}
 
-    profile[:user] = some_of user
-    profile[:followers] = followers.map { |f| some_of f } || [] # important to have empty arrays if no followers
-    profile[:followees] = followees.map { |f| some_of f } || [] 
+    profile[:user] = user.show
+    profile[:followers] = followers.reverse[COUNT_FRIENDS].map { |f| f.show } || []
+    profile[:followees] = followees.reverse[COUNT_FRIENDS].map { |f| f.show } || [] 
     profile[:playlists] = playlists || []
     profile[:user][:followers_count] = followers_count + user.app_friends.count
     profile[:user][:followees_count] = followees_count + user.app_friends.count
@@ -120,58 +116,25 @@ class ApplicationController < ActionController::Base
     profile
   end
 
-  def some_of from, without = nil
-    show_fields = SHOW_FIELDS.map(&:to_sym)
-    show_fields -= without.map!(&:to_sym) if without
+  # return full playlist by id
+  def getPlaylist(id)
+    return false unless id
+    return false unless playlist = Playlist.any_of({url: id}, {_id: id}).first
+    
+    followers = playlist.all_followers_by_model('User')  || []
+    followers = followers[COUNT_FRIENDS]
 
-    obj = {}
-
-    show_fields.each do |field|
-      obj[field] = from[field == :id ? :_id : field]
+    lovers_ids = []
+    playlist.tracks.map! do |track|
+      track[:lovers] = track[:lovers].reverse[0...5]
+      lovers_ids |= track[:lovers]
+      track
     end
     
-    obj[:id] = from[:id] if obj[:id].nil?
+    lovers = User.getByIds lovers_ids
 
-    obj
-  end
-
-  # return full playlist by id
-  def getPlaylist(url_or_id)
-    return false unless url_or_id
-
-    playlist = Playlist.any_of({url: url_or_id}, {_id: url_or_id}).first
-    
-    return false unless playlist
-    
-    followers = playlist.all_followers_by_model('User') 
-       
-    if followers
-      # вытаскиваем id'шники
-      followers_vk_ids = followers.map { |v| v[:vk_id] }
-
-      # показываем только 15 фоловеров
-      followers_vk_ids = followers_vk_ids[0...15] if followers_vk_ids.length > 15
-      followers_vk_ids = followers_vk_ids ? followers_vk_ids.join(',') : ''
-
-      code = "
-        var uids = [#{followers_vk_ids}];
-        var fields = \"screen_name,photo,photo_big\";
-        var followers = API.users.get({ uids: uids, fields: fields});
-        return followers;"
-
-      followers_vk = @vk.execute code: code
-      
-      # сохраняем mongo'вские id'шники, вдруг понадобятся
-      if followers_vk
-        followers_vk.each do |fvk|
-          temp = followers.select { |f| f[:vk_id] == fvk['uid'] }
-          fvk[:id] = temp.empty? ? nil : temp[0][:_id]
-        end
-      else
-        followers_vk = []
-      end
-    else
-      followers_vk = []
+    playlist.tracks.each do |track|
+      track.lovers.map! { |id| lovers[id].show without: %w{ last_name photo_big } }
     end
 
     {
@@ -181,23 +144,21 @@ class ApplicationController < ActionController::Base
       image: playlist.image,
       description: playlist.description,
       tags: playlist.tags,
-      created_at: playlist.created_at,
-      updated_at: playlist.updated_at,
       tracks: playlist.tracks,
       followers_count: playlist.fferc,
-      followers: followers_vk
+      followers: followers
     }    
   end
 
   # simple check authorization for actions which rendering json
   def check_auth
     error('auth fail', 'auth') unless isAuth?
-    error("ban up to #{session['ban']}", 'auth') if session['ban']
+    error("ban up to #{session['ban']}", :auth) if session['ban']
   end
   
   # render error in json format
   def error(error = 'unknown error', auth_error = nil)
-    http_code = auth_error ? 403 : 200
+    http_code = auth_error ? 401 : 200
     render(
       json: { error: error },
       status: http_code

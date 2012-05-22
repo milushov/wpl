@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   # GET /users
   def index
-    render json: User.all.desc(:_id).limit(10)
+    render json: User.all.desc(:_id).limit(10).to_a.map { |user| user.show }
   end
 
   # GET /users/1
@@ -61,12 +61,11 @@ class UsersController < ApplicationController
   end
 
   private
-  
+
   def do_follow undo = nil
     if user = User.find(session[:user_id].to_i)
       unless followee = User.any_of({_id: params[:id].to_i}, {screen_name: params[:id]}).first
-        error "user:#{params[:id]} not found"
-        return
+        return error "user:#{params[:id]} not found"
       end
       
       status = !undo ? user.follow(followee) : user.unfollow(followee)

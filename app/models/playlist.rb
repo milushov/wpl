@@ -16,5 +16,9 @@ class Playlist
 
   embeds_many :tracks
 
+  index :name
+  index :description
+  index :url, unique: true
+
   # scope :find2, ->(id_or_url) { self.any_of({url: id_or_url}, {_id: id_or_url}).first }
 end
