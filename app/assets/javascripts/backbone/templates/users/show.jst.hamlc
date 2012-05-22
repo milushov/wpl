@@ -4,8 +4,8 @@
       %img{src: "#{@user.photo_big}"}
     .follow
       - if @i_follow
-        %button#unfollow.btn.btn-success
-          <i class="icon-ok-sign icon-white"></i>
+        %button#unfollow.btn
+          <i class="icon-ok-sign icon-black"></i>
           Подписан
       - else
         %button#follow.btn.btn-success

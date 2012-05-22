@@ -59,7 +59,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       image:  'http://vk.com/images/camera_a.gif'
       description: $('#playlist_description').val()
       tags: $("#edit_tags").tagit("assignedTags")
-      creator: my_profile.user.uid
+      creator: my_profile.user.id
       tracks: App.new_tracks.toJSON()
 
     new_playlist = JSON.stringify new_playlist

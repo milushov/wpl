@@ -2,7 +2,8 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :app_init
+  before_filter :app_init, :check_abuse
+
   COUNT_FRIENDS = 0...15
   APP_ID = 1111000
   APP_SECRET = '1111000key'
@@ -30,6 +31,7 @@ class ApplicationController < ActionController::Base
         session[:access_token] = cookies[:access_token]
         session[:user_id] = cookies[:user_id]
         session[:auth_key] = cookies[:auth_key]
+        session[:abuse] ||= []
         true
       end
     else
@@ -152,17 +154,14 @@ class ApplicationController < ActionController::Base
 
   # simple check authorization for actions which rendering json
   def check_auth
-    error('auth fail', 'auth') unless isAuth?
+    error('auth fail', 401) unless isAuth?
     error("ban up to #{session['ban']}", :auth) if session['ban']
   end
   
   # render error in json format
-  def error(error = 'unknown error', auth_error = nil)
-    http_code = auth_error ? 401 : 200
-    render(
-      json: { error: error },
-      status: http_code
-    ) and return
+  def error(error = 'unknown error', http_code = nil)
+    http_code = 200 unless http_code
+    return render json: { error: error }, status: http_code
   end
 
   # spesial for alex.strigin :-)
@@ -171,6 +170,20 @@ class ApplicationController < ActionController::Base
       params[:path] << ".#{params[:format]}" if params[:path]
       params[:id] << ".#{params[:format]}" if params[:id]
       params.delete 'format'
+    end
+  end
+
+  def check_abuse
+    return unless session[:abuse]
+    if session[:abuse].size >= 3
+      session[:abuse].shift and session[:abuse].push Time.now.to_f
+      last_time = session[:abuse][2] - session[:abuse][1]
+      if last_time < 1.0/2
+        session[:abuse] = []
+        return error "abuse", 403
+      end
+    else
+      session[:abuse].push Time.now.to_f
     end
   end
 end

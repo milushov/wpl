@@ -16,7 +16,7 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
   nestedCollection
 
-window.debug = 1
+window.debug = !1
 
 window.imgur = {}
 window.imgur.api_url = 'http://api.imgur.com/2/upload.json'
@@ -78,6 +78,11 @@ $ ()->
 
   $(document).ajaxError (e, jqxhr, settings, exception) =>
     console.error arguments
+    # console.error jqxhr.responseText
+    if jqxhr.status == 403
+      if JSON.parse(jqxhr.responseText).error == 'abuse'
+        return alert 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)'
+
     alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
     #history.back()
 

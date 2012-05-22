@@ -39,7 +39,7 @@ class Playlists.Models.Vk extends Backbone.Model
 
     url = @get('url')
     action = unless undo then 'follow' else 'unfollow'
-
+    
     $.get "#{url}api/#{type}s/#{id}/#{action}", (data)->
       if data and not data.error
         if type == 'user'
@@ -192,7 +192,7 @@ class Playlists.Models.Vk extends Backbone.Model
 
     req.fail (jqXHR, textStatus) =>
       console.error "Request failed(#{url}): #{textStatus}"
-      alert "Request failed(#{url}): #{textStatus}"
+      # alert "Request failed(#{url}): #{textStatus}"
 
   rand: ->
     Math.random().toString(36).substr(-8)

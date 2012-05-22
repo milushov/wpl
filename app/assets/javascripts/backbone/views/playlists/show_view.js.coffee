@@ -1,7 +1,7 @@
 Playlists.Views.Playlists ||= {}
 
 class Playlists.Views.Playlists.ShowView extends Backbone.View
-  template: JST["backbone/templates/playlists/show"]
+  template: JST['backbone/templates/playlists/show']
 
   events:
     'click #play_all' : 'playAll'

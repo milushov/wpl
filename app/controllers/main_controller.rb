@@ -104,5 +104,6 @@ class MainController < ApplicationController
       cookies[:access_token] = session[:access_token] = access_token
       cookies[:user_id] = session[:user_id] = user_id.to_i
       cookies[:auth_key] = session[:auth_key] = getAuthKey user_id.to_i
+      session[:abuse] = []
     end
 end

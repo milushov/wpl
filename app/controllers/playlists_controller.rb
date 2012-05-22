@@ -66,31 +66,40 @@ class PlaylistsController < ApplicationController
 
     playlists, playlists_followers_ids = [], []
 
-    playlists_data.each do |playlist|
-      fs = []
-      playlist.followers.to_a.each { |f| fs << f[:follower_id] }
+    playlists_data.each do |playlist| # for loop for new scope
+      fs, ts = [], []
+      # playlist.followers store following relations
+      playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
+
+      playlist.tracks.map! do |track|
+        track[:lovers] = track[:lovers].reverse[0...5]
+        ts += track[:lovers]
+        track
+      end
+
       playlists << {
         _id: playlist.id.to_s,
         url: playlist.url,
+        image: playlist.image,
         name: playlist.name,
         description: playlist.description,
         tags: playlist.tags,
-        image: playlist.image,
         tracks: playlist.tracks,
         followers_count: playlist.fferc,
-        followers: fs
+        followers: fs.reverse
       }
-      playlists_followers_ids += fs
+      playlists_followers_ids += fs + ts
     end
 
-    playlists_followers = {};
-
-    User.any_in(_id: playlists_followers_ids.uniq).to_a.each do |follower|
-      playlists_followers[follower[:_id]] = follower
-    end
+    playlists_followers = User.getByIds playlists_followers_ids
 
     playlists.each do |playlist|
-      playlist[:followers].map! { |id| some_of playlists_followers[id] }
+      playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
+      playlist[:tracks].each do |track|
+        track[:lovers].map! do |id|
+          playlists_followers[id].show without: %w{ photo_big last_name }
+        end
+      end
     end
 
     render json: {
