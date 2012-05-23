@@ -10,7 +10,7 @@
     - for id, lover of @lovers
       %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
         %img{src: "#{lover.photo}"}
-.actions.fl_r.clear
+.actions.fl_r.clear{style: 'display:none;'}
   .up.fl_l
     %a.btn ▲
   .down.clear.fl_l

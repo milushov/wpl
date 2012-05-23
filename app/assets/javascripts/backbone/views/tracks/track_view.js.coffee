@@ -4,6 +4,8 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
   template: JST['backbone/templates/tracks/track']
 
   events :
+    'mouseover' : 'showVoteButtons'
+    'mouseout' : 'hideVoteButtons'
     'click .play_btn' : 'play'
     'click .up a'     : 'like'
     'click .down a'   : 'hate'
@@ -16,6 +18,14 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
     @model = @options.model
     @options = null
     $(@el).attr 'id', "track_id-#{ @model.get("_id") }"
+
+  showVoteButtons: ->
+    $(@el).find('.lovers').hide()
+    $(@el).find('.actions').show()
+
+  hideVoteButtons: ->
+    $(@el).find('.lovers').show()
+    $(@el).find('.actions').hide()
 
   play: ->
     console.log 'Views.Tracks.TrackView play()', @model
