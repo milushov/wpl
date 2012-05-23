@@ -16,7 +16,7 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
   nestedCollection
 
-window.debug = !1
+window.debug = 1
 
 window.imgur = {}
 window.imgur.api_url = 'http://api.imgur.com/2/upload.json'

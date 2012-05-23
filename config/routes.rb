@@ -30,6 +30,10 @@ Playlists::Application.routes.draw do
       member do
         get 'follow'
         get 'unfollow'
+        get 'comments', to: 'comments#index'
+        post 'comments/create', to: 'comments#create'
+        post 'comments/:cid/upadate', to: 'comments#update'
+        post 'comments/:cid/delete', to: 'comments#delete'
       end
 
       resources :tracks do
@@ -48,13 +52,13 @@ Playlists::Application.routes.draw do
     end
   end
 
-  match 'u/:id', to: 'main#index'
-  match 'auth', to: 'main#auth'
-  match 'login', to: 'main#login'
-  match 'logout', to: 'main#logout'
+  get 'u/:id', to: 'main#index'
+  get 'auth', to: 'main#auth'
+  get 'login', to: 'main#login'
+  get 'logout', to: 'main#logout'
 
   root to: 'main#index'
-  match '*path', to: 'main#index'
+  get '*path', to: 'main#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

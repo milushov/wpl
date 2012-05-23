@@ -52,7 +52,7 @@ class TracksController < ApplicationController
           @track.pull :lovers, @uid and @track.inc :lovers_count, -1 if @track.lovers.include? @uid
           @track.push :haters, @uid and @track.inc :haters_count, 1
         end
-      @playlist.updated_at = @track.updated_at = Time.now.utc
+      @playlist.updated_at = @track.updated_at = Time.now
       @playlist.save
     end
 end

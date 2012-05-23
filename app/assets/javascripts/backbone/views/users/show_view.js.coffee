@@ -25,6 +25,7 @@ class Playlists.Views.User.ShowView extends Backbone.View
     i_follow = false
     if my_profile.followees.length != 0
       i_follow = followee for followee in my_profile.followees when followee.id == cur_uid
+    # alert i_follow
 
     $(@el).html( @template(
       user: @options.user

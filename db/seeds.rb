@@ -1,18 +1,12 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
 require "#{Rails.root}/app/models/mongoid-simple-tags.rb"
 
-Playlist.delete_all and User.delete_all and Follow.delete_all
+Playlist.delete_all and User.delete_all and Follow.delete_all and Comment.delete_all
 
 artists_photos = %w{ http://userserve-ak.last.fm/serve/34s/61520993.png http://userserve-ak.last.fm/serve/34s/71349074.png http://userserve-ak.last.fm/serve/34s/70383082.png http://userserve-ak.last.fm/serve/34s/50183455.png http://userserve-ak.last.fm/serve/34s/74977662.png http://userserve-ak.last.fm/serve/34s/57494593.png }
+text = File.open("#{Rails.root}/db/Steve_Jobs.txt").read.to_s.split('. ')
 
 p 'creating playlists...'
+
 playlists = []
 JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |playlist|
   playlist['tracks'].each do |t|
@@ -23,12 +17,11 @@ JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |play
   pl.tag_list = playlist['tags']
   pl.save
   playlists << pl
-  p "create playlist - #{playlist["url"]} with tags: #{pl.tags}"
+  p "   create playlist - #{playlist["url"]} with tags: #{pl.tags}"
 end
 
-p ''
-
 p 'creating users...'
+
 users = []
 JSON.parse(File.open("#{Rails.root}/db/users.json").read.to_s)['response'].each do |user|
   user['id'] = user['uid']
@@ -38,20 +31,29 @@ JSON.parse(File.open("#{Rails.root}/db/users.json").read.to_s)['response'].each 
   p "user #{new_user.screen_name} created"
 end
 
-p ''
+p 'creating social network: users follow each other and users follows playlists...'
 
 users.each do |user|
   playlists.each do |playlist|
     if rand(1..2).even? or rand(1..2).even?
       user.follow(playlist)
-      p "user #{user.screen_name} followed playlist #{playlist.url}"
+
+      comment_text = ''
+      rand(1..10).times { comment_text += text[rand(0...text.size)]+'.' }
+      
+      comment = Comment.new text: comment_text
+      comment.user = user
+
+      playlist.comments << comment
+
+      p "   user #{user.screen_name} followed playlist #{playlist.url}"
     end
   end
-  
+
   users.each do |followee|
     if rand(1..2).even? or rand(1..2).even?
       user.follow(followee) if user.id != followee.id
-      p "user #{user.screen_name} followed user #{followee.screen_name}"
+      p "   user #{user.screen_name} followed user #{followee.screen_name}"
     end
   end
 end

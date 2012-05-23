@@ -2,10 +2,11 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   routes:
     'u/:user_id'        : 'getUserProfile'
     'tag/:tag'          : 'getPlaylistsByTag'
+    ':url/comments'     : 'getComments'
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
     'popular'           : 'getPopularPlaylist'
-    ':url'              : 'getPlaylist' 
+    ':url'              : 'getPlaylist'
     '.*'                : 'myProfile'
     '*path'             : 'notFound'
   initialize: (options)->
@@ -127,7 +128,19 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     $("#app").html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
+
+    if @show_comments
+      @vk.getComments playlist.get('url'), 0, 10, (data)->
+        console.log data
+
+      ,this  
+
+    @show_comments = false
     @ok()
+
+  getComments: (url) ->
+    @show_comments = true
+    @getPlaylist url
 
   # request for playlists data
   getPlaylistsByTag: (tag) ->

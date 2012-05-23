@@ -53,11 +53,14 @@ class UsersController < ApplicationController
     @user = User.find2 params[:id]
     @user.ban = true
     @user.unban_date = Time.now + 1.days + 1.hours + 1.minutes
-    @user.save!
+    status = @user.save
+    render json: {status: status, id: user.id }
   end
 
   def unban
-    User.find2(params[:id]).set bun: false
+    user = User.find2(params[:id])
+    status = user.set bun: false
+    render json: {status: status, id: user.id }
   end
 
   private

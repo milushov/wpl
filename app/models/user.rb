@@ -29,6 +29,8 @@ class User
 
   index :screen_name, unique: true
 
+  has_many :comments
+
   def me? user_id
     self.id == user_id.to_i
   end

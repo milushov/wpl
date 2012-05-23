@@ -79,6 +79,26 @@ class Playlists.Models.Vk extends Backbone.Model
   saveNewPlaylist: (playlist_data, success, context)->
     @ajax "#{@get("url")}api/playlists", success, context, playlist_data, true
 
+  getComments: (pid, page = 0, per = 10, success, context) ->
+    return if not pid
+    url = "#{@get("url")}api/playlists/#{pid}/comments?page=#{page}&per=#{per}"
+    @ajax url, success, context, false, true, 'get'
+
+  saveNewComment: (pid, text, reply_to = null, success, context)  ->
+    return if not pid or not text
+    url = "#{@get("url")}api/playlists/#{pid}/comments/create"
+    @ajax url, success, context, {text: text, reply_to: reply_to}, true
+
+  updateComment: (pid, cid, new_text, success, context)  ->
+    return if not pid or not cid or not new_text
+    url = "#{@get("url")}api/playlists/#{pid}/comments/#{cid}/update"
+    @ajax url, success, context, {text: new_text}, true
+
+  deleteComment: (pid, cid, success, context)  ->
+    return if not pid or not cid
+    url = "#{@get("url")}api/playlists/#{pid}/comments/#{cid}/delete"
+    @ajax url, success, context, false, true
+
   uploadImage: (file) ->
     if not file or not file.type.match /image.*/
       alert 'Выберите изображение!'

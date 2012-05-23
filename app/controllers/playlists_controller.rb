@@ -66,7 +66,7 @@ class PlaylistsController < ApplicationController
 
     playlists, playlists_followers_ids = [], []
 
-    playlists_data.each do |playlist| # for loop for new scope
+    playlists_data.each do |playlist|
       fs, ts = [], []
       # playlist.followers store following relations
       playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }

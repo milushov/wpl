@@ -2,9 +2,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :app_init, :check_abuse
+  before_filter :app_init, :check_auth, :check_abuse
 
   COUNT_FRIENDS = 0...15
+  MAX_REQUERS_PER_SECOND = 2
   APP_ID = 1111000
   APP_SECRET = '1111000key'
   REDIRECT_URI = 'http://playlists.dev:3000/auth'
@@ -64,7 +65,7 @@ class ApplicationController < ActionController::Base
     
     playlists, playlists_followers_ids = [], []
 
-    playlists_data.each do |playlist| # for loop for new scope
+    playlists_data.each do |playlist|
       fs, ts = [], []
       # playlist.followers store following relations
       playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
@@ -109,7 +110,7 @@ class ApplicationController < ActionController::Base
 
     profile[:user] = user.show
     profile[:followers] = followers.reverse[COUNT_FRIENDS].map { |f| f.show } || []
-    profile[:followees] = followees.reverse[COUNT_FRIENDS].map { |f| f.show } || [] 
+    profile[:followees] = followees.reverse[user.me?(session[:user_id]) ? 0...followees.count : COUNT_FRIENDS].map { |f| f.show } || [] 
     profile[:playlists] = playlists || []
     profile[:user][:followers_count] = followers_count + user.app_friends.count
     profile[:user][:followees_count] = followees_count + user.app_friends.count
@@ -173,15 +174,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # if you make abuse request 3 in a row times, then you will suck
   def check_abuse
     return unless session[:abuse]
-    if session[:abuse].size >= 3
+    abuse_time = 1.0/MAX_REQUERS_PER_SECOND
+    if session[:abuse].size >= 4
       session[:abuse].shift and session[:abuse].push Time.now.to_f
-      last_time = session[:abuse][2] - session[:abuse][1]
-      if last_time < 1.0/2
-        session[:abuse] = []
-        return error "abuse", 403
-      end
+      times = []
+      3.downto(1) { |i| times << session[:abuse][i] - session[:abuse][i-1] }
+      return error "abuse", 403 if times.max < abuse_time
     else
       session[:abuse].push Time.now.to_f
     end
