@@ -2,7 +2,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :app_init, :check_auth, :check_abuse
+  before_filter :app_init, :check_abuse
 
   COUNT_FRIENDS = 0...15
   MAX_REQUERS_PER_SECOND = 2
@@ -11,9 +11,9 @@ class ApplicationController < ActionController::Base
   REDIRECT_URI = 'http://playlists.dev:3000/auth'
   SETTINGS = 'notify,friends,photos,audio' # 1+2+4+8
 
-  private
+private
 
-  def getAuthKey(user_id)
+  def getAuthKey user_id
     Digest::MD5.hexdigest "#{APP_ID}_#{user_id}_#{APP_SECRET}"
   end
 
@@ -48,7 +48,12 @@ class ApplicationController < ActionController::Base
     
     # mini statisctics
     if user.me? session[:user_id]
-      user.app_friends = @vk.friends.getAppUsers if user.last_visit < Time.now - 3.hour
+       begin
+        user.app_friends = @vk.friends.getAppUsers if 1#user.last_visit < Time.now - 3.hour  
+      rescue Exception => ex
+        # User authorization failed: access_token have heen expired        
+        return ex.error_code
+      end
       user.last_visit = Time.now
       user.visits_count = user.visits_count + 1
       user.save

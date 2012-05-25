@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_filter :prepare
+  before_filter :check_auth, :prepare
 
   PER_PAGE = 10
   

@@ -1,5 +1,6 @@
 # encoding: utf-8
 class PlaylistsController < ApplicationController
+  before_filter :check_auth
   PER_PAGE = 12
   respond_to :json
   

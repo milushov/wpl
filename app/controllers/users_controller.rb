@@ -1,5 +1,6 @@
 # encoding: utf-8
 class UsersController < ApplicationController
+  before_filter :check_auth
   respond_to :json
 
   before_filter :check_auth

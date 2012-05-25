@@ -10,7 +10,7 @@ class MainController < ApplicationController
       # if profile don't extst (@user_profile will be equal false),
       # we create user...
       @user_profile = getProfile session[:user_id]
-
+      
       unless @user_profile
         create_user
         unless(@user_profile = getProfile session[:user_id])
@@ -18,6 +18,11 @@ class MainController < ApplicationController
         end
       end
       
+      if @user_profile.kind_of? Integer
+        cookies['auth_key'] = 'oops, you will not be able to auth'
+        return redirect_to action: 'login', return_to: params[:path]
+      end
+
       @count_friends = ApplicationController::COUNT_FRIENDS.max + 1
 
       respond_to do |format|
@@ -31,6 +36,7 @@ class MainController < ApplicationController
   end
 
   def login
+    binding.pry
     if isAuth?
       redirect_to action: 'index'
     else

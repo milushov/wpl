@@ -37,6 +37,11 @@ class Playlists.Models.Player extends Backbone.Model
     track = @playlist.tracks.getById audio_id
 
     App.vk.getTrackData track.get('audio_id'), (data) ->
+      if info = data.error
+        console.log info.error_code, info.error_msg
+        alert "Ошибка Вконтакте API. Сейчас приложение перезапустится и всё будет ok."
+        location.reload()
+        return false
       track.set url: (data.response[0].url || @fail_url) if data.response
       @set cur_track: track
       App.player.trigger 'show_track_name'
