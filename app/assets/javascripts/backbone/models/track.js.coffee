@@ -10,7 +10,10 @@ class Playlists.Models.Track extends Backbone.Model
 
   # special double id for SoundManager
   smid: ->
-    "#{@get "playlist_id"}:#{@get "audio_id"}"
+    if @get('playlist_id')?
+      "#{@get 'playlist_id'}:#{@get "audio_id"}"
+    else
+      false
 
 class Playlists.Collections.TracksCollection extends Backbone.Collection
   model: Playlists.Models.Track

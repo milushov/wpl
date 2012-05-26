@@ -2,7 +2,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   routes:
     'u/:user_id'        : 'getUserProfile'
     'tag/:tag'          : 'getPlaylistsByTag'
-    ':url/comments'     : 'getComments'
+    ':url/comments'     : 'showComments'
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
     'popular'           : 'getPopularPlaylist'
@@ -125,22 +125,41 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @follow_switch = false
 
     @playlists.add playlist
+
+    if @show_comments
+      @show_comments = false
+      @showComments playlist.get 'url'
+      return
+
     $("#app").html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
 
-    if @show_comments
-      @vk.getComments playlist.get('url'), 0, 10, (data)->
-        console.log data
-
-      ,this  
-
-    @show_comments = false
     @ok()
 
-  getComments: (url) ->
-    @show_comments = true
-    @getPlaylist url
+  showComments: (url) ->
+    unless playlist = @playlists.getByUrl url
+      @getPlaylist url
+      @show_comments = true
+      return
+
+    if playlist.comments.length == 0
+      @vk.getComments playlist.get('url'), 0, 10, (data)->
+        if not data.error       
+          playlist.comments.add data
+          playlist.comments.url = "#{playlist.url()}/comments"
+
+          $("#app").html( new Playlists.Views.Comments.IndexView(
+            playlist
+          ).render().el )
+          @ok()
+        else console.error data
+      ,this  
+    else
+      $("#app").html( new Playlists.Views.Comments.IndexView(
+        playlist
+      ).render().el )
+      @ok()
 
   # request for playlists data
   getPlaylistsByTag: (tag) ->

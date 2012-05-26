@@ -36,7 +36,7 @@ class MainController < ApplicationController
   end
 
   def login
-    binding.pry
+    # binding.pry
     if isAuth?
       redirect_to action: 'index'
     else

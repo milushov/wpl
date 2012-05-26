@@ -1,12 +1,12 @@
 Playlists.Views.Playlists ||= {}
 
+# view of item of playlists collection, which located in user's home page
 class Playlists.Views.Playlists.PlaylistView extends Backbone.View
   template: JST["backbone/templates/playlists/playlist"]
 
   events:
     'click .destroy' : 'destroy'
     'click .flip' : 'flip'
-
 
   tagName: 'div'
   className: 'playlist'
@@ -22,8 +22,8 @@ class Playlists.Views.Playlists.PlaylistView extends Backbone.View
     return false
 
   flip: () ->
-    # просто красивая фича
-    # будет красиво "переворачивать" обложку на список трех треков
+    # TODO: there will be fancy feature turning cover image
+    # of playlist to block with 3 first tracks
     if $(@el).find('.tracks').is(':hidden')
       $(@el).find('.info').hide()
       $(@el).find('.tracks').show()

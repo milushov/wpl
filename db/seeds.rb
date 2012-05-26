@@ -41,7 +41,8 @@ users.each do |user|
       comment_text = ''
       rand(1..10).times { comment_text += text[rand(0...text.size)]+'.' }
       
-      comment = Comment.new text: comment_text
+      comment = Comment.new content: comment_text
+      comment.created_at = Time.now + rand(-10..10).months + rand(-10..10).days + rand(-10..10).hour + rand(-10..10).minutes
       comment.user = user
 
       playlist.comments << comment
@@ -56,4 +57,9 @@ users.each do |user|
       p "   user #{user.screen_name} followed user #{followee.screen_name}"
     end
   end
+end
+
+Comment.all.each do |comment|
+  comment.created_at = Time.now - rand(1..10).months + rand(-10..10).days + rand(-10..10).hour + rand(-10..10).minutes
+  comment.save
 end

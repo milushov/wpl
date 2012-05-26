@@ -1,0 +1,35 @@
+<h1>New comment</h1>
+
+<form id="new-comment" name="comment">
+  <div class="field">
+    <label for="id"> id:</label>
+    <input type="text" name="id" id="id" value="<%= id %>" >
+  </div>
+
+  <div class="field">
+    <label for="text"> text:</label>
+    <input type="text" name="text" id="text" value="<%= text %>" >
+  </div>
+
+  <div class="field">
+    <label for="date"> date:</label>
+    <input type="text" name="date" id="date" value="<%= date %>" >
+  </div>
+
+  <div class="field">
+    <label for="reply_to"> reply_to:</label>
+    <input type="text" name="reply_to" id="reply_to" value="<%= reply_to %>" >
+  </div>
+
+  <div class="field">
+    <label for="user"> user:</label>
+    <input type="text" name="user" id="user" value="<%= user %>" >
+  </div>
+
+  <div class="actions">
+    <input type="submit" value="Create Comment" />
+  </div>
+
+</form>
+
+<a href="#/index">Back</a>

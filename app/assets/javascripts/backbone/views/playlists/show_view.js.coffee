@@ -46,7 +46,8 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
       tags: @model.get 'tags'
       image: @model.get 'image'
       followers: @model.get 'followers'
-      i_follow: i_follow
+      i_follow: i_follow,
+      comments_url: "/#{@model.get 'url'}/comments"
     ) )
 
     # добавляю id плейлиста в модель трека

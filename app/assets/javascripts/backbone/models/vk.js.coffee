@@ -84,15 +84,15 @@ class Playlists.Models.Vk extends Backbone.Model
     url = "#{@get("url")}api/playlists/#{pid}/comments?page=#{page}&per=#{per}"
     @ajax url, success, context, false, true, 'get'
 
-  saveNewComment: (pid, text, reply_to = null, success, context)  ->
+  saveNewComment: (pid, content, reply_to = null, success, context)  ->
     return if not pid or not text
     url = "#{@get("url")}api/playlists/#{pid}/comments/create"
-    @ajax url, success, context, {text: text, reply_to: reply_to}, true
+    @ajax url, success, context, {content: content, reply_to: reply_to}, true
 
-  updateComment: (pid, cid, new_text, success, context)  ->
+  updateComment: (pid, cid, new_content, success, context)  ->
     return if not pid or not cid or not new_text
     url = "#{@get("url")}api/playlists/#{pid}/comments/#{cid}/update"
-    @ajax url, success, context, {text: new_text}, true
+    @ajax url, success, context, {content: new_content}, true
 
   deleteComment: (pid, cid, success, context)  ->
     return if not pid or not cid

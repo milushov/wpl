@@ -8,8 +8,10 @@
 }
 
 .track {
-  margin: 10px;
+  padding:10px;
+  margin-top: 10px;
   overflow: hidden;
+  @include rounded(4px);
   color:#999;
   font-size:11px;
   
@@ -20,9 +22,8 @@
   border-top:1px solid #e4e4e4;
   border-left:1px solid #dfdfdf;
   border-right:1px solid #dfdfdf;
-  @include rounded(4px);
+  
   box-shadow:0 1px 2px #f7f7f7;
-  padding:12px;
 
   .play_btn_wrap {
     overflow: hidden;

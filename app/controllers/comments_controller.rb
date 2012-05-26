@@ -15,11 +15,11 @@ class CommentsController < ApplicationController
   end
 
   def create
-    return error 'text nil or less 10 letters' unless text = params[:text] or text.length < 10
+    return error 'content nil or less 10 letters' unless content = params[:content] or content.length < 10
 
     reply_to = nil unless params[:reply_to] =~ /[a-f0-9]{24}/
 
-    comment = Comment.new text: text, reply_to: params[:reply_to]
+    comment = Comment.new content: content, reply_to: params[:reply_to]
     comment.user = User.find(session[:user_id].to_i)
 
     status = @playlist.comments << comment
@@ -27,12 +27,12 @@ class CommentsController < ApplicationController
   end
 
   def update
-    return error 'text nil or less 10 letters' unless text = params[:text] or text.length < 10
+    return error 'content nil or less 10 letters' unless content = params[:content] or content.length < 10
     comment = @playlist.find(params[:cid])
     if comment.created_at < Time.now - 4.hour
       return error 'it is too late, was more than 4 hour'
     end
-    comment.text = text
+    comment.content = content
     status = comment.save
     render json: { status: status, id: comment.id  }
   end
@@ -46,9 +46,16 @@ class CommentsController < ApplicationController
     render json: {status: status, id: comment.id}
   end
 
-  private
-
+private
   def prepare
     @playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+  end
+
+  def pick(hash, *keys)
+    filtered = {}
+    hash.each do |key, value| 
+      filtered[key.to_sym] = value if keys.include?(key.to_sym) 
+    end
+    filtered
   end
 end

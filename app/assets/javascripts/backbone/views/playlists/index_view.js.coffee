@@ -1,7 +1,6 @@
 Playlists.Views.Playlists ||= {}
 
-#  Главная вьюха которая отображает список плейлистов
-
+# main view showing collection of user's playlists
 class Playlists.Views.Playlists.IndexView extends Backbone.View
 
   template: JST["backbone/templates/playlists/index"]

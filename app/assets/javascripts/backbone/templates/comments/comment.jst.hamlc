@@ -1,0 +1,11 @@
+.comment{id: "@_id"}
+  .user_photo.fl_l
+    %img{src: @user_data.photo}
+  .content.fl_l
+    .name
+      = "#{@user_data.first_name} #{@user_data.last_name}"
+    .text
+      = @content
+    .date
+      = moment(@created_at).fromNow()
+      = @created_at

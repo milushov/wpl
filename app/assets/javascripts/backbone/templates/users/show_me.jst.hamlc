@@ -8,7 +8,9 @@
       %img{src: '/assets/vk.png'}
     %h2.fl_l
       = "#{@user.first_name} #{@user.last_name}"
-    %a#new.btn.btn-success.fl_r{href: "/new"} ♫ Создать плейлист
+    %a#new.btn.btn-success.fl_r{href: "/new"}
+      %i.icon-music.icon-white
+      Создать плейлист
   #playlists
 #right_block.fl_r
   #followers

@@ -14,9 +14,9 @@
 //= require jquery_ujs
 //= require jquery.cookie
 //= require jquery.url
-//= require moment
-//= require bootstrap
-//= require underscore
+//= require moment.min
+//= require bootstrap.min
+//= require underscore-min
 //= require backbone-min
 //= require hamlcoffee
 //= require common
