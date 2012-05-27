@@ -1,11 +1,13 @@
 .comment{id: "@_id"}
   .user_photo.fl_l
-    %img{src: @user_data.photo}
+    %a{href: "/u/#{@user_data.screen_name}"}
+      %img{src: @user_data.photo}
   .content.fl_l
     .name
-      = "#{@user_data.first_name} #{@user_data.last_name}"
-    .text
+      %a{href: "/u/#{@user_data.screen_name}"}
+        = "#{@user_data.first_name} #{@user_data.last_name}"
+    .content
       = @content
     .date
-      = moment(@created_at).fromNow()
-      = @created_at
+      %a{rel: 'tooltip', data-original-options: '{placement: right}', data-original-title="#{ moment(@created_at).format('D MMMM YYYY, H:mm, dddd') }"}
+        = moment(@created_at).fromNow()

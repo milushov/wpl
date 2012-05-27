@@ -1,21 +1,8 @@
-// Place all the styles related to the playlists controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import 'mixins';
 
 $pw: 180px; // playlist_width
 $ph: 180px;
 
-@mixin box-shadow($blur: 23px, $spread: 2px, $color: #cecece ) {
-  -webkit-box-shadow: 0px 0px $blur $spread $color;
-  -moz-box-shadow: 0px 0px $blur $spread $color;
-  box-shadow: 0px 0px $blur $spread $color;
-}
-
-@mixin border-radius($radius: 5px) {
-  -webkit-border-radius: $radius;
-  -moz-border-radius: $radius;
-  border-radius: $radius;
-}
 
 .playlist {
   width: $pw; height: $ph;

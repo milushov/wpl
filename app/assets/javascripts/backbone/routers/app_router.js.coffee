@@ -144,6 +144,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       return
 
     if playlist.comments.length == 0
+      playlist.fetch
       @vk.getComments playlist.get('url'), 0, 10, (data)->
         if not data.error       
           playlist.comments.add data

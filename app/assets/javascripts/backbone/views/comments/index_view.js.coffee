@@ -1,10 +1,27 @@
 Playlists.Views.Comments ||= {}
 
 class Playlists.Views.Comments.IndexView extends Backbone.View
-  template: JST["backbone/templates/comments/index"]
+  template: JST['backbone/templates/comments/index']
+
+  events:
+    'click #follow' : 'followPlaylist'
+    'click #unfollow' : 'unfollowPlaylist'
+    'click #new_comment' : 'newComment'
+
+  tagName: 'div'
 
   initialize: () ->
-    #@options.comments.bind('reset', @addAll)
+    @options.comments.bind('reset', @addAll)
+
+  newComment: () ->
+    content = $('.content textarea').val()
+    console.log content
+
+  followPlaylist: ->
+    App.vk.follow 'playlist', @options.get 'url'
+
+  unfollowPlaylist: ->
+    App.vk.follow 'playlist', @options.get('url'), 'undo'
 
   addAll: () =>
     @options.comments.each(@addOne)

@@ -25,6 +25,18 @@
         %a{href: "/tag/#{tag}"}
           =tag
     #comments
+      .comment#new_comment
+        .user_photo.fl_l
+          %a{href: "/u/#{my_profile.user.screen_name}"}
+            %img{src: my_profile.user.photo}
+        .content.fl_l
+          .name
+            %a{href: "/u/#{my_profile.user.screen_name}"}
+              = "#{my_profile.user.first_name} #{my_profile.user.last_name}"
+          .content
+            %textarea
+          %a.btn.btn-primary#add_new_comment
+            Отправить
 #right_block.fl_r
   #followers
     - if @followers.length

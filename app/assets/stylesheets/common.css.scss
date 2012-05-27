@@ -1,8 +1,4 @@
-@mixin rounded($radius: 5px) {
-  border-radius: $radius;
-  -moz-border-radius: $radius;
-  -webkit-border-radius: $radius;
-}
+@import 'mixins';
 
 #head_loader {
   border: 0;
@@ -20,7 +16,7 @@
 
   body {
     font-family: Tahoma, Arial, Verdana, sans-serif, Lucida Sans;
-    font-size: 12px;
+    font-size: 12.5px;
     color: #222;
     width: 100%;
     background: #fff;
@@ -154,7 +150,7 @@
         overflow: hidden;
         text-decoration: none;
         display: inline-block;
-        margin-right: 1px;
+        // margin-right: 1px;
         margin-bottom: 2px;
         @include rounded(3px);
 
@@ -173,7 +169,7 @@
         overflow: hidden;
         text-decoration: none;
         display: inline-block;
-        margin-right: 1px;
+        // margin-right: 1px;
         margin-bottom: 2px;
         @include rounded(3px);
 
@@ -187,7 +183,7 @@
 
   #app {
     margin-top: 100px;
-    min-height: 500px;
+    min-height: 460px;
     width: 1000px;
   }
 
@@ -221,4 +217,8 @@
 
 .alert {
   padding: 7px;
+}
+
+footer {
+  margin-top: 23px;  
 }

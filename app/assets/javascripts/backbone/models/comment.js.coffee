@@ -7,6 +7,8 @@ class Playlists.Models.Comment extends Backbone.Model
 class Playlists.Collections.CommentsCollection extends Backbone.Collection
   model: Playlists.Models.Comment
   # url will be defained, when collection will be populate with models
+  url: () ->
+    '/api/playlists/test3/comments'
   
   initialize: (options) ->
     # console.log 'collection comments created'
