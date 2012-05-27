@@ -30,6 +30,26 @@ window.ondrop = (e) ->
   App.vk.uploadImage e.dataTransfer.files[0]
   l 'ondrop'
 
+window.notify = (message, type = 'error', long_message = false) ->
+  timeout = if long_message then 15000 else 4500
+  noty(
+    text: message,
+    theme:'noty_theme_twitter',
+    layout:'top',
+    type: type,
+    animateOpen:
+      height: 'toggle'
+    animateClose: 
+      height: 'toggle',
+    easing: 'easeOutExpo',
+    speed: 500,
+    timeout: timeout,
+    closeButton:true,
+    closeOnSelfClick: true,
+    closeOnSelfOver: false,
+    modal:true
+  )
+
 $ ()->
   if my_profile == -1
     $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>"
@@ -76,14 +96,16 @@ $ ()->
   soundManager.ontimeout ()->
     alert 'Плеер завис, перезагрузите страницу! (F5)'
 
+  $.ajaxSetup cache: false
+
   $(document).ajaxError (e, jqxhr, settings, exception) =>
     console.error arguments
     # console.error jqxhr.responseText
     if jqxhr.status == 403
       if JSON.parse(jqxhr.responseText).error == 'abuse'
-        return alert 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)'
+        return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
 
-    alert "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
+    notify "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
     #history.back()
 
   $('footer').tooltip
@@ -107,6 +129,7 @@ if not debug
   console.warn = ->
   console.info = ->
   window.l = ->
+  alert = window.notify
 
 window.curUrl = ()->
   $.url().attr().relative

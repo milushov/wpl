@@ -26,4 +26,5 @@
 //= require soundmanager2-jsmin
 //= require jquery-ui.min
 //= require tag-it
+//= require jquery.noty
 //= require_tree .

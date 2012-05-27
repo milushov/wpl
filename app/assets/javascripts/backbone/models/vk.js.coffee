@@ -101,7 +101,7 @@ class Playlists.Models.Vk extends Backbone.Model
 
   uploadImage: (file) ->
     if not file or not file.type.match /image.*/
-      alert 'Выберите изображение!'
+      notify 'Выберите изображение!', 'alert'
       return false
     
     fd = new FormData()

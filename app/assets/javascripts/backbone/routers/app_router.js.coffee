@@ -143,6 +143,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @show_comments = true
       return
 
+    # BUG: way when i use fetch method for obrain comments - not work!
     if playlist.comments.length == 0
       playlist.fetch
       @vk.getComments playlist.get('url'), 0, 10, (data)->
@@ -154,7 +155,9 @@ class Playlists.Routers.AppRouter extends Backbone.Router
             playlist
           ).render().el )
           @ok()
-        else console.error data
+        else
+          notify data
+          @ok()
       ,this  
     else
       $("#app").html( new Playlists.Views.Comments.IndexView(
