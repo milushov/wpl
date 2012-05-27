@@ -6,16 +6,31 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
   events:
     'click #follow' : 'followPlaylist'
     'click #unfollow' : 'unfollowPlaylist'
-    'click #new_comment' : 'newComment'
+    'click #add_new_comment' : 'newComment'
 
   tagName: 'div'
 
   initialize: () ->
-    @options.comments.bind('reset', @addAll)
+    # @options.comments.bind('reset', @addAll)
 
   newComment: () ->
     content = $('.content textarea').val()
-    console.log content
+    if content.length < 10
+      return notify 'Длина сообщения должная быть больше 10 символов.'
+
+    # TODO: make replying feature
+    reply_to = null
+
+    App.vk.saveNewComment @options.id, content, reply_to, (data) ->
+      return notify data.error if data.error
+      data.comment.user_data = my_profile.user
+      comment = new Playlists.Models.Comment data.comment
+      console.log App.playlists.getById(@options.id).comments.add(
+        comment,
+        at: 0
+      )
+      App.showComments @options.get 'url'      
+    ,this
 
   followPlaylist: ->
     App.vk.follow 'playlist', @options.get 'url'
@@ -27,10 +42,10 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
     @options.comments.each(@addOne)
 
   addOne: (comment) =>
-    view = new Playlists.Views.Comments.CommentView({model : comment})
+    view = new Playlists.Views.Comments.CommentView model: comment
     @$("#comments").append(view.render().el)
 
-  render: =>    
+  render: =>   
     url = @options.get 'url'
     i_follow = false
     if my_profile.playlists.length != 0

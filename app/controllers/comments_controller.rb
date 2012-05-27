@@ -23,7 +23,7 @@ class CommentsController < ApplicationController
     comment.user = User.find(session[:user_id].to_i)
 
     status = @playlist.comments << comment
-    render json: {status: status, id: comment.id}
+    render json: {status: status, id: comment.id, comment: comment}
   end
 
   def update

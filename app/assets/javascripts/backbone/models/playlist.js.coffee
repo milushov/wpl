@@ -1,4 +1,5 @@
 class Playlists.Models.Playlist extends Backbone.Model
+  idAttribute: "_id"
   url: ->
     if url = @get('url')
       "/api/playlists/#{url}"

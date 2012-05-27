@@ -141,9 +141,9 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     unless playlist = @playlists.getByUrl url
       @getPlaylist url
       @show_comments = true
-      return
+      return console.log 'playlist in App.playlist dont exist'
 
-    # BUG: way when i use fetch method for obrain comments - not work!
+    # BUG: way, when i use fetch method for obtain comments - not work!
     if playlist.comments.length == 0
       playlist.fetch
       @vk.getComments playlist.get('url'), 0, 10, (data)->
