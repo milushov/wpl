@@ -124,6 +124,9 @@ window.l = (a, b)->
     else
       console.log(a)
 
+window.title = (mes = 404) ->
+  document.title = mes
+
 if not debug
   console.log = ->
   console.warn = ->

@@ -134,8 +134,8 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     $("#app").html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
-
-    @ok()
+    @navigate playlist.get 'url'
+    return @ok()
 
   showComments: (url) ->
     unless playlist = @playlists.getByUrl url
@@ -211,4 +211,5 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       delay:
         show: 420, hide: 100
     bind_urls()
+    title $('#center_block').find('#name').find('h2').text().trim()
     loading('off')
