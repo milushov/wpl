@@ -63,6 +63,53 @@
       textarea {
         width: 470px; height: 75px;
       }
+
+      .reply_btn {
+        display: none;
+        margin-top: -3px;
+      }
     }
   }
+}
+
+.reply_popover:hover {
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px dotted #005580;
+}
+
+// override bootstrap
+.popover-title {
+  overflow: hidden;
+}
+
+.reply_popover:hover {
+  cursor: pointer;
+}
+
+.popover_user_photo {
+  text-decoration: none;
+  overflow: hidden;
+  display: block;
+  @include rounded(4px);
+
+  img {
+    width: 30px; height: 30px;
+  }
+}
+
+.popover_user_name {
+  font-size: 14px;
+  display: block;
+  float: left;
+  margin-top: 1px;
+  margin-left: 10px;
+}
+
+.popover_created_at {
+  display: block;
+  color: #2d2d2d;
+  font-size: 9.5px;
+  margin-left: 11px;
+  margin-top: 18px;
 }

@@ -27,4 +27,6 @@
 //= require jquery-ui.min
 //= require tag-it
 //= require jquery.noty
+//= require Name
+//= require jquery.scrollTo-min
 //= require_tree .

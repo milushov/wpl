@@ -2,35 +2,39 @@
 "response":[
 {
 "uid":1,
-"first_name":"Pavel",
-"last_name":"Durov",
+"first_name":"Павел",
+"last_name":"Деров",
 "photo":"http://cs1495.userapi.com/u00001/e_4e71b89f.jpg",
 "photo_big":"http://cs1495.userapi.com/u00001/a_c87cf7a6.jpg",
-"screen_name":"durov"
+"screen_name":"durov",
+"sex": 2
 },
 {
 "uid":2,
-"first_name":"Alexandra",
-"last_name":"Vladimirova",
+"first_name":"Александра",
+"last_name":"Владимировна",
 "photo":"http://cs9592.userapi.com/u00002/e_e7a82119.jpg",
 "photo_big":"http://cs9592.userapi.com/u00002/a_61b8e2c2.jpg",
-"screen_name":"alexandra"
+"screen_name":"alexandra",
+"sex": 1
 },
 {
 "uid":5,
-"first_name":"Ilya",
-"last_name":"Perekopsky",
+"first_name":"Илья",
+"last_name":"Перекопский",
 "photo":"http://cs9553.userapi.com/u00005/e_4d406dcf.jpg",
 "photo_big":"http://cs9553.userapi.com/u00005/a_f0ae0129.jpg",
-"screen_name":"ilya"
+"screen_name":"ilya",
+"sex": 2
 },
 {
 "uid":6,
-"first_name":"Nikolay",
-"last_name":"Durov",
+"first_name":"Николай",
+"last_name":"Дуров",
 "photo":"http://cs1024.userapi.com/u00006/e_63e4b73e.jpg",
 "photo_big":"http://cs1024.userapi.com/u00006/a_81f6c308.jpg",
-"screen_name":"id6"
+"screen_name":"id6",
+"sex": 2
 },
 {
 "uid":7,
@@ -38,7 +42,8 @@
 "last_name":"Kobylyansky",
 "photo":"http://cs4732.userapi.com/u00007/e_1fb2591f.jpg",
 "photo_big":"http://cs4732.userapi.com/u00007/a_4ee9938d.jpg",
-"screen_name":"id7"
+"screen_name":"id7",
+"sex": 2
 },
 {
 "uid":8,
@@ -46,7 +51,8 @@
 "last_name":"Sepiashvili",
 "photo":"http://cs377.userapi.com/u00008/e_7653a0a5.jpg",
 "photo_big":"http://cs377.userapi.com/u00008/a_5a321a41.jpg",
-"screen_name":"aki"
+"screen_name":"aki",
+"sex": 2
 },
 {
 "uid":9,
@@ -54,39 +60,44 @@
 "last_name":"Vasilyeva",
 "photo":"http://cs9557.userapi.com/u00009/e_a37383f7.jpg",
 "photo_big":"http://cs9557.userapi.com/u00009/a_a411db7e.jpg",
-"screen_name":"zhavoronok_mutant"
+"screen_name":"zhavoronok_mutant",
+"sex": 1
 },
 {
 "uid":10,
-"first_name":"Alexandr",
-"last_name":"Kuznetsov",
+"first_name":"Саша",
+"last_name":"Кузнецов",
 "photo":"http://cs9562.userapi.com/u00010/e_8b48978a.jpg",
 "photo_big":"http://cs9562.userapi.com/u00010/a_9549cb7d.jpg",
-"screen_name":"kuzya"
+"screen_name":"kuzya",
+"sex": 2
 },
 {
 "uid":11,
-"first_name":"Mikhail",
-"last_name":"Petrov",
+"first_name":"Михаил",
+"last_name":"Петров",
 "photo":"http://cs203.userapi.com/u00011/e_787bf138.jpg",
 "photo_big":"http://cs203.userapi.com/u00011/a_d301b0fa.jpg",
-"screen_name":"id11"
+"screen_name":"id11",
+"sex": 2
 },
 {
 "uid":788157,
-"first_name":"Roman",
-"last_name":"Milushov",
+"first_name":"Роман",
+"last_name":"Милушов",
 "photo":"http://cs9698.userapi.com/u788157/e_c8a89eb5.jpg",
 "photo_big":"http://cs9698.userapi.com/u788157/a_84c1043c.jpg",
-"screen_name":"milushov"
+"screen_name":"milushov",
+"sex": 2
 },
 {
 "uid":1504020,
-"first_name":"Alexandr",
-"last_name":"Strigin",
+"first_name":"Александр",
+"last_name":"Стригин",
 "photo":"http://cs5647.userapi.com/u1504020/e_ffe656a0.jpg",
 "photo_big":"http://cs5647.userapi.com/u1504020/a_fb422179.jpg",
-"screen_name":"alex.strigin"
+"screen_name":"alex.strigin",
+"sex": 2
 },
 {
 "uid":124281120,
@@ -94,15 +105,17 @@
 "last_name":"Ma",
 "photo":"http://cs9626.userapi.com/u124281120/e_89335731.jpg",
 "photo_big":"http://cs9626.userapi.com/u124281120/a_95ed5b95.jpg",
-"screen_name":"milro"
+"screen_name":"milro",
+"sex": 2
 },
 {
 "uid":7066,
-"first_name":"Tatyana",
-"last_name":"Zamakhova",
+"first_name":"Татьяна",
+"last_name":"Замахова",
 "photo":"http://cs5910.userapi.com/u07066/e_b1eed9e8.jpg",
 "photo_big":"http://cs5910.userapi.com/u07066/a_c19a6561.jpg",
-"screen_name":"firefly"
+"screen_name":"firefly",
+"sex": 1
 },
 {
 "uid":214300,
@@ -110,15 +123,17 @@
 "last_name":"Ezhova",
 "photo":"http://cs304802.userapi.com/u214300/e_74a35369.jpg",
 "photo_big":"http://cs304802.userapi.com/u214300/a_02bb6b73.jpg",
-"screen_name":"ezhova_k"
+"screen_name":"ezhova_k",
+"sex": 1
 },
 {
 "uid":578995,
-"first_name":"Mikhail",
-"last_name":"Chmutov",
+"first_name":"Михаил",
+"last_name":"Чмутов",
 "photo":"http://cs5596.userapi.com/u578995/e_a088912a.jpg",
 "photo_big":"http://cs5596.userapi.com/u578995/a_4ad71d81.jpg",
-"screen_name":"chmuto"
+"screen_name":"chmuto",
+"sex": 2
 },
 {
 "uid":690765,
@@ -126,7 +141,8 @@
 "last_name":"Pavlov",
 "photo":"http://cs10352.userapi.com/u690765/e_1535c712.jpg",
 "photo_big":"http://cs10352.userapi.com/u690765/a_a120fe15.jpg",
-"screen_name":"pavlovmaxim1"
+"screen_name":"pavlovmaxim1",
+"sex": 2
 },
 {
 "uid":776827,
@@ -134,31 +150,35 @@
 "last_name":"Makarov",
 "photo":"http://cs5140.userapi.com/u776827/e_a1b2472f.jpg",
 "photo_big":"http://cs5140.userapi.com/u776827/a_55790fad.jpg",
-"screen_name":"blindhawk"
+"screen_name":"blindhawk",
+"sex": 2
 },
 {
 "uid":819179,
-"first_name":"Igor",
-"last_name":"Kavtrev",
+"first_name":"Игорь",
+"last_name":"Кавтрев",
 "photo":"http://cs11406.userapi.com/u819179/e_02ceacbe.jpg",
 "photo_big":"http://cs11406.userapi.com/u819179/a_fd2722d5.jpg",
-"screen_name":"id819179"
+"screen_name":"id819179",
+"sex": 2
 },
 {
 "uid":820737,
-"first_name":"Yuli",
-"last_name":"Bezruchko",
+"first_name":"Юля",
+"last_name":"Безручко",
 "photo":"http://cs5919.userapi.com/u820737/e_72bbdca6.jpg",
 "photo_big":"http://cs5919.userapi.com/u820737/a_17405d47.jpg",
-"screen_name":"id820737"
+"screen_name":"id820737",
+"sex": 1
 },
 {
 "uid":1182169,
-"first_name":"Kolya",
-"last_name":"Savvateev",
+"first_name":"Коля",
+"last_name":"Савватеев",
 "photo":"http://cs305304.userapi.com/u1182169/e_86a87cac.jpg",
 "photo_big":"http://cs305304.userapi.com/u1182169/a_8e989c99.jpg",
-"screen_name":"id1182169"
+"screen_name":"id1182169",
+"sex": 2
 },
 {
 "uid":1275628,
@@ -166,7 +186,8 @@
 "last_name":"Lord",
 "photo":"http://cs316818.userapi.com/u1275628/e_409e04aa.jpg",
 "photo_big":"http://cs316818.userapi.com/u1275628/a_64004cd2.jpg",
-"screen_name":"maxzhuravlev"
+"screen_name":"maxzhuravlev",
+"sex": 2
 },
 {
 "uid":1653563,
@@ -174,15 +195,17 @@
 "last_name":"Khmelevskaya",
 "photo":"http://cs303611.userapi.com/u1653563/e_5f52196f.jpg",
 "photo_big":"http://cs303611.userapi.com/u1653563/a_290bb840.jpg",
-"screen_name":"melkaya007"
+"screen_name":"melkaya007",
+"sex": 1
 },
 {
 "uid":1972962,
-"first_name":"Vit",
-"last_name":"Nikiforov",
+"first_name":"Вит",
+"last_name":"Никифоров",
 "photo":"http://cs10818.userapi.com/u1972962/e_b6e145a4.jpg",
 "photo_big":"http://cs10818.userapi.com/u1972962/a_5a1f45e4.jpg",
-"screen_name":"time_of_your_life"
+"screen_name":"time_of_your_life",
+"sex": 2
 },
 {
 "uid":2738410,
@@ -190,15 +213,17 @@
 "last_name":"Kharkova",
 "photo":"http://cs302409.userapi.com/u2738410/e_e2faaf82.jpg",
 "photo_big":"http://cs302409.userapi.com/u2738410/a_2624483a.jpg",
-"screen_name":"id2738410"
+"screen_name":"id2738410",
+"sex": 1
 },
 {
 "uid":3362194,
-"first_name":"Katya",
-"last_name":"Kolbasyuk",
+"first_name":"Катя",
+"last_name":"Колбасюк",
 "photo":"http://cs10149.userapi.com/u3362194/e_fe4dc615.jpg",
 "photo_big":"http://cs10149.userapi.com/u3362194/a_5f378bea.jpg",
-"screen_name":"my_penguin"
+"screen_name":"my_penguin",
+"sex": 1
 },
 {
 "uid":3611936,
@@ -206,79 +231,89 @@
 "last_name":"Psyke",
 "photo":"http://cs9405.userapi.com/u3611936/e_e55f6c97.jpg",
 "photo_big":"http://cs9405.userapi.com/u3611936/a_b0352f10.jpg",
-"screen_name":"whatdahellareyoudoingonmypage"
+"screen_name":"whatdahellareyoudoingonmypage",
+"sex": 2
 },
 {
 "uid":4199875,
-"first_name":"Igor",
-"last_name":"Tebyakin",
+"first_name":"Игорь",
+"last_name":"Тебякин",
 "photo":"http://cs304211.userapi.com/u4199875/e_98117a92.jpg",
 "photo_big":"http://cs304211.userapi.com/u4199875/a_259ad4ba.jpg",
-"screen_name":"id4199875"
+"screen_name":"id4199875",
+"sex": 2
 },
 {
 "uid":6684279,
-"first_name":"Vladimir",
-"last_name":"Kirilyuk",
+"first_name":"Влидимир",
+"last_name":"Кириююк",
 "photo":"http://cs10185.userapi.com/u6684279/e_652f7609.jpg",
 "photo_big":"http://cs10185.userapi.com/u6684279/a_6ba3c77c.jpg",
-"screen_name":"thundernyashka"
+"screen_name":"thundernyashka",
+"sex": 2
 },
 {
 "uid":7622670,
-"first_name":"Zhenya",
-"last_name":"Malyshev",
+"first_name":"Жения",
+"last_name":"Малышев",
 "photo":"http://cs5525.userapi.com/u7622670/e_e4c5d1d8.jpg",
 "photo_big":"http://cs5525.userapi.com/u7622670/a_9541228d.jpg",
-"screen_name":"id7622670"
+"screen_name":"id7622670",
+"sex": 2
 },
 {
 "uid":9043523,
-"first_name":"Andrey",
-"last_name":"Sorokin",
+"first_name":"Андрей",
+"last_name":"Сорокин",
 "photo":"http://cs235.userapi.com/u9043523/e_75e285a9.jpg",
 "photo_big":"http://cs235.userapi.com/u9043523/a_0f88d249.jpg",
-"screen_name":"id9043523"
+"screen_name":"id9043523",
+"sex": 2
 },
 {
 "uid":12738850,
-"first_name":"Vladimir",
-"last_name":"Melnik",
+"first_name":"Владимир",
+"last_name":"Мельников",
 "photo":"http://cs10393.userapi.com/u12738850/e_3668d2c2.jpg",
 "photo_big":"http://cs10393.userapi.com/u12738850/a_e4722b85.jpg",
-"screen_name":"rubydev_ru"
+"screen_name":"rubydev_ru",
+"sex": 2
 },
 {
 "uid":13821048,
-"first_name":"Denis",
-"last_name":"Belov",
+"first_name":"Денис",
+"last_name":"Белов",
 "photo":"http://cs316818.userapi.com/u13821048/e_22076916.jpg",
 "photo_big":"http://cs316818.userapi.com/u13821048/a_5eff6734.jpg",
-"screen_name":"d_e_x"
+"screen_name":"d_e_x",
+"sex": 2
 },
 {
 "uid":15226731,
-"first_name":"Nikita",
-"last_name":"Nikitenko",
+"first_name":"Никита",
+"last_name":"Никитенко",
 "photo":"http://cs9598.userapi.com/u15226731/e_29f67def.jpg",
 "photo_big":"http://cs9598.userapi.com/u15226731/a_7ba5d401.jpg",
-"screen_name":"babusha"
+"screen_name":"babusha",
+"sex": 2
 },
 {
 "uid":28609892,
-"first_name":"Andrey",
-"last_name":"Saenko",
+"first_name":"Андей",
+"last_name":"Саенко",
 "photo":"http://cs302114.userapi.com/u28609892/e_2dd7cbc2.jpg",
 "photo_big":"http://cs302114.userapi.com/u28609892/a_662bc75f.jpg",
-"screen_name":"oferir"
+"screen_name":"oferir",
+"sex": 2
 },
 {
 "uid":42845285,
-"first_name":"Artyom",
-"last_name":"Perevozchikov",
+"first_name":"Аретем",
+"last_name":"Перевозчиуов",
 "photo":"http://cs304111.userapi.com/u42845285/e_3dc58a48.jpg",
 "photo_big":"http://cs304111.userapi.com/u42845285/a_5fc95424.jpg",
-"screen_name":"modelol"
+"screen_name":"modelol",
+"sex": 2
 }
 ]
 }

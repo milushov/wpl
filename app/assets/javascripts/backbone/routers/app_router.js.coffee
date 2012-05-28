@@ -207,9 +207,18 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   ok: ()->
     $('.tooltip').remove()
     $('#app').tooltip
-      selector: "a[rel=tooltip]"
+      selector: 'a[rel=tooltip]'
       delay:
         show: 420, hide: 100
+
+    $('.popover').remove()
+    $('#app').popover
+      selector: 'a[rel=popover]'
+      placement: 'top'
+      delay:
+        show: 100, hide: 1000
+      template: '<div class="popover"><div class="arrow"></div><div class="popover-inner"><div class="popover-title"></div><div class="popover-content"><p></p></div></div></div>'
+        
     bind_urls()
     title $('#center_block').find('#name').find('h2').text().trim()
     loading('off')

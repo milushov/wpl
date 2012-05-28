@@ -9,4 +9,10 @@ class Comment
 
   belongs_to :playlist
   belongs_to :user
+
+  class << self
+    def getByIds ids
+      any_in(_id: ids).includes(:user).to_a
+    end
+  end
 end

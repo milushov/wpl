@@ -90,8 +90,9 @@ class MainController < ApplicationController
     def create_user
       user_info = @vk.users.get(
         uids: session[:user_id],
-        fields: 'photo_big,screen_name'
-      )[0]
+        lang: 'ru', # REMARK: not tested!
+        fields: 'photo_big,screen_name,sex'
+      ).first
 
       user_info[:id] = user_info[:uid]
       user_info.delete 'uid'

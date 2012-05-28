@@ -11,18 +11,48 @@ class CommentsController < ApplicationController
     comments = Comment.where(playlist_id: pid).desc(:created_at).skip(page).limit(per).includes(:user).to_a
 
     return error 'comments not found' if comments.empty?
-    render json: comments.map { |c| c[:user_data] = c.user.show; c }
+
+    comments.map! { |c| c[:user_data] = c.user.show; c }
+
+    # ids of comments that users respond
+    ids = comments.map { |c|c.reply_to }
+    ids.reject!(&:nil?).uniq!
+
+    unless ids.empty?
+      response_comments = Comment.getByIds ids
+      response_comments.map! { |c| c[:user_data] = c.user.show; c }
+    end
+
+    comments.map! do |comment|
+      if cid = comment.reply_to and not cid.nil?
+        comment[:replied_comment] = response_comments.select{ |rc| rc.id.to_s == cid }.first
+      end
+      comment
+    end
+
+    render json: comments
   end
 
   def create
     return error 'content nil or less 10 letters' unless content = params[:content] or content.length < 10
 
-    reply_to = nil unless params[:reply_to] =~ /[a-f0-9]{24}/
-
-    comment = Comment.new content: content, reply_to: params[:reply_to]
-    comment.user = User.find(session[:user_id].to_i)
-
+    if params[:reply_to] =~ /[a-f0-9]{24}/
+      reply_to = params[:reply_to]
+    else
+      reply_to = nil 
+    end
+    # binding.pry
+    comment = Comment.new content: content, reply_to: reply_to
+    comment.user = User.find session[:user_id].to_i
     status = @playlist.comments << comment
+
+    if cid = comment.reply_to and not cid.nil?
+      comment[:replied_comment] = Comment.find cid
+      if comment[:replied_comment]
+        comment[:replied_comment][:user_data] = comment[:replied_comment].user.show
+      end
+    end
+
     render json: {status: status, id: comment.id, comment: comment}
   end
 

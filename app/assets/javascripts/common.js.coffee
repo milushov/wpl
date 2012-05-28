@@ -22,6 +22,14 @@ window.imgur = {}
 window.imgur.api_url = 'http://api.imgur.com/2/upload.json'
 window.imgur.key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
 
+# moment foemat for created_at property of comment
+window.format = 'D MMMM YYYY, H:mm, dddd'
+window.lite_format = 'D MMMM, H:mm'
+
+window.dative = (full_name) ->
+  rn = new RussianName(full_name)
+  rn.fullName rn.gcaseDat
+
 window.ondragover = (e) ->
   e.preventDefault()
   l 'ondragover'
@@ -155,6 +163,9 @@ window.bind_urls = ->
             return false
         App.navigate(url, true)
 
+window.nav = (_this) ->
+  url = $(_this).attr 'href'
+  return App.navigate url, true
 
 window.too_late = 0
 window.loading = (ready = false) ->

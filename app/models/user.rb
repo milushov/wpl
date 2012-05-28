@@ -1,5 +1,5 @@
 class User
-  SHOW_FIELDS = %w{ id screen_name first_name last_name photo photo_big }
+  SHOW_FIELDS = %w{ id screen_name first_name last_name photo photo_big sex }
 
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -12,6 +12,7 @@ class User
 
   field :first_name, type: String, default: ''
   field :last_name, type: String, default: ''
+  field :sex, type: Integer, default: 0 # 2-man 1-woman 0-unknown
   
   field :photo, type: String
   field :photo_big, type: String
