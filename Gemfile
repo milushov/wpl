@@ -1,4 +1,9 @@
-gem 'rails', '3.2.0'
+source 'http://rubygems.org'
+
+ruby '1.9.3'
+gem  'rails', '3.2.3'
+
+gem 'heroku'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
