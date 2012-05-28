@@ -24,6 +24,8 @@ class MainController < ApplicationController
       end
 
       @count_friends = ApplicationController::COUNT_FRIENDS.max + 1
+      @app_url = ApplicationController::APP_URL
+      binding.pry
 
       respond_to do |format|
         format.html # index.html.haml

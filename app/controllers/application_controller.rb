@@ -8,7 +8,8 @@ class ApplicationController < ActionController::Base
   MAX_REQUERS_PER_SECOND = 2
   APP_ID = 1111000
   APP_SECRET = '1111000key'
-  REDIRECT_URI = 'http://playlists.dev:3000/auth'
+  REDIRECT_URI = ENV['USER'].nil? ? 'http://wpl.herokuapp.com/auth' : 'http://playlists.dev:3000/auth'
+  APP_URL = ENV['USER'].nil? ? 'http://wpl.herokuapp.com/' : 'http://playlists.dev:3000/'
   SETTINGS = 'notify,friends,photos,audio' # 1+2+4+8
 
 private
