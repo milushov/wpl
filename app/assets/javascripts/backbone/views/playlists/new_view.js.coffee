@@ -23,15 +23,15 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
 
     track_name = $('#track_seacher input').val()
     if track_name.length < 3
-      alert 'Название трека слишком короткое'
-      return
+      return notify 'Название трека слишком короткое'
 
     App.vk.searchTracks track_name, 0, (data)->
-      data.response.tracks?.splice 0, 1 # убираем первый элемент, который содержит кол-во найденных треков
-      window.a = tracks = data.response.tracks
-      if not tracks?
-        alert 'ни одного трека не найдено'
-        return
+      if data.response.tracks
+        data.response.tracks.splice 0, 1 # remove first element
+      tracks = data.response.tracks
+      
+      return notify 'Ни одного трека не найдено' unless tracks
+        
       $('#searched_tracks').html(new Playlists.Views.Tracks.FoundTracksView(tracks).render().el)
     ,this
 
@@ -53,28 +53,53 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       track.unset 'owner_id'
       track.unset 'aid'
 
+    name = $('#playlist_name').val()
+    if name.length < 3
+      return notify 'Слишком короткое название'
+
+    url = $('#playlist_url').val()
+    if name.length < 3
+      return notify 'Ссылка слишком короткая'
+
+    if not @image
+      return notify 'Загрузите изображение, визуализирующее тематику плейлиста'
+    image = 
+      image: @image.large_thumbnail
+      image_small: @image.small_square
+
+    tags = $("#edit_tags").tagit("assignedTags")
+    if tags.length == 0
+      return notify 'Добавьте хоть один тег'
+
+    description = $('#playlist_description').val()
+    if description.length < 10
+      return notify 'Описание слишком короткое'
+
+     
+    switch count = App.new_tracks.length
+      when 0 then return notify 'Добавьте треков в плейлист'
+      when 1, 2 then return notify 'Маловато треков для плейлиста'
+
     new_playlist = 
-      name: $('#playlist_name').val()
-      url: $('#playlist_url').val()
-      image:  'http://vk.com/images/camera_a.gif'
-      description: $('#playlist_description').val()
-      tags: $("#edit_tags").tagit("assignedTags")
+      name: name
+      url: url
+      image:  image
+      description: description
+      tags: tags
       creator: my_profile.user.id
       tracks: App.new_tracks.toJSON()
 
     new_playlist = JSON.stringify new_playlist
 
-    App.vk.saveNewPlaylist playlist: new_playlist, (data)->
-      if data.status
-        App.navigate(data.id, true)
-      else
-        alert 'что-то пошло не так'
-    , this
+    App.vk.saveNewPlaylist playlist: new_playlist, (data) ->
+      return notify data.error if data.error
+      App.navigate(data.id, true) if data.status  
+    ,this
 
   imageUploaded: (imageUploaded) ->
-    console.log imageUploaded
-    @image = imageUploaded
-    $('#photo img')[0].src = @image.upload.links.large_thumbnail
+    # console.log imageUploaded
+    @image = imageUploaded.upload.links
+    $('#photo img')[0].src = @image.large_thumbnail
 
   render: ->
     console.log 'Views.Playlists.NewView render()'

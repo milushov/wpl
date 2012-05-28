@@ -146,18 +146,15 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     # BUG: way, when i use fetch method for obtain comments - not work!
     if playlist.comments.length == 0
       playlist.fetch
-      @vk.getComments playlist.get('url'), 0, 10, (data)->
-        if not data.error       
-          playlist.comments.add data
-          playlist.comments.url = "#{playlist.url()}/comments"
+      @vk.getComments playlist.get('url'), 0, 10, (data) ->
+        return notify data.error if data.error
+        
+        playlist.comments.add data if data.comments?.length != 0
+        playlist.comments.url = "#{playlist.url()}/comments"
 
-          $("#app").html( new Playlists.Views.Comments.IndexView(
-            playlist
-          ).render().el )
-          @ok()
-        else
-          notify data
-          @ok()
+        $("#app").html( new Playlists.Views.Comments.IndexView(playlist).render().el)
+        @ok()
+       
       ,this  
     else
       $("#app").html( new Playlists.Views.Comments.IndexView(

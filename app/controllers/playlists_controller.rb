@@ -30,16 +30,21 @@ class PlaylistsController < ApplicationController
 
   # POST /playlists
   def create
-    playlist = JSON.parse params['playlist']
+    playlist = pick JSON.parse(params[:playlist]), :name, :url, :image, :description, :tags, :tracks
+    if playlist[:image]
+      playlist[:image_small] = playlist[:image]['image_small'] || nil
+      playlist[:image] = playlist[:image]['image'] || nil
+    end
+    playlist[:creator] = session[:user_id]
 
-    @playlist = Playlist.new(playlist)
+    @playlist = Playlist.new playlist
     
-    if @playlist.save
-      user = User.where(vk_id: session[:user_id].to_s).first
+    if status = @playlist.save
+      user = User.find session[:user_id].to_i
       user.follow @playlist
-      render json: {status: true, id: @playlist[:url]}, location: @playlist
+      render json: {status: status, id: @playlist[:url]}, location: @playlist
     else
-      error "#{playlist['name']} not created :-("
+      return error 'Плейлист не создан, т.к. одно из полей было заполненно неверно.'
     end
   end
 
@@ -126,8 +131,15 @@ class PlaylistsController < ApplicationController
     # @playlist.destroy
   end
 
-  private
-  
+private
+  def pick(hash, *keys)
+    filtered = {}
+    hash.each do |key, value| 
+      filtered[key.to_sym] = value if keys.include?(key.to_sym) 
+    end
+    filtered
+  end
+
   def do_follow undo = nil
     if user = User.find(session[:user_id].to_i)
       unless playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first

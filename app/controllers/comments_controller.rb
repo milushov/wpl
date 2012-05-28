@@ -10,7 +10,7 @@ class CommentsController < ApplicationController
 
     comments = Comment.where(playlist_id: pid).desc(:created_at).skip(page).limit(per).includes(:user).to_a
 
-    return error 'comments not found' if comments.empty?
+    return render json: { status: true, comments: [] } if comments.empty?
 
     comments.map! { |c| c[:user_data] = c.user.show; c }
 

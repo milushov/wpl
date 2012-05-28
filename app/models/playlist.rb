@@ -11,6 +11,7 @@ class Playlist
   
   field :name, type: String
   field :image, type: String
+  field :image_small, type: String, default: nil
   field :description, type: String
 
   field :url, type: String
