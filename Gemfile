@@ -1,4 +1,4 @@
-gem 'rails', '3.2.0'
+gem 'rails', '3.2.3'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -40,15 +40,11 @@ gem 'debugger', group: [:development, :test]
 
 gem 'mongoid'
 gem 'mongoid_follow', git: 'git://github.com/YanhaoYang/mongoid_follow.git'
-# gem 'voteable_mongo'
-# gem 'kaminari'
 gem 'bson_ext'
 gem 'haml-rails'
 gem 'rails-backbone'
-
-#gem 'carrierwave-mongoid', :require => 'carrierwave/mongoid'
 gem 'yajl-ruby'
-gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git' # версия которая работаем у меня на шиндовс
+gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git'
 
 # gem 'mongoid-simple-tags', '0.0.5', git: 'git://github.com/thrk/mongoid-simple-tags.git'
 
