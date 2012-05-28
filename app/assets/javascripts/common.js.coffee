@@ -122,6 +122,25 @@ $ ()->
     delay:
       show: 420, hide: 100
 
+  $('.navbar.navbar-fixed-top').hover () ->
+    $('#slider').show()
+  , () -> setTimeout ( -> $('#slider').hide() ), 3000
+
+  $('#slider').draggable(
+    drag: (event, ui) -> 
+      cur = ui.position.left
+      all = $('#progress_line').width()
+      proc = cur/all*100
+      l all, cur
+      $('#play').width "#{proc}%"
+    ,
+    stop: (event, ui) -> 
+      cur = ui.originalPosition.left
+      all = $('#progress_line').width()
+      # App.player.asldkfjlasd
+    , axis: 'x'
+  )
+
 window.l = (a, b)->
   if not a or arguments.length == 0 then return 'not arguments'
   if arguments.length > 2

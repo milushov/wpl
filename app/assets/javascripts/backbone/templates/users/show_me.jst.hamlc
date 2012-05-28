@@ -4,7 +4,7 @@
       %img{src: "#{@user.photo_big}"}
 #center_block.fl_l
   #name
-    %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", data: {type: 'ext'}}
+    %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", target: 'blank', data: {type: 'ext'}}
       %img{src: '/assets/vk.png'}
     %h2.fl_l
       = "#{@user.first_name} #{@user.last_name}"

@@ -14,8 +14,8 @@
             %a{href: "/popular"} Популярные
           %li
             #player_ui
-              %a#play_btn
               %a#prev_btn
+              %a#play_btn
               %a#next_btn
               %a#repeat_btn
               #track_info
@@ -37,10 +37,11 @@
                   %a{href: '/logout', data: {type: 'ext'} } Выход
             
       / /.nav-collapse
-  #progress_line{style:'margin-top:10px;'}
+  #progress_line
+    #slider.ui-draggable
     #load
     #play
-    #slider.ui-draggable
+    
 
 #app.container
   %center
