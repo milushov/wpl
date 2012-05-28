@@ -177,7 +177,7 @@ DEPENDENCIES
   mongoid
   mongoid_follow!
   pry
-  rails (= 3.2.3)
+  rails
   rails-backbone
   sass-rails (~> 3.2.3)
   thin
