@@ -29,10 +29,11 @@
         .user_photo.fl_l
           %a{href: "/u/#{my_profile.user.screen_name}"}
             %img{src: my_profile.user.photo}
-        .content.fl_l
-          .name
-            %a{href: "/u/#{my_profile.user.screen_name}"}
-              = "#{my_profile.user.first_name} #{my_profile.user.last_name}"
+        .comment_info.fl_l
+          .header.clear
+            .name.fl_l
+              %a{href: "/u/#{my_profile.user.screen_name}"}
+                = "#{my_profile.user.first_name} #{my_profile.user.last_name}"
           .content
             %textarea
           %a.btn.btn-primary#add_new_comment

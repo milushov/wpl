@@ -34,7 +34,9 @@ class CommentsController < ApplicationController
   end
 
   def create
-    return error 'content nil or less 10 letters' unless content = params[:content] or content.length < 10
+    if content = params[:content] and not (10..1000).include? content.length
+      return error 'comment less 10 of bigger 1000 letters'
+    end
 
     if params[:reply_to] =~ /[a-f0-9]{24}/
       reply_to = params[:reply_to]
@@ -56,23 +58,37 @@ class CommentsController < ApplicationController
     render json: {status: status, id: comment.id, comment: comment}
   end
 
-  def update
-    return error 'content nil or less 10 letters' unless content = params[:content] or content.length < 10
-    comment = @playlist.find(params[:cid])
+def update
+    if content = params[:content] and not (10..1000).include? content.length
+      return error 'comment less 10 of bigger 1000 letters'
+    end
+    
+    comment = Comment.find params[:cid]
+    
     if comment.created_at < Time.now - 4.hour
       return error 'it is too late, was more than 4 hour'
     end
     comment.content = content
     status = comment.save
-    render json: { status: status, id: comment.id  }
+    render json: { status: status, id: comment.id, comment: comment}
   end
 
   def delete
-    comment = @playlist.find(params[:cid]) 
+    unless comment = Comment.find(params[:cid])
+      return error 'comment not found, probably this comment already deleted'
+    end
+
     unless comment.user_id == session[:user_id].to_i
       return error 'you can not delete comments form others users'
     end
     status = @playlist.comments.find(params[:cid]).destroy
+    render json: {status: status, id: comment.id}
+  end
+
+  def spam
+    comment = Comment.find params[:cid]
+    status = true
+    #status = @playlist.comments.find(params[:cid]).destroy
     render json: {status: status, id: comment.id}
   end
 

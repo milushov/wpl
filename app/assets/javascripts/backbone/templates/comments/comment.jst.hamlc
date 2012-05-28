@@ -1,30 +1,44 @@
-.comment{id: @_id}
+.comment{id: "cid#{@_id}"}
   .user_photo.fl_l
     %a{href: "/u/#{@user_data.screen_name}"}
       %img{src: @user_data.photo}
-  .content.fl_l
-    .name
-      %a{href: "/u/#{@user_data.screen_name}"}
-        = "#{@user_data.first_name} #{@user_data.last_name}"
-      - if @replied_comment
-        - name = "#{@replied_comment.user_data.first_name} #{@replied_comment.user_data.last_name}"
-        - name_dat = dative name
-        - url = @replied_comment.user_data.screen_name
-        - photo_url = @replied_comment.user_data.photo
-        - created_at = moment(@replied_comment.created_at).format(lite_format)
-        - if @user_data.sex == 2
-          %span
-            ответил
+
+  .comment_info.fl_l
+    .header.clear
+      .name.fl_l
+        %a{href: "/u/#{@user_data.screen_name}"}
+          = "#{@user_data.first_name} #{@user_data.last_name}"
+        - if @replied_comment
+          
+          - name = "#{@replied_comment.user_data.first_name} #{@replied_comment.user_data.last_name}"
+          - name_dat = dative name
+          - url = @replied_comment.user_data.screen_name
+          - photo_url = @replied_comment.user_data.photo
+          - created_at = moment(@replied_comment.created_at).format(lite_format)
+
+          - if @user_data.sex == 2
+            %span
+              ответил
+          - else
+            %span
+              ответила
+
+          - title = $("<div> <a href=\"/u/#{url}\" onclick=\"nav(this); return false;\" class=\'popover_user_photo fl_l\'> <img src=\"#{photo_url}\"> </a> <div class=\"fl_l\"> <span class=\"popover_user_name\">#{name}</span> <span class=\"popover_created_at\">#{created_at}</span></div> </div>")
+
+          %a.reply_popover{rel: 'popover', data: { original-title: title.html(), content: @replied_comment.content} }
+            = name_dat
+
+      .actions.fl_r
+        - if @user_data.id == my_profile.user.id
+          - if can_update @created_at
+            %a.update_btn.icon-pencil.icon-black{ rel: 'tooltip', data-cid: @_id, data-original-options: '{placement: top}', data-original-title: 'Редактировать' }
+          %a.delete_btn.icon-remove.icon-black{ rel: 'tooltip', data-cid: @_id, data-original-options: '{placement: top}', data-original-title: 'Удалить' }
         - else
-          %span
-            ответила
+          %a.spam_btn.icon-flag.icon-black{ rel: 'tooltip', data-cid: @_id, data-original-options: '{placement: top}', data-original-title: 'Спам' }
 
-        - title = $("<div><a href=\"/u/#{url}\" onclick=\"nav(this); return false;\" class=\'popover_user_photo fl_l\'> <img src=\"#{photo_url}\"> </a> <div class=\"fl_l\"> <span class=\"popover_user_name\">#{name}</span> <span class=\"popover_created_at\">#{created_at}</span></div> </div>")
-
-        %a.reply_popover{rel: 'popover', data: {'original-title': title.html(), content: @replied_comment.content}, onmouseover: 'bind_urls(); //epic fail' }=name_dat
     .content
       = @content
     .date.fl_l
-      %a{rel: 'tooltip', data-original-options: '{placement: right}', data-original-title="#{ moment(@created_at).format(format) }"}
+      %a{rel: 'tooltip', data-original-options: "{placement: 'right'}", data-original-title: moment(@created_at).format(format) } }
         = moment(@created_at).fromNow()
-    %a.reply_btn.btn.btn-mini.fl_r{data: {reply_to: @_id}} Ответить
+    %a.reply_btn.btn.btn-mini.fl_r{ data-reply_to: @_id } Ответить

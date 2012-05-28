@@ -4,14 +4,16 @@ class Playlists.Views.Comments.CommentView extends Backbone.View
   template: JST["backbone/templates/comments/comment"]
 
   events:
-    'mouseover' : 'showReplyButton'
-    'mouseout' : 'hideReplyButton'
+    'mouseover' : 'showButtons'
+    'mouseout' : 'hideButtons'
     'click .destroy' : 'destroy'
 
-  showReplyButton: ->
+  showButtons: ->
+    $(@el).find('.actions').show()
     $(@el).find('.reply_btn').show()
 
-  hideReplyButton: ->
+  hideButtons: ->
+    $(@el).find('.actions').hide()
     $(@el).find('.reply_btn').hide()
 
   destroy: () ->
@@ -22,4 +24,6 @@ class Playlists.Views.Comments.CommentView extends Backbone.View
 
   render: ->
     $(@el).html(@template(@model.toJSON() ))
+    content = $(@el).find('.content').html()
+    $(@el).find('.content').html linkify(content)
     return this

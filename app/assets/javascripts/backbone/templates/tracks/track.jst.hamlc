@@ -6,7 +6,7 @@
   .duration.fl_r.clear
     = dur(@duration)
 .lovers.fl_r.clear
-  - if @lovers.length
+  - if @lovers
     - for id, lover of @lovers
       %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
         %img{src: "#{lover.photo}"}

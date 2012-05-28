@@ -12,7 +12,7 @@
 
   .fl_l { float: left; }
   .fl_r { float: right; }
-  .clear:after { clear:both; }
+  .clear:after { clear:both; float: none; }
 
   body {
     overflow-y: scroll;

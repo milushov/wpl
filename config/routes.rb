@@ -32,8 +32,9 @@ Playlists::Application.routes.draw do
         get 'unfollow'
         get 'comments', to: 'comments#index'
         post 'comments/create', to: 'comments#create'
-        post 'comments/:cid/upadate', to: 'comments#update'
+        post 'comments/:cid/update', to: 'comments#update'
         post 'comments/:cid/delete', to: 'comments#delete'
+        post 'comments/:cid/spam', to: 'comments#spam'
       end
 
       resources :tracks do

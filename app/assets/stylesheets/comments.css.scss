@@ -39,13 +39,30 @@
       }
     }
 
-    .content {
+    .comment_info {
       width: 470px;
 
-      .name {
-        a {
+      .header {
+        overflow: hidden;
+        .name {
+          
+          a {
 
+          }
         }
+
+        .actions {
+          overflow: hidden;
+          display: none;
+          opacity: 0.7;
+          a{
+            cursor: pointer;
+          }
+        }
+      }
+
+      .content {
+        width: 470px;
       }
 
       .date {
@@ -61,12 +78,12 @@
       }
 
       textarea {
-        width: 470px; height: 75px;
+        width: 465px; height: 75px;
       }
 
       .reply_btn {
         display: none;
-        margin-top: -3px;
+        margin-top: -2px;
       }
     }
   }

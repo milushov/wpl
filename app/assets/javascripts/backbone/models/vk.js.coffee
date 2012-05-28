@@ -99,6 +99,11 @@ class Playlists.Models.Vk extends Backbone.Model
     url = "#{@get("url")}api/playlists/#{pid}/comments/#{cid}/delete"
     @ajax url, success, context, false, true
 
+  spamComment: (pid, cid, success, context)  ->
+    return if not pid or not cid
+    url = "#{@get("url")}api/playlists/#{pid}/comments/#{cid}/spam"
+    @ajax url, success, context, false, true
+
   uploadImage: (file) ->
     if not file or not file.type.match /image.*/
       notify 'Выберите изображение!', 'alert'

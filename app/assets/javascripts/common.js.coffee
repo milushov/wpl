@@ -43,7 +43,7 @@ window.notify = (message, type = 'error', long_message = false) ->
   noty(
     text: message,
     theme:'noty_theme_twitter',
-    layout:'top',
+    layout: if type == 'error' then 'top' else 'bottomRight',
     type: type,
     animateOpen:
       height: 'toggle'
@@ -55,7 +55,7 @@ window.notify = (message, type = 'error', long_message = false) ->
     closeButton:true,
     closeOnSelfClick: true,
     closeOnSelfOver: false,
-    modal:true
+    modal: if type == 'error' then true else false
   )
 
 $ ()->
@@ -102,7 +102,7 @@ $ ()->
     )
 
   soundManager.ontimeout ()->
-    alert 'Плеер завис, перезагрузите страницу! (F5)'
+    notify 'Плеер завис, перезагрузите страницу! (F5)'
 
   $.ajaxSetup cache: false
 
@@ -113,7 +113,7 @@ $ ()->
       if JSON.parse(jqxhr.responseText).error == 'abuse'
         return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
 
-    notify "Упс. Кажется эта ссылка сейчас не работает. Уже чиним. (#{exception})"
+    notify "Упс. Кажется эта функция сейчас не работает. Уже чиним. (#{exception})"
     #history.back()
 
   $('footer').tooltip
@@ -224,3 +224,13 @@ window.translitUrl = (url)->
     .replace(/[^\w\d\s-_]+/g, '') 
     .replace(/[\s-_]+/g, '-')
     .replace(/(^-|-$)+/g,'')
+
+window.linkify = (text) ->
+  exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
+  text.replace(exp,"<a href='$1' data-type='ext' target='blank'>$1</a>")
+
+window.can_update = (time_str) ->
+  return false unless time_str
+  diff = (moment().diff(time_str)/1000).toFixed()
+  max_time = 4*60*60
+  return if diff > max_time then false else true
