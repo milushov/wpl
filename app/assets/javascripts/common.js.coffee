@@ -71,7 +71,7 @@ $ ()->
 
   bind_urls()
   
-  soundManager.url = 'http://playlists.dev:3000';
+  soundManager.url = app_url;
   soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
   soundManager.debugMode = if !debug then true
