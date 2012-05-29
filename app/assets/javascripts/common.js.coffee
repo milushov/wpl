@@ -16,8 +16,6 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
   nestedCollection
 
-window.debug = 1
-
 window.imgur = {}
 window.imgur.api_url = 'http://api.imgur.com/2/upload.json'
 window.imgur.key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
@@ -58,88 +56,6 @@ window.notify = (message, type = 'error', long_message = false) ->
     modal: if type == 'error' then true else false
   )
 
-$ ()->
-  if my_profile == -1
-    $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>"
-    return false
-
-  window.App = new Playlists.Routers.AppRouter(
-    playlists: my_profile['playlists']
-  )
-  
-  Backbone.history.start(pushState: true)
-
-  bind_urls()
-  
-  soundManager.url = app_url;
-  soundManager.preferFlash = true;
-  soundManager.flashVersion = 9;
-  soundManager.debugMode = if !debug then true
-  soundManager.flashPollingInterval = 500
-  #soundManager.useHighPerformance = true  
-  #soundManager.html5PollingInterval = 33
-  soundManager.defaultOptions = 
-    #onpause:  ()-> App.player.model.pause()
-    #onresume: ()-> App.player.model.resume()
-    onfinish: ->
-      App.player.model.next()
-      42
-    onload: ->
-      App.player.model.loadNextTrack()
-      42
-    whileplaying: -> App.player.updatePlayProgress(this.position, this.duration)
-    whileloading: -> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
-
-  # достасть из localStorage
-  default_volume = 100
-  duration_mode = 'pos'
-
-  soundManager.defaultOptions.volume = default_volume;
-  
-  soundManager.onready ()->
-    App.player = new Playlists.Views.Player.IndexView(
-      model: new Playlists.Models.Player(duration_mode: duration_mode)
-    )
-
-  soundManager.ontimeout ()->
-    notify 'Плеер завис, перезагрузите страницу! (F5)'
-
-  $.ajaxSetup cache: false
-
-  $(document).ajaxError (e, jqxhr, settings, exception) =>
-    console.error arguments
-    # console.error jqxhr.responseText
-    if jqxhr.status == 403
-      if JSON.parse(jqxhr.responseText).error == 'abuse'
-        return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
-
-    notify "Упс. Кажется эта функция сейчас не работает. Уже чиним. (#{exception})"
-    #history.back()
-
-  $('footer').tooltip
-    selector: 'span[rel=tooltip]'
-    placement: 'right'
-    delay:
-      show: 420, hide: 100
-
-  $('.navbar.navbar-fixed-top').hover () ->
-    $('#slider').show()
-  , () -> setTimeout ( -> $('#slider').hide() ), 3000
-
-  $('#slider').draggable(
-    drag: (event, ui) -> 
-      cur = ui.position.left
-      all = $('#progress_line').width()
-      proc = cur/all*100
-      l all, cur
-      $('#play').width "#{proc}%"
-    ,
-    stop: (event, ui) -> 
-      cur = ui.originalPosition.left
-      all = $('#progress_line').width()
-      # App.player.asldkfjlasd
-    , axis: 'x'
-  )
 
 window.l = (a, b)->
   if not a or arguments.length == 0 then return 'not arguments'
@@ -153,13 +69,6 @@ window.l = (a, b)->
 
 window.title = (mes = 404) ->
   document.title = mes
-
-if not debug
-  console.log = ->
-  console.warn = ->
-  console.info = ->
-  window.l = ->
-  alert = window.notify
 
 window.curUrl = ()->
   $.url().attr().relative
@@ -253,3 +162,91 @@ window.can_update = (time_str) ->
   diff = (moment().diff(time_str)/1000).toFixed()
   max_time = 4*60*60
   return if diff > max_time then false else true
+
+$ () ->
+  return $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>" if my_profile == -1
+    
+  unless debug
+    console.log = ->
+    console.warn = ->
+    console.info = ->
+    window.l = ->
+    alert = window.notify
+
+  window.App = new Playlists.Routers.AppRouter(
+    playlists: my_profile['playlists']
+  )
+  
+  Backbone.history.start(pushState: true)
+
+  bind_urls()
+  
+  soundManager.url = app_url;
+  soundManager.preferFlash = true;
+  soundManager.flashVersion = 9;
+  soundManager.debugMode = if !debug then true
+  soundManager.flashPollingInterval = 500
+  #soundManager.useHighPerformance = true  
+  #soundManager.html5PollingInterval = 33
+  soundManager.defaultOptions = 
+    #onpause:  ()-> App.player.model.pause()
+    #onresume: ()-> App.player.model.resume()
+    onfinish: ->
+      App.player.model.next()
+      42
+    onload: ->
+      App.player.model.loadNextTrack()
+      42
+    whileplaying: -> App.player.updatePlayProgress(this.position, this.duration)
+    whileloading: -> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
+
+  # достасть из localStorage
+  default_volume = 100
+  duration_mode = 'pos'
+
+  soundManager.defaultOptions.volume = default_volume;
+  
+  soundManager.onready ()->
+    App.player = new Playlists.Views.Player.IndexView(
+      model: new Playlists.Models.Player(duration_mode: duration_mode)
+    )
+
+  soundManager.ontimeout ()->
+    notify 'Плеер завис, перезагрузите страницу! (F5)'
+
+  $.ajaxSetup cache: false
+
+  $(document).ajaxError (e, jqxhr, settings, exception) =>
+    console.error arguments
+    # console.error jqxhr.responseText
+    if jqxhr.status == 403
+      if JSON.parse(jqxhr.responseText).error == 'abuse'
+        return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
+
+    notify "Упс. Кажется эта функция сейчас не работает. Уже чиним. (#{exception})"
+    #history.back()
+
+  $('footer').tooltip
+    selector: 'span[rel=tooltip]'
+    placement: 'right'
+    delay:
+      show: 420, hide: 100
+
+  $('.navbar.navbar-fixed-top').hover () ->
+    $('#slider').show()
+  , () -> setTimeout ( -> $('#slider').hide() ), 3000
+
+  $('#slider').draggable(
+    drag: (event, ui) -> 
+      cur = ui.position.left
+      all = $('#progress_line').width()
+      proc = cur/all*100
+      l all, cur
+      $('#play').width "#{proc}%"
+    ,
+    stop: (event, ui) -> 
+      cur = ui.originalPosition.left
+      all = $('#progress_line').width()
+      # App.player.asldkfjlasd
+    , axis: 'x'
+  )

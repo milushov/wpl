@@ -23,8 +23,9 @@ class MainController < ApplicationController
         return redirect_to action: 'login', return_to: params[:path]
       end
 
-      @count_friends = ApplicationController::COUNT_FRIENDS.max + 1
+      @count_friends = ApplicationController::COUNT_FRIENDS.max + 1 # depricated
       @app_url = ApplicationController::APP_URL
+      @debug = ApplicationController::DEBUG
       
       respond_to do |format|
         format.html # index.html.haml

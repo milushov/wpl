@@ -52,9 +52,10 @@
   var user_profile = {};
   var count_friends = #{@count_friends};
   var app_url = "#{@app_url}";
+  var debug = #{@debug};
 
 %footer
   %center
-    %a{href:'http://vk.com/milushov', data: {type: 'ext'} }сделано
+    %a{href:'http://vk.com/milushov', data: {type: 'ext'} } сделано
     с 
-    %span{style: 'color:#ef0063; cursor: pointer;', rel: 'tooltip', title: 'с любовью же, к хорошей музыке'}❤
+    %span{style: 'color:#ef0063; cursor: pointer;', rel: 'tooltip', title: 'с любовью же, к хорошей музыке'} ❤
