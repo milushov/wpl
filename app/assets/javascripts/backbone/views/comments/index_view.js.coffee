@@ -31,8 +31,10 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
       return notify data.error if data.error
       pid = @options.id
       App.playlists.getById(pid).comments.where(_id: cid)[0].destroy()
-      @$("#cid#{cid}").remove()
+      @$("#cid#{cid}").slideUp 700, 'easeOutExpo',
+        -> ( $(this).remove())
       $('.tooltip').remove()
+      notify 'Сообщение удалено', 'success'
     ,this
 
   spam: (e) ->
@@ -41,7 +43,8 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
       return notify data.error if data.error
       pid = @options.id
       console.log App.playlists.getById(pid).comments.where(_id: cid)[0].destroy()
-      @$("#cid#{cid}").remove()
+      @$("#cid#{cid}").slideUp 700, 'easeOutExpo',
+        -> ( $(this).remove()) 
       $('.tooltip').remove()
       notify 'Сообщение помечено как спам', 'success'
     ,this
@@ -61,18 +64,18 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
     if @update_cid
       App.vk.updateComment @options.id, @update_cid, content, (data) ->
         return notify data.error if data.error
-        
-
         data.comment.user_data = my_profile.user
         comment = new Playlists.Models.Comment data.comment
-        
-        playlist = App.playlists.getById(@options.id)
-        model = playlist.comments.where(_id: @update_cid)[0]
-        i = playlist.comments.models.indexOf model
-        App.playlists.getById(@options.id).comments.add comment, at: i        
+        # finding index of comment in comments collecion
+        # for comment which we update
+        playlist = App.playlists.getById @options.id
+        comments = playlist.comments.where(_id: @update_cid)[0]
+        i = playlist.comments.models.indexOf comments
+        App.playlists.getById(@options.id).comments.add comment, at: i
+        # make a view which replaces the updated comment
         view = new Playlists.Views.Comments.CommentView model: comment
         @$("#cid#{@update_cid}").replaceWith view.render().el
-        @$('#new_comment textarea').val('')
+        @$('#new_comment textarea').val ''
         @update_cid = false
       ,this
     else
@@ -84,9 +87,8 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
         App.playlists.getById(@options.id).comments.add comment, at: 0
         
         view = new Playlists.Views.Comments.CommentView model: comment
-        @$("#new_comment").after(view.render().el)
-        @$('#new_comment textarea').val('')
-        # App.showComments @options.get 'url'
+        @$("#new_comment").after view.render().el
+        @$('#new_comment textarea').val ''
       ,this
 
   scroll: ->

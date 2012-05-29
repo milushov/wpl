@@ -81,7 +81,7 @@ window.bind_urls = ->
       if url
         current_url = curUrl()
         if url != current_url
-          loading();
+          loading()
           $('a[rel=tooltip]').tooltip('hide')
           #чтобы не мазолило глаза, если запрос будет ооочень долгий 
           setTimeout (->loading('off')), 15000
@@ -107,7 +107,7 @@ window.loading = (ready = false) ->
   else
     # console.warn "ждем #{fast_operation}", window.too_late
     # show loader
-    setTimeout ()=>
+    setTimeout () =>
       # if loader show,
       if loader.css('opacity') != '1' and not window.too_late
         # console.warn "быстрая операция < #{fast_operation}", window.too_late

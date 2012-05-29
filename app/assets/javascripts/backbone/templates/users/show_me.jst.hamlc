@@ -14,7 +14,9 @@
   #playlists
 #right_block.fl_r
   #followers
-    #title Мои слушатели
+    .title
+      %a=@user.followers_count
+      Слушатели
     - if @followers.length
       - for id, follower of @followers
         %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
@@ -23,7 +25,9 @@
       .alert.alert-info
         Вас еще никто не слушает, пригласите друзей :-)
   #followees
-    #title Я слушаю
+    .title
+      %a=@user.followees_count
+      Я слушаю
     - if @followees.length
       - for id, followee of @followees
         %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}

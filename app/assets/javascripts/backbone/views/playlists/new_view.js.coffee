@@ -3,8 +3,6 @@ Playlists.Views.Playlists ||= {}
 class Playlists.Views.Playlists.NewView extends Backbone.View
   template: JST["backbone/templates/playlists/new"]
 
-  tagName: 'div'
-
   events:
     'click #track_seacher a' : 'addTrack'
     'click #save_playlist' : 'savePlaylist'
@@ -22,7 +20,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     console.log 'Views.Playlists.NewView addTrack()'
 
     track_name = $('#track_seacher input').val()
-    if track_name.length < 3
+    if track_name.length < 2
       return notify 'Название трека слишком короткое'
 
     App.vk.searchTracks track_name, 0, (data)->
@@ -32,7 +30,9 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       
       return notify 'Ни одного трека не найдено' unless tracks
         
-      $('#searched_tracks').html(new Playlists.Views.Tracks.FoundTracksView(tracks).render().el)
+      @$('#searched_tracks').html(
+        new Playlists.Views.Tracks.FoundTracksView(tracks).render().el
+      )
     ,this
 
   updateTracks: ->
@@ -41,12 +41,15 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     for track in App.new_tracks.models
       track.set audio_id: "#{track.get "owner_id"}_#{track.get "aid"}"
       track.set artist_photo: '/assets/default.jpg'
-      $('#tracks').append(new Playlists.Views.Tracks.TrackView(model: track).render().el)
+      $('#tracks').append(
+        new Playlists.Views.Tracks.TrackView(model: track).render().el
+      )
     $('#searched_tracks').empty()
 
   savePlaylist: ->
     console.log 'Views.Playlists.NewView savePlaylist()'
     
+    # remove attributes that are not needed in the database
     for track in App.new_tracks.models
       track.unset 'lyrics_id'
       track.unset 'url'
@@ -67,6 +70,8 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       image: @image.large_thumbnail
       image_small: @image.small_square
 
+    delete @image
+
     tags = $("#edit_tags").tagit("assignedTags")
     if tags.length == 0
       return notify 'Добавьте хоть один тег'
@@ -75,7 +80,6 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     if description.length < 10
       return notify 'Описание слишком короткое'
 
-     
     switch count = App.new_tracks.length
       when 0 then return notify 'Добавьте треков в плейлист'
       when 1, 2 then return notify 'Маловато треков для плейлиста'
@@ -97,17 +101,14 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     ,this
 
   imageUploaded: (imageUploaded) ->
-    # console.log imageUploaded
     @image = imageUploaded.upload.links
     $('#photo img')[0].src = @image.large_thumbnail
+    loading('off')
 
   render: ->
-    console.log 'Views.Playlists.NewView render()'
-
     $(@el).html @template(
       photo: @me.photo
       screen_name: @me.screen_name
     )
 
-    #this.$("form").backboneLink(@model)
     this

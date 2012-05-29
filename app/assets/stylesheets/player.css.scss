@@ -98,14 +98,22 @@
     width: 200px; height: 16px;
     background-color: #fcfcfc;
     margin-left: 25px;
-    padding: 3px 7px;
-    color: #2AB2E2;
-    font-weight: bold;
+    padding: 2px 7px;
+    color: #555;
+    // font-weight: bold;
     border-radius: 5px;
+
+    -webkit-box-shadow: inset 1px 0px 12px 1px #CCD;
+    box-shadow: inset 1px 0px 12px 1px #CCD;
+
+    //border-bottom:1px solid #d9d9d9;
+    border-left:1px solid #dfdfdf;
+    border-right:1px solid #dfdfdf;
     
     #name {
       float: left;
       margin-right: 5px;
+      margin-top: -1px;
       overflow: hidden;
       width: 160px;
     }

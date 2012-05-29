@@ -28,9 +28,8 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     this.remove()
     return false
 
-  # запускает текущий плейлист с первого трека
+  # run the current playlist from the first track
   playAll: ()->
-    console.log 'Views.Playlists.ShowView playAll()'
     App.player.play()
 
   render: ->
@@ -40,17 +39,12 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     if my_profile.playlists.length != 0
       i_follow = p for p in my_profile.playlists when p.url == url
 
-    $(@el).html( @template(
-      name: @model.get 'name'
-      description: @model.get 'description'
-      tags: @model.get 'tags'
-      image: @model.get 'image'
-      followers: @model.get 'followers'
-      i_follow: i_follow,
-      comments_url: "/#{@model.get 'url'}/comments"
-    ) )
+    playlist_data = @model.toJSON()
+    playlist_data.comments_url = "/#{@model.get 'url'}/comments"
+    playlist_data.i_follow = i_follow
+    $(@el).html @template(playlist_data)
 
-    # добавляю id плейлиста в модель трека
+    # adding playlist's id in track model for player needs
     playlist_id = @model.get('_id')
 
     for i,track of @model.tracks.models

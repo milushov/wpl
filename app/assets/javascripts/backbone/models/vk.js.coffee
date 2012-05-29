@@ -105,16 +105,16 @@ class Playlists.Models.Vk extends Backbone.Model
     @ajax url, success, context, false, true
 
   uploadImage: (file) ->
-    if not file or not file.type.match /image.*/
-      notify 'Выберите изображение!', 'alert'
-      return false
-    
-    fd = new FormData()
-    fd.append('image', file)
-    fd.append('key', imgur.key)
+    unless file or not file.type.match /image.*/
+      return notify 'Выберите изображение в формате jpeg, png, gif!'
+      
+    window.loading()
+    fd = new FormData
+    fd.append 'image', file
+    fd.append 'key', imgur.key
 
     xhr = new XMLHttpRequest
-    xhr.open("POST", imgur.api_url)
+    xhr.open "POST", imgur.api_url
 
     xhr.onload = ()->
       image_data = JSON.parse xhr.responseText

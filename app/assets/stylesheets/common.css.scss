@@ -97,6 +97,18 @@
     #playlists {
       min-height: 380px;
       padding: 10px;
+
+      #tags {
+        a {
+          text-decoration: none;
+          padding: 2px 5px;
+          @include rounded(3px);
+        }
+
+        a:hover {
+
+        }
+      }
     }
 
     #playlist_name {
@@ -155,6 +167,7 @@
         margin-bottom: 2px;
         @include rounded(3px);
 
+
         img {
           width: 30px; height: 30px;
         } 
@@ -163,7 +176,7 @@
 
     #followees {
       position: fixed;
-      margin-top: 120px;
+      margin-top: 140px;
       width: 170px;
       margin-bottom: 10px;
       .followee {
@@ -177,6 +190,33 @@
         img {
           width: 30px; height: 30px;
         } 
+      }
+    }
+
+    .title {
+      font-size: 15px;
+      margin: 0 0 11px 2px;
+
+      a {
+        padding: 4px;
+        background-color: #fff;
+        text-decoration: none;
+
+        -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+        -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.4);
+        border-left: 0px solid #DBDBDB;
+        border-right: 0px solid #DBDBDB;
+        @include rounded(3px);
+        margin-right: 3px;
+
+        min-width: 18px;
+        display: inline-block;
+        text-align: center;
+      }
+
+      a:hover {
+        text-decoration: none; 
       }
     }
 

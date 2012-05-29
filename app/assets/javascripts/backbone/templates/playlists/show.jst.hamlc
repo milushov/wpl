@@ -30,7 +30,9 @@
 #right_block.fl_r
   #followers
     - if @followers.length
-      #title Слушатели
+      .title
+        %a=@followers_count
+        Слушатели
       - for id, follower of @followers
         %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
           %img{src: "#{follower.photo}"}
