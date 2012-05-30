@@ -25,6 +25,7 @@ Playlists::Application.routes.draw do
         get 'popular'
         get 'tags'
         get 'tags/:tag', to: 'playlists#playlistsByTag'
+        get 'search/:query', to:'playlists#search'
       end
 
       member do

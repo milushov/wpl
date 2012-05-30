@@ -15,14 +15,19 @@
   #name
     %h2.fl_l
       = @name
-    .btn-group.fl_r
+    .btn-group.fl_r{style: 'margin-top: 3px;'}
+      %a.btn.fl_r{onclick: 'history.back();'}
+        %i.icon-circle-arrow-left.icon-black
+        Назад
+      %a#show_comments.btn{href: @comments_url}
+        %i.icon-comment.icon-black
+        Комментарии
       %a#play_all.btn.btn-primary
         %i.icon-play.icon-white
         Играть всё
-      %a#show_comments.btn{href: @comments_url} Комментарии
   #playlists
     %h3= @description
-    .tags
+    #tags
       - for tag, i in @tags
         %a{href: "/tag/#{tag}"}
           =tag

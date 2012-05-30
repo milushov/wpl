@@ -124,13 +124,19 @@ class Playlists.Models.Vk extends Backbone.Model
 
   getPlaylistsByTag: (tag)->
     $.get "#{@get('url')}api/playlists/tags/#{tag}", (data)->
-      if data && !data.error
+      unless data.error
         console.log "Playlists.Models.Vk getPlaylistsByTag()", data
         App.trigger 'playlists_by_tag_data_loaded', data
       else
         console.error data.error
         App.notFound()
     , 'json'
+
+  search: (query, success, context)->
+    return false unless query
+    url = "#{@get 'url'}api/playlists/search/#{query}"
+    @ajax url, success, context, false, true, 'get'
+
 
   getTrackData: (id, success, context)->
     if !id then return false

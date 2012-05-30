@@ -63,6 +63,18 @@ class PlaylistsController < ApplicationController
     render json: Playlist.all_tags.map{ |p| p[:name] }
   end
 
+  def search
+    return error 'query too short' if params[:query].length < 3
+    playlists_data = Playlist.search params[:query]
+    playlists = make_playlists playlists_data
+    response = {
+       status: playlists.empty? ? false : true,
+       playlists: playlists,
+       query: params[:query]
+    }
+    render json: response
+  end
+
   # GET /playlists/tags/sport
   def playlistsByTag
     limit = (params[:limit] ? (3..3*10).include?(params[:limit].to_i) : false) ? params[:limit].to_i : PER_PAGE
@@ -70,43 +82,7 @@ class PlaylistsController < ApplicationController
     
     playlists_data = Playlist.tagged_with(params[:tag].to_s, skip, limit)
 
-    playlists, playlists_followers_ids = [], []
-
-    playlists_data.each do |playlist|
-      fs, ts = [], []
-      # playlist.followers store following relations
-      playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
-
-      playlist.tracks.map! do |track|
-        track[:lovers] = track[:lovers].reverse[0...5]
-        ts += track[:lovers]
-        track
-      end
-
-      playlists << {
-        _id: playlist.id.to_s,
-        url: playlist.url,
-        image: playlist.image,
-        name: playlist.name,
-        description: playlist.description,
-        tags: playlist.tags,
-        tracks: playlist.tracks,
-        followers_count: playlist.fferc,
-        followers: fs.reverse
-      }
-      playlists_followers_ids += fs + ts
-    end
-
-    playlists_followers = User.getByIds playlists_followers_ids
-
-    playlists.each do |playlist|
-      playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
-      playlist[:tracks].each do |track|
-        track[:lovers].map! do |id|
-          playlists_followers[id].show without: %w{ photo_big last_name }
-        end
-      end
-    end
+    playlists = make_playlists playlists_data
 
     render json: {
       tag: params[:tag].to_s,
@@ -157,4 +133,47 @@ private
       end
     end
   end
+
+  def make_playlists playlists_data
+    playlists, playlists_followers_ids = [], []
+
+    playlists_data.each do |playlist|
+      fs, ts = [], []
+      # playlist.followers store following relations
+      playlist.followers.to_a.each { |f| fs << f[:follower_id].to_i }
+
+      playlist.tracks.map! do |track|
+        track[:lovers] = track[:lovers].reverse[0...5]
+        ts += track[:lovers]
+        track
+      end
+
+      playlists << {
+        _id: playlist.id.to_s,
+        url: playlist.url,
+        image: playlist.image,
+        name: playlist.name,
+        description: playlist.description,
+        tags: playlist.tags,
+        tracks: playlist.tracks,
+        followers_count: playlist.fferc,
+        followers: fs.reverse
+      }
+      playlists_followers_ids += fs + ts
+    end
+
+    playlists_followers = User.getByIds playlists_followers_ids.uniq
+
+    playlists.each do |playlist|
+      playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
+      playlist[:tracks].each do |track|
+        track[:lovers].map! do |id|
+          playlists_followers[id].show without: %w{ photo_big last_name }
+        end
+      end
+    end
+
+    playlists
+  end
+
 end

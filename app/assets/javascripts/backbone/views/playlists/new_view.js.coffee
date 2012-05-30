@@ -44,6 +44,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       $('#tracks').append(
         new Playlists.Views.Tracks.TrackView(model: track).render().el
       )
+      l track
     $('#searched_tracks').empty()
 
   savePlaylist: ->
@@ -101,6 +102,9 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     ,this
 
   imageUploaded: (imageUploaded) ->
+    l window.roma = imageUploaded
+    if imageUploaded.upload.image.animated == 'true'
+      return notify 'Давайте не загружать анимашки :-)'
     @image = imageUploaded.upload.links
     $('#photo img')[0].src = @image.large_thumbnail
     loading('off')

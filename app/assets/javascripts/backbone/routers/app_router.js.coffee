@@ -2,6 +2,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   routes:
     'u/:user_id'        : 'getUserProfile'
     'tag/:tag'          : 'getPlaylistsByTag'
+    'search/:query'     : 'searchPlaylists'
     ':url/comments'     : 'showComments'
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
@@ -168,6 +169,23 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   getPlaylistsByTag: (tag) ->
     console.log 'Routers.AppRouter getPlaylistsByTag()', tag
     @vk.getPlaylistsByTag(tag)
+
+  searchPlaylists: (query = '') ->
+    return notify 'Запрос слишком короткий' if query.length < 3
+    @vk.search query, (data) ->
+      return notify data.error and @ok() if data.error
+      console.log data
+      @showSearchedPlaylists data
+    ,this 
+    @ok()
+
+  showSearchedPlaylists: (data)->
+    $("#app").html(
+      new Playlists.Views.Playlists.SearchPlaylistsView(
+        data
+      ).render().el
+    )
+    @ok()
 
   showPlaylistsByTag: (playlists_data) ->
     $("#app").html( new Playlists.Views.Playlists.PlaylistsByTagView(

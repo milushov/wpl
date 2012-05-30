@@ -8,9 +8,12 @@
       %img{src: '/assets/vk.png'}
     %h2.fl_l
       = "#{@user.first_name} #{@user.last_name}"
-    %a#new.btn.btn-success.fl_r{href: "/new"}
-      %i.icon-music.icon-white
-      Создать плейлист
+    .btn-group.fl_r{style: 'margin-top: 3px;'}
+      %a.btn{href: "/popular"} Популярные
+      %a.btn{href: "/last"} Последние
+      %a#new.btn.btn-success{href: "/new"}
+        %i.icon-music.icon-white
+        Создать плейлист
   #playlists
 #right_block.fl_r
   #followers

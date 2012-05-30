@@ -136,6 +136,11 @@ window.playOnce = (_this)->
 window.chooseTrack = (_this)->
   json = $(_this).data 'track'
   track = new Playlists.Models.Track json
+  audio_id = "#{track.get "owner_id"}_#{track.get "aid"}"
+  if res = App.new_tracks.where('audio_id': audio_id)
+    if res.length
+      name = "#{res[0].get 'artist'} - #{res[0].get 'title'}"
+      return notify "Этот трек [#{name}] уже есть в плейлисте"
   App.new_tracks.add track
   App.new_playlist_view.trigger 'track_choosen'
 
@@ -250,3 +255,9 @@ $ () ->
       # App.player.asldkfjlasd
     , axis: 'x'
   )
+
+  $('#search_input').keydown (e) ->
+    if e.which == 13 # Enter
+      query = e.currentTarget.value
+      return notify 'Запрос слишком короткий' if query.length < 3
+      App.navigate "/search/#{query}", true

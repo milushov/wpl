@@ -8,6 +8,7 @@ class Playlist
   include Mongoid::Timestamps
   include Mongoid::Followee
   include Mongoid::Document::Taggable
+  include Mongoid::Search
   
   field :name, type: String
   field :image, type: String
@@ -29,6 +30,8 @@ class Playlist
   validates_length_of :url, :in => 5..MAX_LENGTH
   
   validates_length_of :description, :in => 5..1000
+
+  search_in :name, :description, :url, tracks: :artist, tracks: :title, match: :all
 
   # scope :find2, ->(id_or_url) { self.any_of({url: id_or_url}, {_id: id_or_url}).first }
 end

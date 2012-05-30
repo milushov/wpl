@@ -1,17 +1,15 @@
 .navbar.navbar-fixed-top
   .navbar-inner
-    .container
+    .container{style: 'width: 1000px;'}
       %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
       %img#head_loader{src: '/assets/head_loader.gif'}
-      %a.brand{href: '/'} 
+      %a.brand{href: '/', style: 'padding: 10px 20px 10px;'} 
         Wiki
         %strong{style: 'color:#2AB2E2;'} Playlists
       .nav-collapse
         %ul.nav
-          %li.active
-            %a{href: "/last"} Последние
-          %li
-            %a{href: "/popular"} Популярные
+          .navbar-search.pull-left
+            %input#search_input.search-query.span2{ placeholder: 'Поиск', type: 'text' }            
           %li
             #player_ui
               %a#prev_btn
