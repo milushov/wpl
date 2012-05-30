@@ -5,6 +5,14 @@ class MainController < ApplicationController
   def index
     format_fix if params[:format]
 
+    # if we come from application vk.com/app111111
+    if params[:viewer_id]
+      user_id = params[:viewer_id].to_i
+      access_token = params[:access_token].to_i
+      # auth_key = params[:auth_key].to_i
+      saveToken access_token, user_id
+    end
+
     if isAuth?
       # here we will be select user profile by id,
       # if profile don't extst (@user_profile will be equal false),

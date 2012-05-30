@@ -9,7 +9,11 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'popular'           : 'getPopularPlaylist'
     ':url'              : 'getPlaylist'
     '.*'                : 'myProfile'
+    '?*splat'           : 'from_vk'
     '*path'             : 'notFound'
+
+  from_vk: (a = null)->
+    @myProfile()
 
   initialize: (options)->
     console.log 'Routers.AppRouter initialize()'
