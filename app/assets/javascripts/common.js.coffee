@@ -260,4 +260,10 @@ $ () ->
     if e.which == 13 # Enter
       query = e.currentTarget.value
       return notify 'Запрос слишком короткий' if query.length < 3
+      $('#search_input').val ''
+      # try search from playlist on client side
+      if ps = App.playlists.where(url: query)
+        return App.navigate "/#{query}", true if ps.length
+      if ps = App.playlists.where(name: query)
+        return App.navigate "/#{ ps[0].get 'url' }", true if ps.length
       App.navigate "/search/#{query}", true
