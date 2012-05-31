@@ -23,9 +23,8 @@ private
 
   # at the beginning we need to init VK module for requesting to vk.com api
   def app_init
-    @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET    
+    @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET#, settings: SETTINGS
     @vk.access_token = session[:access_token] if isAuth?
-    #@vk.settings = SETTINGS
   end
 
   # check user authentication by cookies, and if alright - save them to session

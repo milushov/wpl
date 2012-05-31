@@ -186,6 +186,7 @@ $ () ->
 
   bind_urls()
   
+  ####### soundManager #######
   soundManager.url = app_url;
   soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
@@ -198,38 +199,40 @@ $ () ->
     #onresume: ()-> App.player.model.resume()
     onfinish: ->
       App.player.model.next()
-      42
     onload: ->
       App.player.model.loadNextTrack()
-      42
     whileplaying: -> App.player.updatePlayProgress(this.position, this.duration)
     whileloading: -> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
 
   # достасть из localStorage
-  default_volume = 100
-  duration_mode = 'pos'
 
-  soundManager.defaultOptions.volume = default_volume;
+  volume = $.cookie('volume') || 100
+  dur_mode = $.cookie('volume') || 'pos'
+
+  soundManager.defaultOptions.volume = volume;
   
-  soundManager.onready ()->
+  soundManager.onready ->
     App.player = new Playlists.Views.Player.IndexView(
-      model: new Playlists.Models.Player(duration_mode: duration_mode)
+      model: new Playlists.Models.Player(
+        duration_mode: dur_mode,
+        volume: volume
+      )
     )
 
-  soundManager.ontimeout ()->
+  soundManager.ontimeout ->
     notify 'Плеер завис, перезагрузите страницу! (F5)'
 
+  ####### AJAX SETTINGS #######
   $.ajaxSetup cache: false
 
-  $(document).ajaxError (e, jqxhr, settings, exception) =>
-    console.error arguments
+  $(document).ajaxError (e, jqxhr, settings, exception) ->
+    # console.error arguments
     # console.error jqxhr.responseText
     if jqxhr.status == 403
       if JSON.parse(jqxhr.responseText).error == 'abuse'
         return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
 
     notify "Упс. Кажется эта функция сейчас не работает. Уже чиним. (#{exception})"
-    #history.back()
 
   $('footer').tooltip
     selector: 'span[rel=tooltip]'
@@ -237,25 +240,45 @@ $ () ->
     delay:
       show: 420, hide: 100
 
-  $('.navbar.navbar-fixed-top').hover () ->
+  ####### PLAYER PROGRESS #######
+  $(".navbar").hover () ->
     $('#slider').show()
-  , () -> setTimeout ( -> $('#slider').hide() ), 3000
+  , () ->
+      if App.player.update == false
+        return
+      setTimeout (-> $('#slider').hide()), 3000
 
   $('#slider').draggable(
     drag: (event, ui) -> 
+      App.player.update = false
       cur = ui.position.left
       all = $('#progress_line').width()
-      proc = cur/all*100
-      l all, cur
-      $('#play').width "#{proc}%"
+      percent = cur/all*100
+
+      $('#play').width "#{percent}%"
     ,
     stop: (event, ui) -> 
-      cur = ui.originalPosition.left
+      App.player.update = true
+      cur = ui.position.left
       all = $('#progress_line').width()
-      # App.player.asldkfjlasd
+      percent = cur/all*100
+
+      App.player.setPosition percent
+      setTimeout (-> $('#slider').hide()), 3000
     , axis: 'x'
   )
 
+  $('#progress_line').click (e) ->
+    App.player.update = true
+    cur = e.offsetX
+    all = $('#progress_line').width()
+    percent = cur/all*100
+
+    App.player.setPosition percent
+    setTimeout (-> $('#slider').hide()), 3000
+
+
+  ####### SEARCH #######
   $('#search_input').keydown (e) ->
     if e.which == 13 # Enter
       query = e.currentTarget.value

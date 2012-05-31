@@ -6,10 +6,13 @@ class Playlists.Models.Player extends Backbone.Model
     state: 'pause'
     cur_track: null
     duration_mode: 'pos' # or 'neg'
+    volume: 100
 
-  initialize: ->
+  initialize: (opts)->
     console.log 'Player model created'
-    @fail_url = 'http://vk.com/mp3/bb2.mp3'
+    @fail_url = 'http://vk.com/mp3/bb2.mp3'    
+    @set duration_mode: opts.duration_mode
+    @set volume: opts.volume
 
   reset: ->
     soundManager.reboot()
@@ -127,6 +130,17 @@ class Playlists.Models.Player extends Backbone.Model
       url: track.get 'url'
       autoPlay: autoPlay
       autoLoad: true
+
+  setPosition: (pos) ->
+    soundManager.setPosition @get('cur_track')?.smid(), pos
+
+  saveVolume: (val) ->
+    volume = if val >= 0 and val <= 100 then val else 100
+    $.cookie('volume', volume, { expires: 60*60*24*366 });
+
+  saveDurMode: (val) ->
+    dur_mod = if val == 'pos' || val == 'neg' then val else 'pos'
+    $.cookie('duration_mode', dur_mod, { expires: 60*60*24*366 });
 
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
