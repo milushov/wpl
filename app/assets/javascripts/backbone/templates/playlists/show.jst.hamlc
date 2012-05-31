@@ -15,15 +15,29 @@
   #name
     %h2.fl_l
       = @name
-    .btn-group.fl_r{style: 'margin-top: 3px;'}
-      %a.btn.fl_r{onclick: 'history.back();', rel: 'tooltip', title: 'Назад'}
-        %i.icon-circle-arrow-left.icon-black
-        
-      %a#show_comments.btn{href: @comments_url, rel: 'tooltip', title: 'Комментарии'}
-        %i.icon-comment.icon-black
-        
-      %a#play_all.btn.btn-primary{rel: 'tooltip', title: 'Играть всё'}
-        %i.icon-play.icon-white
+    - if @name.length > 20
+      .btn-group.fl_r{style: 'margin-top: 3px;'}
+        %a.btn.fl_r{onclick: 'history.back();', rel: 'tooltip', title: 'Назад'}
+          %i.icon-circle-arrow-left.icon-black
+          
+        %a#show_comments.btn{href: @comments_url, rel: 'tooltip', title: 'Комментарии'}
+          %i.icon-comment.icon-black
+          
+        %a#play_all.btn.btn-primary{rel: 'tooltip', title: 'Играть всё'}
+          %i.icon-play.icon-white
+    - else
+      .btn-group.fl_r{style: 'margin-top: 3px;'}
+        %a.btn.fl_r{onclick: 'history.back();'}
+          %i.icon-circle-arrow-left.icon-black
+          Назад
+          
+        %a#show_comments.btn{href: @comments_url, rel: 'tooltip'}
+          %i.icon-comment.icon-black
+          Комментарии
+          
+        %a#play_all.btn.btn-primary{rel: 'tooltip', title: 'Играть всё'}
+          %i.icon-play.icon-white
+          Играть всё
         
   #playlists
     %h3= @description

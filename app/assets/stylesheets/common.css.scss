@@ -100,6 +100,7 @@
 
       #tags {
         a {
+          display: inline-block;
           text-decoration: none;
           padding: 2px 5px;
           @include rounded(3px);
@@ -227,7 +228,7 @@
   }
 
   #app {
-    margin-top: 100px;
+    margin-top: 70px;
     min-height: 460px;
     width: 1000px;
   }
