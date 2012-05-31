@@ -207,7 +207,7 @@ $ () ->
   # достасть из localStorage
 
   volume = $.cookie('volume') || 100
-  dur_mode = $.cookie('volume') || 'pos'
+  dur_mode = $.cookie('duration_mode') || 'pos'
 
   soundManager.defaultOptions.volume = volume;
   

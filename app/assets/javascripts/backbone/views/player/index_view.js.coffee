@@ -63,11 +63,11 @@ class Playlists.Views.Player.IndexView extends Backbone.View
     total = Math.round total
     pers = (loaded/total*100).toFixed(2)
     $('#load').width "#{pers}%"
-    @updateDuraion()
 
   changeDurationMode: () ->
     mode = if @model.get('duration_mode') is 'pos' then 'neg' else 'pos'
     @model.set duration_mode: @duration_mode = mode
+    @model.saveDurMode(mode)
     @updateDuraion()
 
   showTrackName: ->

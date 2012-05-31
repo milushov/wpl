@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   APP_SECRET = '1111000key'
   SETTINGS = 'notify,friends,photos,audio' # 1+2+4+8
 
-  APP_URL = ENV['USER'] ? 'http://playlists.dev:3000/' : 'http://wpl.herokuapp.com/'
+  APP_URL = ENV['USER'] ? 'http://playlists.dev:3000/' : 'http://wpl.me/'
   REDIRECT_URI = "#{APP_URL}auth"
   DEBUG = ENV['USER'] ? true : false
 
