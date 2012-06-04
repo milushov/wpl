@@ -51,6 +51,7 @@ gem 'rails-backbone'
 gem 'yajl-ruby'
 gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git'
 gem 'mongoid_search'
+gem 'newrelic_rpm'
 
 # gem 'mongoid-simple-tags', '0.0.5', git: 'git://github.com/thrk/mongoid-simple-tags.git'
 
