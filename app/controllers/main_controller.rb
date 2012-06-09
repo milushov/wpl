@@ -32,8 +32,14 @@ class MainController < ApplicationController
       end
 
       @count_friends = ApplicationController::COUNT_FRIENDS.max + 1 # depricated
-      @app_url = ApplicationController::APP_URL
+      @app_url = ApplicationController::APP_URL # main url of application
       @debug = ApplicationController::DEBUG
+      if @debug
+        @api_url = "http://#{env['HTTP_HOST']}/"
+      else
+        n = rand INSTANCES
+        @api_url = "http://#{n}.#{@@domain}/"
+      end
       
       respond_to do |format|
         format.html # index.html.haml
@@ -55,10 +61,17 @@ class MainController < ApplicationController
   end
 
   def logout
-    cookies[:access_token] = session[:access_token] = nil
-    cookies[:user_id] = session[:user_id] = nil
-    cookies[:auth_key] = session[:auth_key] = nil
+    session[:access_token] = nil
+    session[:user_id] = nil
+    session[:auth_key] = nil
     session['ban'] = nil
+
+    domain = '.' + @@domain[/[^\.]*\.[^\.]*$/]
+
+    cookies.delete :access_token, domain: domain
+    cookies.delete :user_id, domain: domain
+    cookies.delete :auth_key, domain: domain
+
     redirect_to action: 'index'
   end
 
@@ -112,15 +125,24 @@ class MainController < ApplicationController
 
     # first step: request code, which is required for getting auth token
     def requestAuth(return_to = nil)
-      redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-      redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scope=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
+      domain = "http://#{@@domain}/auth"
+      redirect_uri = return_to ? "#{domain}?return_to=#{return_to}" : domain
+      redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scpoe=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
     end
 
     # сохраняет access_token, user_id, auth_key в сессии, куке
     def saveToken( access_token, user_id )
-      cookies[:access_token] = session[:access_token] = access_token
-      cookies[:user_id] = session[:user_id] = user_id.to_i
-      cookies[:auth_key] = session[:auth_key] = getAuthKey user_id.to_i
       session[:abuse] = []
+
+      access_token = session[:access_token] = access_token
+      user_id = session[:user_id] = user_id.to_i
+      auth_key = session[:auth_key] = getAuthKey user_id.to_i
+      
+      domain = '.' + @@domain
+      expires = Time.now + 366.days
+
+      cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
+      cookies[:user_id] = {value: user_id, domain: domain, expires: expires}
+      cookies[:auth_key] = {value: auth_key, domain: domain, expires: expires}
     end
 end

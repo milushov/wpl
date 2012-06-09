@@ -9,4 +9,5 @@ test:
   raise_not_found_error: false
 
 production:
-  uri: <%= ENV['MONGOLAB_URI'] %>
+  #uri: <%= ENV['MONGOLAB_URI'] %>
+  uri: 'mongodb://heroku_app4117392:lebq7rjatclopleg65133sv7h8@ds033217.mongolab.com:33217/heroku_app4117392'

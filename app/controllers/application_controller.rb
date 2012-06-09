@@ -15,8 +15,11 @@ class ApplicationController < ActionController::Base
   REDIRECT_URI = "#{APP_URL}auth"
   DEBUG = ENV['USER'] ? true : false
 
-private
+  # INSTANCES = 0..2
+  INSTANCES = 0..0
 
+private
+  
   def getAuthKey user_id
     Digest::MD5.hexdigest "#{APP_ID}_#{user_id}_#{APP_SECRET}"
   end
@@ -25,6 +28,7 @@ private
   def app_init
     @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET#, settings: SETTINGS
     @vk.access_token = session[:access_token] if isAuth?
+    @@domain = env['HTTP_HOST'][/\w+[^:]*/]
   end
 
   # check user authentication by cookies, and if alright - save them to session
@@ -36,8 +40,8 @@ private
         session[:user_id] = cookies[:user_id]
         session[:auth_key] = cookies[:auth_key]
         session[:abuse] ||= []
-        true
-      end
+        end
+      true
     else
       false
     end

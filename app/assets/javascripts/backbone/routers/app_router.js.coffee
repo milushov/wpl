@@ -18,7 +18,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   initialize: (options)->
     console.log 'Routers.AppRouter initialize()'
     @vk = new Playlists.Models.Vk()
-    @vk.set url: app_url
+    @vk.set url: api_url
     if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
 
     # подписываем роутер на события
