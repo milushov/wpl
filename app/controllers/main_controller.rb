@@ -3,6 +3,8 @@ class MainController < ApplicationController
   require 'openssl'
 
   def index
+    return render text: 'access only by api' if @@only_api
+    
     format_fix if params[:format]
 
     # if we come from application vk.com/app111111
@@ -11,6 +13,8 @@ class MainController < ApplicationController
       access_token = params[:access_token].to_i
       # auth_key = params[:auth_key].to_i
       saveToken access_token, user_id
+    elsif @@kookies
+      saveToken @@kookies['access_token'], @@kookies['user_id']
     end
 
     if isAuth?
@@ -66,7 +70,7 @@ class MainController < ApplicationController
     session[:auth_key] = nil
     session['ban'] = nil
 
-    domain = '.' + @@domain[/[^\.]*\.[^\.]*$/]
+    domain = '.' + @@domain
 
     cookies.delete :access_token, domain: domain
     cookies.delete :user_id, domain: domain

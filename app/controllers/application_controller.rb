@@ -2,7 +2,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :app_init, :check_abuse
+  before_filter :app_init, :check_abuse, :allow_cross_domain_access
 
   COUNT_FRIENDS = 0...15
   MAX_REQUERS_PER_SECOND = 2
@@ -28,7 +28,29 @@ private
   def app_init
     @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET#, settings: SETTINGS
     @vk.access_token = session[:access_token] if isAuth?
-    @@domain = env['HTTP_HOST'][/\w+[^:]*/]
+
+    # host = "playlists.dev:300" or "wpl.me" or "[0..2].wpl.me"
+    host = env['HTTP_HOST']
+
+    # delete port, if it exitst and make url like "example.com"
+    @@domain = host[/\w+[^:]*/][/[^\.]*\.[^\.]*$/]
+
+    # access only by api for domain "[0..2].wpl.me"
+    if host.count('.') == 2 and INSTANCES.include?(host[0].to_i)
+      @@only_api = true 
+    else
+      @@only_api = false
+    end
+
+    if @@kookies = env['HTTP_KOOKIES']
+      k = {}
+      @@kookies.split(';').each do |x|
+        b = x.split('=')
+        k[b[0]] = b[1]
+      end
+      @@kookies = k
+    end
+    # binding.pry
   end
 
   # check user authentication by cookies, and if alright - save them to session
@@ -198,5 +220,11 @@ private
     else
       session[:abuse].push Time.now.to_f
     end
+  end
+
+  def allow_cross_domain_access
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
   end
 end

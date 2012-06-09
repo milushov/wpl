@@ -223,7 +223,17 @@ $ () ->
     notify 'Плеер завис, перезагрузите страницу! (F5)'
 
   ####### AJAX SETTINGS #######
-  $.ajaxSetup cache: false
+  if $.cookie('user_id')
+    kookies = document.cookie
+  else
+    kookies = false
+
+  $.support.cors = true
+  $.ajaxSetup
+    cache: false
+    beforeSend: (jqXHR) ->
+      jqXHR.setRequestHeader 'kookies', kookies
+
 
   $(document).ajaxError (e, jqxhr, settings, exception) ->
     # console.error arguments
