@@ -7,11 +7,12 @@ class ApplicationController < ActionController::Base
   COUNT_FRIENDS = 0...15
   MAX_REQUERS_PER_SECOND = 2
 
-  APP_ID = ENV['USER'] ? 2845993 : 1111000
+  APP_ID = ENV['USER'] ? 2999165 : 1111000
   APP_SECRET = '1111000key'
-  SETTINGS = 'notify,friends,photos,audio' # 1+2+4+8
-
-  APP_URL = ENV['USER'] ? 'http://playlists.dev:3000/' : 'http://wpl.me/'
+  SETTINGS = 'notify,friends,audio'
+  DEV_URL = 'http://playlists.dev:3000/'
+  PROD_URL = 'http://wpl.me/'
+  APP_URL = ENV['USER'] ? DEV_URL : PROD_URL
   REDIRECT_URI = "#{APP_URL}auth"
   DEBUG = ENV['USER'] ? true : false
 
@@ -27,13 +28,18 @@ private
   # at the beginning we need to init VK module for requesting to vk.com api
   def app_init
     @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET#, settings: SETTINGS
+    @vk.settings = SETTINGS
     @vk.access_token = session[:access_token] if isAuth?
-
+    # binding.pry
     # host = "playlists.dev:300" or "wpl.me" or "[0..2].wpl.me"
     host = env['HTTP_HOST']
 
-    # delete port, if it exitst and make url like "example.com"
-    @@domain = host[/\w+[^:]*/][/[^\.]*\.[^\.]*$/]
+    if host =~ /:/
+      @@domain = 'playlists.dev:3000'
+    else
+      # delete port, if it exitst and make url like "example.com"
+      @@domain = host[/\w+[^:]*/][/[^\.]*\.[^\.]*$/]
+    end
 
     # access only by api for domain "[0..2].wpl.me"
     if host.count('.') == 2 and INSTANCES.include?(host[0].to_i)
@@ -42,6 +48,7 @@ private
       @@only_api = false
     end
 
+    # trying get cookies from header, if request came for api
     if @@kookies = env['HTTP_KOOKIES']
       k = {}
       @@kookies.split(';').each do |x|
@@ -55,6 +62,7 @@ private
 
   # check user authentication by cookies, and if alright - save them to session
   def isAuth?
+    # binding.pry
     if cookies[:access_token] and cookies[:user_id] and cookies[:auth_key]
       auth_key, real_auth_key = cookies[:auth_key], getAuthKey(cookies[:user_id])
       if auth_key == real_auth_key

@@ -4,18 +4,8 @@ class MainController < ApplicationController
 
   def index
     return render text: 'access only by api' if @@only_api
-    
     format_fix if params[:format]
-
-    # if we come from application vk.com/app111111
-    if params[:viewer_id]
-      user_id = params[:viewer_id].to_i
-      access_token = params[:access_token].to_i
-      # auth_key = params[:auth_key].to_i
-      saveToken access_token, user_id
-    elsif @@kookies
-      saveToken @@kookies['access_token'], @@kookies['user_id']
-    end
+    from_vk_or_for_api  
 
     if isAuth?
       # here we will be select user profile by id,
@@ -42,7 +32,8 @@ class MainController < ApplicationController
         @api_url = "http://#{env['HTTP_HOST']}/"
       else
         n = rand INSTANCES
-        @api_url = "http://#{n}.#{@@domain}/"
+        # @api_url = "http://#{n}.#{@@domain}/" 
+        @api_url = "http://#{@@domain}/"
       end
       
       respond_to do |format|
@@ -56,7 +47,6 @@ class MainController < ApplicationController
   end
 
   def login
-    # binding.pry
     if isAuth?
       redirect_to action: 'index'
     else
@@ -70,7 +60,12 @@ class MainController < ApplicationController
     session[:auth_key] = nil
     session['ban'] = nil
 
-    domain = '.' + @@domain
+    # if exist port
+    if i = @@domain =~ /:/
+      domain = '.' + @@domain[0...i]
+    else
+      domain = '.' + @@domain
+    end
 
     cookies.delete :access_token, domain: domain
     cookies.delete :user_id, domain: domain
@@ -131,7 +126,7 @@ class MainController < ApplicationController
     def requestAuth(return_to = nil)
       domain = "http://#{@@domain}/auth"
       redirect_uri = return_to ? "#{domain}?return_to=#{return_to}" : domain
-      redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&scpoe=#{ SETTINGS }&redirect_uri=#{ redirect_uri }&response_type=code"
+      redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
     end
 
     # сохраняет access_token, user_id, auth_key в сессии, куке
@@ -142,11 +137,27 @@ class MainController < ApplicationController
       user_id = session[:user_id] = user_id.to_i
       auth_key = session[:auth_key] = getAuthKey user_id.to_i
       
-      domain = '.' + @@domain
+      # if exist port
+      if i = @@domain =~ /:/
+        domain = '.' + @@domain[0...i]
+      else
+        domain = '.' + @@domain
+      end
       expires = Time.now + 366.days
 
       cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
       cookies[:user_id] = {value: user_id, domain: domain, expires: expires}
       cookies[:auth_key] = {value: auth_key, domain: domain, expires: expires}
+    end
+
+    def from_vk_or_for_api
+      if params[:viewer_id]
+        user_id = params[:viewer_id].to_i
+        access_token = params[:access_token].to_i
+        # auth_key = params[:auth_key].to_i
+        saveToken access_token, user_id
+      elsif @@kookies
+        saveToken @@kookies['access_token'], @@kookies['user_id']
+      end
     end
 end
