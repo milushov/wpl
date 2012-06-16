@@ -1,0 +1,9 @@
+#left_block.fl_l
+  #info
+#center_block.fl_l
+  #name
+    %h2.fl_l Самые популярные плейлисты
+    %a.btn.fl_r{href: "/", style: 'margin-top: 3px;'}
+      %i.icon-circle-arrow-left.icon-black
+      Назад
+  #playlists

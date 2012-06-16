@@ -11,12 +11,26 @@ class PlaylistsController < ApplicationController
     render json: Playlist.desc(:_id).limit(PER_PAGE)
   end
 
-  def popular
-    render json: Playlist.desc(:fferc).limit(PER_PAGE)
+  def popular    
+    playlists_data = Playlist.desc(:fferc).limit(PER_PAGE)
+
+    playlists = make_playlists playlists_data
+
+    render json: {
+      count: playlists.count,
+      playlists: playlists
+    }
   end
 
   def last
-    render json: Playlist.desc(:fferc).limit(PER_PAGE)
+    playlists_data = Playlist.desc(:_id).limit(PER_PAGE)
+
+    playlists = make_playlists playlists_data
+
+    render json: {
+      count: playlists.count,
+      playlists: playlists
+    }
   end
 
   # GET /playlists/url

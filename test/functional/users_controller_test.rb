@@ -1,8 +1,11 @@
 require 'test_helper'
+Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
+  require path
+end
 
 class UsersControllerTest < ActionController::TestCase
   setup do
-    @user = users(:one)
+    @user = User.first
   end
 
   test "should get index" do

@@ -1,8 +1,11 @@
 require 'test_helper'
+Dir[Rails.root + 'app/models/**/*.rb'].each do |path|
+  require path
+end
 
 class PlaylistsControllerTest < ActionController::TestCase
   setup do
-    @playlist = playlists(:one)
+    @playlist = Playlist.first
   end
 
   test "should get index" do
@@ -46,4 +49,9 @@ class PlaylistsControllerTest < ActionController::TestCase
 
     assert_redirected_to playlists_path
   end
+
+  # def setup
+  #   set_cokies '7f872125f4ceebb109013329910bdd04f1109810901338eeb456a9af265c57', 124281120
+  # end
+
 end

@@ -6,7 +6,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     ':url/comments'     : 'showComments'
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
-    'popular'           : 'getPopularPlaylist'
+    'popular'           : 'getPopularPlaylists'
     ':url'              : 'getPlaylist'
     '.*'                : 'myProfile'
     '?*splat'           : 'from_vk'
@@ -87,13 +87,13 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
     @playlists = new Playlists.Collections.PlaylistsCollection( playlists_both_people )
 
-    $("#app").html( new Playlists.Views.User.ShowView(user_data).render().el )
+    $('#app').html( new Playlists.Views.User.ShowView(user_data).render().el )
         
     @ok()
 
   myProfile: ->
     console.log 'Routers.AppRouter myProfile()', my_profile
-    $("#app").html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
+    $('#app').html( new Playlists.Views.User.ShowMeView(my_profile).render().el ) if user_profile
     @ok()
 
   # request for playlist (!) model
@@ -138,7 +138,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @showComments playlist.get 'url'
       return
 
-    $("#app").html( new Playlists.Views.Playlists.ShowView(
+    $('#app').html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
     @navigate playlist.get 'url'
@@ -159,12 +159,12 @@ class Playlists.Routers.AppRouter extends Backbone.Router
         playlist.comments.add data if data.comments?.length != 0
         playlist.comments.url = "#{playlist.url()}/comments"
 
-        $("#app").html( new Playlists.Views.Comments.IndexView(playlist).render().el)
+        $('#app').html( new Playlists.Views.Comments.IndexView(playlist).render().el)
         @ok()
        
       ,this  
     else
-      $("#app").html( new Playlists.Views.Comments.IndexView(
+      $('#app').html( new Playlists.Views.Comments.IndexView(
         playlist
       ).render().el )
       @ok()
@@ -184,7 +184,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @ok()
 
   showSearchedPlaylists: (data)->
-    $("#app").html(
+    $('#app').html(
       new Playlists.Views.Playlists.SearchPlaylistsView(
         data
       ).render().el
@@ -192,26 +192,52 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @ok()
 
   showPlaylistsByTag: (playlists_data) ->
-    $("#app").html( new Playlists.Views.Playlists.PlaylistsByTagView(
+    $('#app').html( new Playlists.Views.Playlists.PlaylistsByTagView(
       playlists: playlists_data.playlists,
       tag: playlists_data.tag
     ).render().el )
 
     # добавляем модели новых плейлистов
-    @playlists = new Playlists.Collections.PlaylistsCollection( my_profile['playlists'] )
+    @playlists = new Playlists.Collections.PlaylistsCollection( my_profile.playlists )
     @playlists.add playlists_data.playlists
 
     @ok()
 
-  getLastPlaylists: ()->
-    
+  getPopularPlaylists: ->
+    @vk.getPlaylists 'popular', (playlists_data) ->
+      unless playlists_data.error
+        $('#app').html( new Playlists.Views.Playlists.PopularPlaylistsView(
+          playlists: playlists_data.playlists
+        ).render().el )
 
-  getPopularPlaylist: ()->
+        # adding new playlists models
+        @playlists = new Playlists.Collections.PlaylistsCollection( my_profile.playlists )
+        @playlists.add playlists_data.playlists
 
+        @ok()
+      else
+        return notify playlists_data.error
+    ,this
+
+  getLastPlaylists: ->
+    @vk.getPlaylists 'last', (playlists_data) ->
+      unless playlists_data.error
+        $('#app').html( new Playlists.Views.Playlists.LastPlaylistsView(
+          playlists: playlists_data.playlists
+        ).render().el )
+
+        # adding new playlists models
+        @playlists = new Playlists.Collections.PlaylistsCollection( my_profile.playlists )
+        @playlists.add playlists_data.playlists
+
+        @ok()
+      else
+        return notify playlists_data.error
+    ,this
 
   newPlaylist: ->
     @new_playlist_view = new Playlists.Views.Playlists.NewView(me: my_profile.user)
-    $("#app").html(@new_playlist_view.render().el)
+    $('#app').html(@new_playlist_view.render().el)
 
     $.get '/api/playlists/tags', (data)->
       $('#edit_tags').tagit
@@ -223,7 +249,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @ok()
 
   notFound: ->
-    $("#app").html "<center><h1 style='font-size: 600px; margin-top: 250px;'>404</h1></center>"
+    $('#app').html "<center><h1 style='font-size: 600px; margin-top: 250px;'>404</h1></center>"
 
   ok: ()->
     $('.tooltip').remove()

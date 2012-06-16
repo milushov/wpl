@@ -10,7 +10,7 @@
       = "#{@user.first_name} #{@user.last_name}"
     .btn-group.fl_r{style: 'margin-top: 3px;'}
       %a.btn{href: "/popular"} Популярные
-      %a.btn{href: "/last"} Последние
+      %a.btn{href: "/last"} Новые
       %a#new.btn.btn-success{href: "/new"}
         %i.icon-music.icon-white
         Создать плейлист

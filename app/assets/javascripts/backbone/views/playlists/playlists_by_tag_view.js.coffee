@@ -21,5 +21,4 @@ class Playlists.Views.Playlists.PlaylistsByTagView extends Backbone.View
       ).render().el
     )
 
-      
     return this 
