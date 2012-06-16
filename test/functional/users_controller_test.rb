@@ -5,7 +5,7 @@ end
 
 class UsersControllerTest < ActionController::TestCase
   setup do
-    @user = User.first
+    @user = get_user 1
   end
 
   test "should get index" do

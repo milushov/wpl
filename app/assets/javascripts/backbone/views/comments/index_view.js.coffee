@@ -122,5 +122,8 @@ class Playlists.Views.Comments.IndexView extends Backbone.View
     
     $(@el).html(@template(playlist_data))
 
+    $(@el).find('textarea').keydown (e) =>
+      @new() if e.keyCode == 13 and e.ctrlKey
+
     @addAll()
     return this

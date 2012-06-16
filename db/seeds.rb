@@ -31,7 +31,7 @@ JSON.parse(File.open("#{Rails.root}/db/users.json").read.to_s)['response'].each 
   p "user #{new_user.screen_name} created"
 end
 
-p 'creating social network: users follow each other and users follows playlists...'
+p 'creating social network: users follow each other and users follow playlists...'
 
 users.each do |user|
   playlists.each do |playlist|
@@ -47,14 +47,14 @@ users.each do |user|
 
       playlist.comments << comment
 
-      p "   user #{user.screen_name} followed playlist #{playlist.url}"
+      p "user #{user.screen_name} followed playlist #{playlist.url}"
     end
   end
 
   users.each do |followee|
     if rand(1..2).even? or rand(1..2).even?
       user.follow(followee) if user.id != followee.id
-      p "   user #{user.screen_name} followed user #{followee.screen_name}"
+      p "user #{user.screen_name} followed user #{followee.screen_name}"
     end
   end
 end

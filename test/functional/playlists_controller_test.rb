@@ -5,53 +5,63 @@ end
 
 class PlaylistsControllerTest < ActionController::TestCase
   setup do
-    @playlist = Playlist.first
+    @playlist = get_playlist "test#{rand[1..9]}"
+    @cookies = set_cokies '7f872125f4ceebb109013329910bdd04f1109810901338eeb456a9af265c57', 788157
   end
 
-  test "should get index" do
-    get :index
+  test "should get popular" do
+    get :popular, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
   end
 
-  test "should get new" do
-    get :new
+  test "should get last" do
+    get :last, cookies: @cookies
     assert_response :success
+    assert_not_nil assigns(:playlists)
   end
 
-  test "should create playlist" do
-    assert_difference('Playlist.count') do
-      post :create, playlist: @playlist.attributes
-    end
-
-    assert_redirected_to playlist_path(assigns(:playlist))
-  end
-
-  test "should show playlist" do
-    get :show, id: @playlist
+  test "should get last" do
+    get :last, cookies: @cookies
     assert_response :success
+    assert_not_nil assigns(:playlists)
   end
 
-  test "should get edit" do
-    get :edit, id: @playlist
+  test "should get show" do
+    get :last, id: @playlist.id, cookies: @cookies
     assert_response :success
+    assert_not_nil assigns(:playlists)
   end
 
-  test "should update playlist" do
-    put :update, id: @playlist, playlist: @playlist.attributes
-    assert_redirected_to playlist_path(assigns(:playlist))
+  test "should get create" do
+    new = @playlist.attributes
+    new.url = new.id = nil
+    post :create, new, @cookies
+    assert_response :success
+    assert_not_nil assigns(:playlists)
   end
 
-  test "should destroy playlist" do
-    assert_difference('Playlist.count', -1) do
-      delete :destroy, id: @playlist
-    end
-
-    assert_redirected_to playlists_path
+  test "should get follow" do
+    get :follow, id: @playlist.id, cookies: @cookies
+    assert_response :success
+    assert_not_nil assigns(:playlists)
   end
 
-  # def setup
-  #   set_cokies '7f872125f4ceebb109013329910bdd04f1109810901338eeb456a9af265c57', 124281120
-  # end
+  test "should get unfollow" do
+    get :unfollow, id: @playlist.id, cookies: @cookies
+    assert_response :success
+    assert_not_nil assigns(:playlists)
+  end
 
+  test "should get unfollow" do
+    get :last, id: @playlist.id, cookies: @cookies
+    assert_response :success
+    assert_not_nil assigns(:playlists)
+  end
+
+  test "should get playlistsByTag" do
+    get :playlistsByTag, id: "tag#{rand[1..4]}", cookies: @cookies
+    assert_response :success
+    assert_not_nil assigns(:playlists)
+  end
 end

@@ -171,9 +171,11 @@ window.can_update = (time_str) ->
   max_time = 4*60*60
   return if diff > max_time then false else true
 
+
+
 $ () ->
   return $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>" if my_profile == -1
-    
+  
   unless debug
     console.log = ->
     console.warn = ->

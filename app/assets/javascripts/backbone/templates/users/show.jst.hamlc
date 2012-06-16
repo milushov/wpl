@@ -13,7 +13,7 @@
           Подписаться
 #center_block.fl_l
   #name
-    %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", data: {type: 'ext'}}
+    %a#vk.fl_l{href: "http://vk.com/#{@user.screen_name}", data: {type: 'ext'}, style: 'margin-left: 7px;'}
       %img{src: '/assets/vk.png'}
     %h2
       = "#{@user.first_name} #{@user.last_name}"
