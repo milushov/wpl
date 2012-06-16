@@ -140,9 +140,12 @@ window.chooseTrack = (_this)->
   if res = App.new_tracks.where('audio_id': audio_id)
     if res.length
       name = "#{res[0].get 'artist'} - #{res[0].get 'title'}"
-      return notify "Этот трек [#{name}] уже есть в плейлисте"
+      return notify "Этот трек <b>#{name}</b> уже есть в плейлисте"
   App.new_tracks.add track
   App.new_playlist_view.trigger 'track_choosen'
+
+  count = App.new_tracks.length
+  $('#progress_tracks .bar').width "#{count*20}%"
 
 window.make_playlist_url = (_this)->
   name = $(_this).val()

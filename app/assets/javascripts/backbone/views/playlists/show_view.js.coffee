@@ -45,10 +45,14 @@ class Playlists.Views.Playlists.ShowView extends Backbone.View
     $(@el).html @template(playlist_data)
 
     # adding playlist's id in track model for player needs
-    playlist_id = @model.get('_id')
+    pid = @model.get('_id')
 
+    tracks_block = $(@el).find('.tracks')
+    my_id = my_profile.user.id
     for i,track of @model.tracks.models
-      track.set(playlist_id: playlist_id)
-      $(@el).find('.tracks').append( new Playlists.Views.Tracks.TrackView(model: track).render().el )
+      track.set(playlist_id: pid)
+      # if we hate this track, it will be not rendered
+      if track.get('haters').indexOf(my_id) == -1
+        tracks_block.append( new Playlists.Views.Tracks.TrackView(model: track).render().el )
     
     this

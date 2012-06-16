@@ -71,3 +71,14 @@ $ph: 180px;
     }
   }
 }
+
+#search_block {
+  overflow: hidden;
+
+  .progress {
+    width: 260px; height: 28px;
+    .bar {
+      height: 28px;
+    }
+  }
+}

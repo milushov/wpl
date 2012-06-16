@@ -7,19 +7,22 @@
 
 #center_block.fl_l
   #name
-    %input#playlist_name.fl_l{placeholder: 'Название плейлиста', onChange: "make_playlist_url(this);"}
+    %input#playlist_name.fl_l{placeholder: 'Название плейлиста', onChange: "make_playlist_url(this);", style: 'margin-bottom: 0;'}
 
-    .input-prepend.fl_l
-      %span.add-on{style: 'margin: 0 -4px 0 0;'} wpl.me/
-      %input#playlist_url.span2{size: "16", type: "text", placeholder: 'Ссылка на плейлист'}
+    .input-prepend.fl_r{style: 'margin-bottom: 0;'}
+      %span.add-on{style: 'margin: 0 -5px 0 0;'} wpl.me/
+      %input#playlist_url{size: "16", type: "text", placeholder: 'Ссылка на плейлист', style: 'width: 235px;'}
 
   #playlists
     %ul#edit_tags
     %textarea#playlist_description.input-xlarge{rows: '3', placeholder: 'Описание плейлиста'}
 
-    #track_seacher.input-append{style: 'margin-left: 135px;'}
-      %input.span3{type: 'text', placeholder: 'Название трека', onkeypress: "if(event.which == 13 || event.keyCode == 13) {$('#track_seacher a').click();}", value: 'каста'} 
-      %a.btn.btn-primary{style: 'margin: 0 0 0 -3px;'} Найти трек
+    #search_block
+      #progress_tracks.progress.progress-striped.progress-success.fl_l{ rel: 'popover', data-content: 'Для создания плейлиста нужно загрузить как минимум 5 музыкальных треков', data-original-title: '<b>Внимание</b>', data-placement: 'left' }
+        .bar{style: 'width: 5%;'}
+      #track_seacher.input-append.fl_r.clear
+        %input.span3{type: 'text', placeholder: 'Название трека', onkeypress: "if(event.which == 13 || event.keyCode == 13) {$('#track_seacher a').click();}", value: 'каста'} 
+        %a.btn.btn-primary{style: 'margin: 0 0 0 -4px;'} Найти трек
 
     #searched_tracks
 
@@ -31,6 +34,13 @@
 
 #right_block.fl_r
   #followers
-    #title Слушатели
-    %a.follower{href: "/u/#{ @screen_name }"}
-      %img{src: "#{ @photo }"}
+    - if @screen_name
+      .title
+        %a 1
+        Слушатели
+      
+      %a.follower{href: "/u/#{@screen_name}", rel: 'tooltip', title: "#{@first_name} #{@last_name}"}
+        %img{src: "#{@photo}"}
+    - else
+      .alert.alert-info
+        = "Этот плейлист еще никто не слушает, можете зафоловить его первым :-)"

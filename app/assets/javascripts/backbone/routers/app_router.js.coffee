@@ -260,7 +260,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
 
     $('.popover').remove()
     $('#app').popover
-      selector: 'a[rel=popover]'
+      selector: '[rel=popover]'
       placement: 'top'
       delay:
         show: 100, hide: 1000

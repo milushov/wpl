@@ -17,8 +17,6 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     @.on 'image_uploaded', (image_data)-> @imageUploaded(image_data)
 
   addTrack: ->
-    console.log 'Views.Playlists.NewView addTrack()'
-
     track_name = $('#track_seacher input').val()
     if track_name.length < 2
       return notify 'Название трека слишком короткое'
@@ -83,7 +81,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
 
     switch count = App.new_tracks.length
       when 0 then return notify 'Добавьте треков в плейлист'
-      when 1, 2 then return notify 'Маловато треков для плейлиста'
+      when 1, 2, 3, 4 then return notify 'Маловато треков для плейлиста, нужно минимум 5'
 
     new_playlist = 
       name: name
@@ -110,9 +108,6 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     loading('off')
 
   render: ->
-    $(@el).html @template(
-      photo: @me.photo
-      screen_name: @me.screen_name
-    )
+    $(@el).html @template(@me)
 
     this
