@@ -40,7 +40,9 @@
           Играть всё
         
   #playlists
-    %h3= @description
+    %div{style: 'overflow: hidden;'}
+      %h3.fl_l{style: 'display: block-inline; width: 450px;'}= @description
+      %a.btn.btn-success.fl_r{href: "/#{@url}/edit", style: 'display: block-inline;'} Добавить трек
     #tags
       - for tag, i in @tags
         %a{href: "/tag/#{tag}"}

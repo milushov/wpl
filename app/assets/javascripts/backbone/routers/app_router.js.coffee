@@ -7,6 +7,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
     'popular'           : 'getPopularPlaylists'
+    ':url/edit'         : 'editPlaylist'
     ':url'              : 'getPlaylist'
     '.*'                : 'myProfile'
     '?*splat'           : 'from_vk'
@@ -69,7 +70,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     
     # добавляем или удаляем пользователя из нашего списка подписчиков
     if @follow_switch == 'user_follow'
-      my_profile.followees.push user_data.user
+      my_profile.followees.splice 0, 0, user_data.user
       @follow_switch = false
     else if @follow_switch == 'user_unfollow'
       for f in my_profile.followees
@@ -103,6 +104,14 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @showPlaylist(playlist)
     else
       @vk.getPlaylist(url)
+  
+  editPlaylist: (url) ->
+    playlist = @playlists.getByUrl(url)
+    @edit_playlist_view = new Playlists.Views.Playlists.EditView playlist
+    $('#app').html(@edit_playlist_view.render().el)
+
+    @ok()
+    
 
   showPlaylist: (playlist) ->
     console.log 'Routers.AppRouter showPlaylist()', playlist

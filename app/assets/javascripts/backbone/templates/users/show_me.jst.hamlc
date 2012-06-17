@@ -32,7 +32,11 @@
       %a=@user.followees_count
       Я слушаю
     - if @followees.length
+      - count = 15
+      - i = 0
       - for id, followee of @followees
+        - if i == count then break
+        - i += 1
         %a.followee{href: "/u/#{followee.screen_name}", rel: 'tooltip', title: "#{followee.first_name} #{followee.last_name}"}
           %img{src: "#{followee.photo}"}
     - else

@@ -142,7 +142,8 @@ window.chooseTrack = (_this)->
       name = "#{res[0].get 'artist'} - #{res[0].get 'title'}"
       return notify "Этот трек <b>#{name}</b> уже есть в плейлисте"
   App.new_tracks.add track
-  App.new_playlist_view.trigger 'track_choosen'
+  App.new_playlist_view?.trigger 'track_choosen'
+  App.edit_playlist_view?.trigger 'track_choosen'
 
   count = App.new_tracks.length
   $('#progress_tracks .bar').width "#{count*20}%"

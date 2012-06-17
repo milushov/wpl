@@ -62,6 +62,29 @@ class PlaylistsController < ApplicationController
     end
   end
 
+  def edit
+
+    unless tracks = params[:tracks].to_a.map{|x| x[1]}
+      return error 'Новых треков не получено'
+    end
+
+    unless @playlist = Playlist.any_of({url: params[:id]}, {_id: params[:id]}).first
+      return error 'Плейлист не найден.'
+    end
+
+    tracks.each do |track|
+      track = Track.new track
+      @playlist.tracks.push track
+    end
+    
+    if status = @playlist.save
+      render json: {status: status, id: @playlist[:url]}
+    else
+      return error 'Плейлист не обновлен, т.к. одно из полей было заполненно неверно.'
+    end
+    #binding.pry
+  end
+
   # GET /playlists/test/follow
   def follow
     do_follow
@@ -103,16 +126,6 @@ class PlaylistsController < ApplicationController
       count: playlists.count,
       playlists: playlists
     }
-  end
-
-  # GET /playlists/1/edit
-  def edit
-    @playlist = Playlist.find(params[:id])
-  end
-
-  # PUT /playlists/1
-  def update
-    # @playlist = Playlist.find(params[:id])
   end
 
   # DELETE /playlists/1

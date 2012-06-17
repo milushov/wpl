@@ -76,8 +76,12 @@ class Playlists.Models.Vk extends Backbone.Model
         App.notFound()
     , 'json'
 
-  saveNewPlaylist: (playlist_data, success, context)->
+  saveNewPlaylist: (playlist_data, success, context) ->
     @ajax "#{@get("url")}api/playlists", success, context, playlist_data, true
+  
+  editPlaylist: (pid, new_tracks, success, context) ->
+    console.log new_tracks
+    @ajax "#{@get("url")}api/playlists/#{pid}/edit", success, context, tracks: new_tracks, true
 
   getComments: (pid, page = 0, per = 10, success, context) ->
     return if not pid
@@ -167,7 +171,7 @@ class Playlists.Models.Vk extends Backbone.Model
         var auto_complete = 1;
         var sort = 2;
         var lyrics = 1;
-        var count = 10;
+        var count = 5;
         var offset = ' + offset + ';
         var tracks = API.audio.search( {q: q, auto_complete: auto_complete, sort: sort, lyrics: lyrics, count: count, offset: offset} );
         if( tracks[0] == 0 ) {

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :app_init, :check_abuse, :allow_cross_domain_access
 
   COUNT_FRIENDS = 0...15
-  MAX_REQUERS_PER_SECOND = 2
+  MAX_REQUERS_PER_SECOND = 3
 
   APP_ID = ENV['USER'] ? 2999165 : 1111000
   APP_SECRET = '1111000key'

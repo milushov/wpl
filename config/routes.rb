@@ -31,6 +31,7 @@ Playlists::Application.routes.draw do
       member do
         get 'follow'
         get 'unfollow'
+        post 'edit'
         get 'comments', to: 'comments#index'
         post 'comments/create', to: 'comments#create'
         post 'comments/:cid/update', to: 'comments#update'
