@@ -16,7 +16,6 @@ class Playlists.Views.Tracks.MiniTrackView extends Backbone.View
 
   play: ->
     console.log 'Views.Tracks.MiniTrackView play()'
-    #@model.voteUp()
 
   render: ->
     #console.log 'Views.Tracks.MiniTrackView render()'

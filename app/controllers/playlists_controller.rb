@@ -194,6 +194,8 @@ private
     playlists.each do |playlist|
       playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
       playlist[:tracks].each do |track|
+        track[:real_lovers_count] = track.lovers.count
+        track[:real_haters_count] = track.haters.count
         track[:lovers].map! do |id|
           playlists_followers[id].show without: %w{ photo_big last_name }
         end

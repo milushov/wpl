@@ -11,9 +11,16 @@
       %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
         %img{src: "#{lover.photo}"}
 .actions.fl_r.clear{style: 'display:none;'}
-  .down.clear.fl_l
-    %a.btn
-      %i.icon-thumbs-down
+  - lovers_perc = ( 100 * @real_lovers_count / (@real_lovers_count + @real_haters_count) ).toFixed()
+  - console.log @real_lovers_count, @real_haters_count
+  - title = "<b>#{lovers_perc}% пользователям нравится<b>"
+
+  .progress.fl_l{rel: 'tooltip', data-original-title: title, style: 'width: 100px; margin: 5px 5px 0 0;' }
+    .bar{style: "width: #{lovers_perc}%;" }
+
+  .down.clear.fl_l{style: 'margin-right: 3px;'}
+    %a.btn.btn-danger
+      %i.icon-thumbs-down.icon-white
   .up.fl_l
-    %a.btn
-      %i.icon-thumbs-up
+    %a.btn.btn-success
+      %i.icon-thumbs-up.icon-white

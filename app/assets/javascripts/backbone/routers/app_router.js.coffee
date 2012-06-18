@@ -4,10 +4,10 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'tag/:tag'          : 'getPlaylistsByTag'
     'search/:query'     : 'searchPlaylists'
     ':url/comments'     : 'showComments'
+    ':url/edit'         : 'editPlaylist'
     'new'               : 'newPlaylist'
     'last'              : 'getLastPlaylists'
     'popular'           : 'getPopularPlaylists'
-    ':url/edit'         : 'editPlaylist'
     ':url'              : 'getPlaylist'
     '.*'                : 'myProfile'
     '?*splat'           : 'from_vk'
@@ -27,21 +27,21 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @.on 'user_data_loaded', (user_data)-> @showUserProfile(user_data)
     @.on 'playlists_by_tag_data_loaded', (playlists_data)-> @showPlaylistsByTag(playlists_data)
     
-    @.on 'user_follow', (data)->
+    @.on 'user_follow', (data) ->
       window.user_profile = {} # очищаем, чтобы загрузить обновленные данные
       @follow_switch = 'user_follow' # чтобы в @showUserProfile() добавить новозафоловленнго юзера в my_profile.followees
       @getUserProfile data.id
     
-    @.on 'user_unfollow', (data)->
+    @.on 'user_unfollow', (data) ->
       window.user_profile = {}
       @follow_switch = 'user_unfollow'
       @getUserProfile data.id
 
-    @.on 'playlist_follow', (data)->
+    @.on 'playlist_follow', (data) ->
       @follow_switch = 'playlist_follow'
       @getPlaylist data.id
     
-    @.on 'playlist_unfollow', (data)->
+    @.on 'playlist_unfollow', (data) ->
       @follow_switch = 'playlist_unfollow'
       @getPlaylist data.id
 
@@ -263,7 +263,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   ok: ()->
     $('.tooltip').remove()
     $('#app').tooltip
-      selector: 'a[rel=tooltip]'
+      selector: '[rel=tooltip]'
       delay:
         show: 420, hide: 100
 

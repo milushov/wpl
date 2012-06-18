@@ -172,8 +172,6 @@ window.can_update = (time_str) ->
   max_time = 4*60*60
   return if diff > max_time then false else true
 
-
-
 $ () ->
   return $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>" if my_profile == -1
   
@@ -188,16 +186,16 @@ $ () ->
     playlists: my_profile['playlists']
   )
   
-  Backbone.history.start(pushState: true)
+  Backbone.history.start pushState: true
 
   bind_urls()
   
   ####### soundManager #######
   soundManager.url = app_url;
-  soundManager.preferFlash = true;
-  soundManager.flashVersion = 9;
-  soundManager.debugMode = if !debug then true
-  soundManager.flashPollingInterval = 500
+  # soundManager.preferFlash = true;
+  # soundManager.flashVersion = 9;
+  soundManager.debugMode = false
+  soundManager.flashPollingInterval = 333
   #soundManager.useHighPerformance = true  
   #soundManager.html5PollingInterval = 33
   soundManager.defaultOptions = 
@@ -226,7 +224,7 @@ $ () ->
     )
 
   soundManager.ontimeout ->
-    notify 'Плеер завис, перезагрузите страницу! (F5)'
+    notify 'Похоже, что плеер завис, перезагрузите страницу! (F5)'
 
   ####### AJAX SETTINGS #######
   if $.cookie('user_id')
@@ -239,7 +237,6 @@ $ () ->
     cache: false
     beforeSend: (jqXHR) ->
       jqXHR.setRequestHeader 'kookies', kookies
-
 
   $(document).ajaxError (e, jqxhr, settings, exception) ->
     # console.error arguments
@@ -257,15 +254,15 @@ $ () ->
       show: 420, hide: 100
 
   ####### PLAYER PROGRESS #######
-  $(".navbar").hover () ->
-    $('#slider').show()
-  , () ->
-      if App.player.update == false
-        return
-      setTimeout (-> $('#slider').hide()), 3000
+#  $(".navbar").hover () ->
+#    $('#slider').show()
+#  , () ->
+#      if App.player.update == false
+#        return
+#      setTimeout (-> $('#slider').hide()), 3000
 
   $('#slider').draggable(
-    drag: (event, ui) -> 
+    drag: (event, ui) ->
       App.player.update = false
       cur = ui.position.left
       all = $('#progress_line').width()
