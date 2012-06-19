@@ -9,7 +9,6 @@ class Playlists.Models.Playlist extends Backbone.Model
   initialize: (options)->
     # console.log 'Models.Playlist initialize()', options
     @tracks = @nestCollection('tracks', new Playlists.Collections.TracksCollection(options.tracks))
-
     @comments = @nestCollection('comments', new Playlists.Collections.CommentsCollection())
 
 

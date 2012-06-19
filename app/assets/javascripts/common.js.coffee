@@ -199,16 +199,10 @@ $ () ->
   #soundManager.useHighPerformance = true  
   #soundManager.html5PollingInterval = 33
   soundManager.defaultOptions = 
-    #onpause:  ()-> App.player.model.pause()
-    #onresume: ()-> App.player.model.resume()
-    onfinish: ->
-      App.player.model.next()
-    onload: ->
-      App.player.model.loadNextTrack()
-    whileplaying: -> App.player.updatePlayProgress(this.position, this.duration)
-    whileloading: -> App.player.updateLoadingProgress(this.bytesLoaded, this.bytesTotal)
-
-  # достасть из localStorage
+    onfinish: -> App.player.model.next()
+    onload: -> App.player.model.loadNextTrack()
+    whileplaying: -> App.player.updatePlayProgress this.position, this.duration
+    whileloading: -> App.player.updateLoadingProgress this.bytesLoaded, this.bytesTotal
 
   volume = $.cookie('volume') || 100
   dur_mode = $.cookie('duration_mode') || 'pos'

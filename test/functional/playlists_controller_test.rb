@@ -13,24 +13,29 @@ class PlaylistsControllerTest < ActionController::TestCase
     get :popular, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
+
   end
 
   test "should get last" do
     get :last, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get last" do
     get :last, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get show" do
     get :last, id: @playlist.id, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get create" do
@@ -39,29 +44,40 @@ class PlaylistsControllerTest < ActionController::TestCase
     post :create, new, @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get follow" do
     get :follow, id: @playlist.id, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get unfollow" do
     get :unfollow, id: @playlist.id, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get unfollow" do
     get :last, id: @playlist.id, cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
   end
 
   test "should get playlistsByTag" do
     get :playlistsByTag, id: "tag#{rand[1..4]}", cookies: @cookies
     assert_response :success
     assert_not_nil assigns(:playlists)
+    check_status
+  end
+
+private
+  def check_status
+    resp = JSON.parse @response.body
+    assert_equal resp.status, true
   end
 end

@@ -3,7 +3,7 @@
 {
 "uid":1,
 "first_name":"Павел",
-"last_name":"Деров",
+"last_name":"Дуров",
 "photo":"http://cs1495.userapi.com/u00001/e_4e71b89f.jpg",
 "photo_big":"http://cs1495.userapi.com/u00001/a_c87cf7a6.jpg",
 "screen_name":"durov",
@@ -99,33 +99,7 @@
 "screen_name":"alex.strigin",
 "sex": 2
 },
-{
-"uid":124281120,
-"first_name":"Ro",
-"last_name":"Ma",
-"photo":"http://cs9626.userapi.com/u124281120/e_89335731.jpg",
-"photo_big":"http://cs9626.userapi.com/u124281120/a_95ed5b95.jpg",
-"screen_name":"milro",
-"sex": 2
-},
-{
-"uid":7066,
-"first_name":"Татьяна",
-"last_name":"Замахова",
-"photo":"http://cs5910.userapi.com/u07066/e_b1eed9e8.jpg",
-"photo_big":"http://cs5910.userapi.com/u07066/a_c19a6561.jpg",
-"screen_name":"firefly",
-"sex": 1
-},
-{
-"uid":214300,
-"first_name":"Ksyushenka",
-"last_name":"Ezhova",
-"photo":"http://cs304802.userapi.com/u214300/e_74a35369.jpg",
-"photo_big":"http://cs304802.userapi.com/u214300/a_02bb6b73.jpg",
-"screen_name":"ezhova_k",
-"sex": 1
-},
+
 {
 "uid":578995,
 "first_name":"Михаил",

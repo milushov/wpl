@@ -116,7 +116,7 @@ class MainController < ApplicationController
         fields: 'photo_big,screen_name,sex'
       ).first
 
-      user_info[:id] = user_info[:uid]
+      user_info[:id] = user_info['uid']
       user_info.delete 'uid'
 
       User.create! user_info

@@ -58,7 +58,7 @@ class PlaylistsController < ApplicationController
       user.follow @playlist
       render json: {status: status, id: @playlist[:url]}, location: @playlist
     else
-      return error 'Плейлист не создан, т.к. одно из полей было заполненно неверно.'
+      return error 'Плейлист не создан, т.к. одно из полей было заполнено неверно.'
     end
   end
 
@@ -104,12 +104,11 @@ class PlaylistsController < ApplicationController
     return error 'query too short' if params[:query].length < 3
     playlists_data = Playlist.search params[:query]
     playlists = make_playlists playlists_data
-    response = {
+    render json: {
        status: playlists.empty? ? false : true,
        playlists: playlists,
        query: params[:query]
     }
-    render json: response
   end
 
   # GET /playlists/tags/sport
@@ -117,7 +116,7 @@ class PlaylistsController < ApplicationController
     limit = (params[:limit] ? (3..3*10).include?(params[:limit].to_i) : false) ? params[:limit].to_i : PER_PAGE
     skip = (params[:skip] ? (1..15).include?(params[:skip].to_i) : false) ? params[:skip].to_i*PER_PAGE : 0 
     
-    playlists_data = Playlist.tagged_with(params[:tag].to_s, skip, limit)
+    playlists_data = Playlist.tagged_with params[:tag].to_s, skip, limit
 
     playlists = make_playlists playlists_data
 
@@ -128,13 +127,8 @@ class PlaylistsController < ApplicationController
     }
   end
 
-  # DELETE /playlists/1
-  def destroy
-    # @playlist = Playlist.find(params[:id])
-    # @playlist.destroy
-  end
-
 private
+
   def pick(hash, *keys)
     filtered = {}
     hash.each do |key, value| 
@@ -156,7 +150,7 @@ private
       elsif status == false
         error "Вы уже #{ !undo ? 'подписаны на этот' : 'отписаны от этого'} плейлиста:#{params[:id]}."
       else
-        error 'o_O'
+        error 'unknown error'
       end
     end
   end
