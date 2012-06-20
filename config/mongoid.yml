@@ -5,7 +5,7 @@ development:
 
 test:
   host: localhost
-  database: playlists_development
+  database: heroku_app4117392
   raise_not_found_error: false
 
 production:

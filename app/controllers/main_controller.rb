@@ -50,6 +50,22 @@ class MainController < ApplicationController
     if isAuth?
       redirect_to action: 'index'
     else
+      session[:access_token] = nil
+      session[:user_id] = nil
+      session[:auth_key] = nil
+      session['ban'] = nil
+
+      # if exist port
+      if i = @@domain =~ /:/
+        domain = '.' + @@domain[0...i]
+      else
+        domain = '.' + @@domain
+      end
+
+      cookies.delete :access_token, domain: domain
+      cookies.delete :user_id, domain: domain
+      cookies.delete :auth_key, domain: domain
+      
       requestAuth params[:return_to] # try to get auth_token
     end
   end

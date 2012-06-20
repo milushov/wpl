@@ -36,9 +36,9 @@ class PlaylistsController < ApplicationController
   # GET /playlists/url
   def show
     if playlist = getPlaylist(params[:id])
-      render json: playlist, content_type: 'application/json'
+      render json: playlist
     else
-      error("playlist #{params[:id]} not found")
+      error "playlist #{params[:id]} not found"
     end
   end
 

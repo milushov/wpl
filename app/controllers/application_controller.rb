@@ -167,16 +167,18 @@ private
   def getPlaylist(id)
     return false unless id
     return false unless playlist = Playlist.any_of({url: id}, {_id: id}).first
-    
+    # binding.pry
     followers = playlist.all_followers_by_model('User')  || []
     followers = followers[COUNT_FRIENDS]
 
     lovers_ids = []
+    # binding.pry
     playlist.tracks.map! do |track|
       track[:real_lovers_count] = track.lovers.count
       track[:real_haters_count] = track.haters.count
       track[:lovers] = track[:lovers].reverse[0...5]
       lovers_ids |= track[:lovers]
+
       track
     end
     
