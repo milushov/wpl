@@ -3,9 +3,8 @@ class MainController < ApplicationController
   require 'openssl'
 
   def index
-    return render text: 'access only by api' if @@only_api
     format_fix if params[:format]
-    from_vk_or_for_api  
+    from_vk_or_for_api
 
     if isAuth?
       # here we will be select user profile by id,
@@ -26,15 +25,8 @@ class MainController < ApplicationController
       end
 
       @count_friends = ApplicationController::COUNT_FRIENDS.max + 1 # depricated
-      @app_url = ApplicationController::APP_URL # main url of application
+      @api_url = ApplicationController::APP_URL # main url of application
       @debug = ApplicationController::DEBUG
-      if @debug
-        @api_url = "http://#{env['HTTP_HOST']}/"
-      else
-        n = rand INSTANCES
-        # @api_url = "http://#{n}.#{@@domain}/" 
-        @api_url = "http://#{@@domain}/"
-      end
       
       respond_to do |format|
         format.html # index.html.haml
@@ -55,12 +47,7 @@ class MainController < ApplicationController
       session[:auth_key] = nil
       session['ban'] = nil
 
-      # if exist port
-      if i = @@domain =~ /:/
-        domain = '.' + @@domain[0...i]
-      else
-        domain = '.' + @@domain
-      end
+      domain = get_domain()
 
       cookies.delete :access_token, domain: domain
       cookies.delete :user_id, domain: domain
@@ -76,12 +63,7 @@ class MainController < ApplicationController
     session[:auth_key] = nil
     session['ban'] = nil
 
-    # if exist port
-    if i = @@domain =~ /:/
-      domain = '.' + @@domain[0...i]
-    else
-      domain = '.' + @@domain
-    end
+    domain = get_domain()
 
     cookies.delete :access_token, domain: domain
     cookies.delete :user_id, domain: domain
@@ -140,8 +122,7 @@ class MainController < ApplicationController
 
     # first step: request code, which is required for getting auth token
     def requestAuth(return_to = nil)
-      domain = "http://#{@@domain}/auth"
-      redirect_uri = return_to ? "#{domain}?return_to=#{return_to}" : domain
+      redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
       redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
     end
 
@@ -153,12 +134,8 @@ class MainController < ApplicationController
       user_id = session[:user_id] = user_id.to_i
       auth_key = session[:auth_key] = getAuthKey user_id.to_i
       
-      # if exist port
-      if i = @@domain =~ /:/
-        domain = '.' + @@domain[0...i]
-      else
-        domain = '.' + @@domain
-      end
+      domain = get_domain()
+
       expires = Time.now + 366.days
 
       cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
@@ -172,8 +149,10 @@ class MainController < ApplicationController
         access_token = params[:access_token].to_i
         # auth_key = params[:auth_key].to_i
         saveToken access_token, user_id
-      elsif @@kookies
-        saveToken @@kookies['access_token'], @@kookies['user_id']
       end
+    end
+
+    def get_domain
+      domain = DEBUG ? '.playlists.dev' : '.wpl.me'
     end
 end

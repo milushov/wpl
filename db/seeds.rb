@@ -31,8 +31,8 @@ JSON.parse(File.open("#{Rails.root}/db/playlists.json").read.to_s).each do |play
     t['lovers'] = []
     t['haters'] = []
 
-    users_ids.each do |id|
-      if rand(0..1).even?
+    users_ids.shuffle.each do |id|
+      if rand(0..1).even? or rand(0..1).even? 
         t['lovers'] << id
       else
         t['haters'] << id
@@ -67,14 +67,14 @@ users.each do |user|
 
       playlist.comments << comment
 
-      # p "user #{user.screen_name} followed playlist #{playlist.url}"
+      p "user #{user.screen_name} followed playlist #{playlist.url}"
     end
   end
 
   users.each do |followee|
     if rand(1..2).even? or rand(1..2).even?
       user.follow(followee) if user.id != followee.id
-      # p "user #{user.screen_name} followed user #{followee.screen_name}"
+      p "user #{user.screen_name} followed user #{followee.screen_name}"
     end
   end
 end

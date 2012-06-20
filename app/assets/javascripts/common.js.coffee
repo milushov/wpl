@@ -191,7 +191,7 @@ $ () ->
   bind_urls()
   
   ####### soundManager #######
-  soundManager.url = app_url;
+  soundManager.url = api_url;
   # soundManager.preferFlash = true;
   # soundManager.flashVersion = 9;
   soundManager.debugMode = false

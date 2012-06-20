@@ -59,6 +59,7 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
         -> ( $(this).remove())
       @destroy
       notify "Данный трек <b>#{ @model.get('title') }</b> больше не будет вам попадаться", 'success'
+      $('.tooltip').remove() # for prevent bug, when after click tooltip countinue to be displayed
       # @destroy if not App.settings.show_hidden_tracks
 
     ,this

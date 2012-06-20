@@ -11,18 +11,22 @@
       %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
         %img{src: "#{lover.photo}"}
 .actions.fl_r.clear{style: 'display:none;'}
-  - lovers_perc = ( 100 * @real_lovers_count / (@real_lovers_count + @real_haters_count) ).toFixed()
-  - console.log @real_lovers_count, @real_haters_count
-  - title = "<b>#{lovers_perc}% пользователям нравится<b>"
+  - lovers_perc = ( 100 * @lovers_count / (@lovers_count + @haters_count) ).toFixed()
+  - like_title = "<b>#{lovers_perc}% пользователям нравится<b>"
+  - hate_title = 'Этот трек будет удален в ближайшее время'
+  - first_title = 'За этот трек еще никто не голосовал. Проголосуйте первым!'
+  - console.log lovers_perc
 
-  - perc = (Math.random()*100).toFixed()
-  - if perc > 70
-    .progress.progress-striped.fl_l{rel: 'tooltip', data-original-title: title, style: 'width: 88px; margin: 5px 5px 0 0;' }
-      .bar{style: "width: #{perc}%;" }
+  - if lovers_perc > 70
+    - title = like_title
   - else
-    - title = 'Этот трек будет удален в ближайшее время'
-    .progress.progress-danger.progress-striped.fl_l{rel: 'tooltip', data-original-title: title, style: 'width: 88px; margin: 5px 5px 0 0;' }
-      .bar{style: "width: #{perc}%;" }
+    - title = hate_title
+
+  - if @lovers_count == 0 and @haters_count == 0
+    - title = first_title
+
+  .progress.progress-striped.progress-success.like_hate_progress.fl_l{rel: 'tooltip', data-original-title: title, style: 'width: 88px; margin: 5px 5px 0 0;' }
+    .bar{style: "width: #{lovers_perc}%;" }
 
   .down.clear.fl_l{style: 'margin-right: 3px;', rel: 'tooltip', data-original-title: 'проголосовать <b>ПРОТИВ</b>'}
     %a.btn.btn-danger
