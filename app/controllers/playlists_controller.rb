@@ -4,8 +4,6 @@ class PlaylistsController < ApplicationController
   PER_PAGE = 12
   respond_to :json
   
-  before_filter :check_auth
-
   # GET /playlists
   def index
     render json: Playlist.desc(:_id).limit(PER_PAGE)
@@ -44,11 +42,17 @@ class PlaylistsController < ApplicationController
 
   # POST /playlists
   def create
+    artists_photos = %w{ http://userserve-ak.last.fm/serve/34s/61520993.png http://userserve-ak.last.fm/serve/34s/71349074.png http://userserve-ak.last.fm/serve/34s/70383082.png http://userserve-ak.last.fm/serve/34s/50183455.png http://userserve-ak.last.fm/serve/34s/74977662.png http://userserve-ak.last.fm/serve/34s/57494593.png }
     playlist = pick JSON.parse(params[:playlist]), :name, :url, :image, :description, :tags, :tracks
     if playlist[:image]
       playlist[:image_small] = playlist[:image]['image_small'] || nil
       playlist[:image] = playlist[:image]['image'] || nil
     end
+
+    # playlist['tracks'].each |track| do
+    #   track['artist_photo'] = artists_photos[rand 0..artists_photos.size-1]
+    # end
+    
     playlist[:creator] = session[:user_id]
 
     @playlist = Playlist.new playlist

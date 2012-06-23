@@ -19,7 +19,7 @@
   #followers
     .title
       %a=@user.followers_count
-      Слушатели
+      Подписчики
     - if @followers.length
       - for id, follower of @followers
         %a.follower{href: "/u/#{follower.screen_name}", rel: 'tooltip', title: "#{follower.first_name} #{follower.last_name}"}
@@ -30,7 +30,7 @@
   #followees
     .title
       %a=@user.followees_count
-      Я слушаю
+      Я подписан на
     - if @followees.length
       - count = 15
       - i = 0

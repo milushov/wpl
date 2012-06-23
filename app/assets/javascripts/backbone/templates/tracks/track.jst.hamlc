@@ -11,11 +11,11 @@
       %a.lover{href: "/u/#{lover.screen_name}", rel: 'tooltip', title: "#{lover.first_name}"}
         %img{src: "#{lover.photo}"}
 .actions.fl_r.clear{style: 'display:none;'}
+
   - lovers_perc = ( 100 * @lovers_count / (@lovers_count + @haters_count) ).toFixed()
   - like_title = "<b>#{lovers_perc}% пользователям нравится<b>"
   - hate_title = 'Этот трек будет удален в ближайшее время'
   - first_title = 'За этот трек еще никто не голосовал. Проголосуйте первым!'
-  - console.log lovers_perc
 
   - if lovers_perc > 70
     - title = like_title

@@ -1,23 +1,24 @@
 class Playlists.Routers.AppRouter extends Backbone.Router
   routes:
-    'u/:user_id'        : 'getUserProfile'
-    'tag/:tag'          : 'getPlaylistsByTag'
-    'search/:query'     : 'searchPlaylists'
-    ':url/comments'     : 'showComments'
-    ':url/edit'         : 'editPlaylist'
-    'new'               : 'newPlaylist'
-    'last'              : 'getLastPlaylists'
-    'popular'           : 'getPopularPlaylists'
-    ':url'              : 'getPlaylist'
-    '.*'                : 'myProfile'
-    '?*splat'           : 'from_vk'
-    '*path'             : 'notFound'
+    'u/:user_id'      : 'getUserProfile'
+    ':url/comments'   : 'showComments'
+    ':url/edit'       : 'editPlaylist'
+    'tag/:tag'        : 'getPlaylistsByTag'
+    'search/:query'   : 'searchPlaylists'
+    'new'             : 'newPlaylist'
+    'last'            : 'getLastPlaylists'
+    'popular'         : 'getPopularPlaylists'
+    ':url'            : 'getPlaylist'
+    '.*'              : 'myProfile'
+    '?*splat'         : 'from_vk'
+    '*actions'        : 'notFound'
 
   from_vk: (a = null)->
-    @myProfile()
+    # нужно будет сделать отдельную версию для vk.com
+    # @myProfile()
 
   initialize: (options)->
-    console.log 'Routers.AppRouter initialize()'
+    console.log 'Routers.AppRouter initialize(options)'
     @vk = new Playlists.Models.Vk()
     @vk.set url: api_url
     if not @vk.isAuth() then console.error 'Вы не залогинены! Атата! Как не стыдно!'
@@ -89,7 +90,6 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     @playlists = new Playlists.Collections.PlaylistsCollection( playlists_both_people )
 
     $('#app').html( new Playlists.Views.User.ShowView(user_data).render().el )
-        
     @ok()
 
   myProfile: ->

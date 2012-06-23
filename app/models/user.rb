@@ -26,7 +26,7 @@ class User
 
   field :app_friends, type: Array, default: []
 
-  # scope :find2, ->(id) { any_of({screen_name: id}, {_id: id}).first }
+  # scope :find2, ->(id) { any_of({screen_name: id}, {_id: id.to_i}).first }
 
   index :screen_name, unique: true
 

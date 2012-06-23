@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_filter :app_init, :check_abuse
 
   COUNT_FRIENDS = 0...15
-  MAX_REQUERS_PER_SECOND = 3
+  MAX_REQUERS_PER_SECOND = 2
 
   APP_ID = ENV['USER'] ? 2999165 : 1111000
   APP_SECRET = '1111000key'
@@ -32,14 +32,17 @@ private
   # check user authentication by cookies, and if alright - save them to session
   def isAuth?
     if cookies[:access_token] and cookies[:user_id] and cookies[:auth_key]
-      auth_key, real_auth_key = cookies[:auth_key], getAuthKey(cookies[:user_id])
+      auth_key = cookies[:auth_key]
+      real_auth_key = getAuthKey cookies[:user_id]
       if auth_key == real_auth_key
         session[:access_token] = cookies[:access_token]
         session[:user_id] = cookies[:user_id]
         session[:auth_key] = cookies[:auth_key]
         session[:abuse] ||= []
-        end
-      true
+        true
+      else
+        false
+      end
     else
       false
     end
@@ -51,18 +54,8 @@ private
     return false unless user = User.any_of({screen_name: id}, {_id: id.to_i}).first
     session['ban'] = user.unban_date and return -1 if user.ban
     
-    # mini statisctics
-    if user.me? session[:user_id]
-       begin
-        user.app_friends = @vk.friends.getAppUsers if 1#user.last_visit < Time.now - 3.hour  
-      rescue Exception => ex
-        # User authorization failed: access_token have heen expired        
-        return ex.error_code
-      end
-      user.last_visit = Time.now
-      user.visits_count = user.visits_count + 1
-      user.save
-    end   
+    mini_statistics user
+      
 
     followers = user.all_followers_by_model('User').to_a
     followers_count = user.followers_count_by_model('User') || 0
@@ -131,16 +124,29 @@ private
     profile
   end
 
+  def mini_statistics user
+    if user.me? session[:user_id]
+      begin
+        user.app_friends = @vk.friends.getAppUsers if user.last_visit < Time.now - 3.hour
+      rescue Exception => ex
+        # 5: User authorization failed: access_token have heen expired
+        return ex.error_code
+      end
+      user.last_visit = Time.now
+      user.visits_count = user.visits_count + 1
+      user.save
+    end
+  end
+
   # return full playlist by id
   def getPlaylist(id)
     return false unless id
     return false unless playlist = Playlist.any_of({url: id}, {_id: id}).first
-    # binding.pry
+    
     followers = playlist.all_followers_by_model('User')  || []
     followers = followers[COUNT_FRIENDS]
 
     lovers_ids = []
-    # binding.pry
     playlist.tracks.map! do |track|
       track[:real_lovers_count] = track.lovers.count
       track[:real_haters_count] = track.haters.count

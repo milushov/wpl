@@ -20,7 +20,7 @@ class MainController < ApplicationController
       end
       
       if @user_profile.kind_of? Integer
-        cookies['auth_key'] = 'oops, you will not be able to auth'
+        cookies.delete :auth_key, domain: get_domain()
         return redirect_to action: 'login', return_to: params[:path]
       end
 
@@ -42,34 +42,12 @@ class MainController < ApplicationController
     if isAuth?
       redirect_to action: 'index'
     else
-      session[:access_token] = nil
-      session[:user_id] = nil
-      session[:auth_key] = nil
-      session['ban'] = nil
-
-      domain = get_domain()
-
-      cookies.delete :access_token, domain: domain
-      cookies.delete :user_id, domain: domain
-      cookies.delete :auth_key, domain: domain
-      
-      requestAuth params[:return_to] # try to get auth_token
+      destroy_auth and requestAuth params[:return_to] # try to get auth_token
     end
   end
 
   def logout
-    session[:access_token] = nil
-    session[:user_id] = nil
-    session[:auth_key] = nil
-    session['ban'] = nil
-
-    domain = get_domain()
-
-    cookies.delete :access_token, domain: domain
-    cookies.delete :user_id, domain: domain
-    cookies.delete :auth_key, domain: domain
-
-    redirect_to action: 'index'
+    destroy_auth and redirect_to action: 'index'
   end
 
   # step2: obtain and save access token
@@ -103,10 +81,23 @@ class MainController < ApplicationController
   end
 
   def blacklist
-    error 'you in blacklist by ip'
+    error 'you are in blacklist by ip'
   end
 
   private
+    def destroy_auth
+      session[:access_token] = nil
+      session[:user_id] = nil
+      session[:auth_key] = nil
+      session['ban'] = nil
+
+      domain = get_domain()
+
+      cookies.delete :access_token, domain: domain
+      cookies.delete :user_id, domain: domain
+      cookies.delete :auth_key, domain: domain
+    end
+
     def create_user
       user_info = @vk.users.get(
         uids: session[:user_id],

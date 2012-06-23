@@ -13,12 +13,15 @@ class UsersController < ApplicationController
   # GET /users/1
   def show   
     format_fix if params[:format]
-    
+
+    # return render json: User.any_of({screen_name: params[:id]}, {_id: params[:id].to_i}).first
+    # return render json: User.find2(params[:id])
+
     if user_profile = getProfile(params[:id])
       check_auth if user_profile == -1
       render json: user_profile
     else
-      error("user #{params[:id]} not found")
+      error "user #{params[:id]} not found"
     end
   end
 
@@ -30,22 +33,7 @@ class UsersController < ApplicationController
     do_follow :undo
   end
 
-  # PUT /users/1
-  def update
-    @user = User.find(params[:id])
-
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # GET /users/1/bun?days=1&hours=10&minutes=1
+  # POST /users/1/ban?days=1&hours=10&minutes=1
   def ban
     days = params[:days] || 0
     hours = params[:hours] || 0
@@ -55,11 +43,11 @@ class UsersController < ApplicationController
     @user.ban = true
     @user.unban_date = Time.now + 1.days + 1.hours + 1.minutes
     status = @user.save
-    render json: {status: status, id: user.id }
+    render json: {status: status, id: user.id}
   end
 
   def unban
-    user = User.find2(params[:id])
+    user = User.find2 params[:id]
     status = user.set bun: false
     render json: {status: status, id: user.id }
   end

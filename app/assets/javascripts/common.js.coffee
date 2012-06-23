@@ -36,12 +36,13 @@ window.ondrop = (e) ->
   App.vk.uploadImage e.dataTransfer.files[0]
   l 'ondrop'
 
+# alert, success, error, information and confirmation
 window.notify = (message, type = 'error', long_message = false) ->
   timeout = if long_message then 15000 else 4500
   noty(
     text: message,
     theme:'noty_theme_twitter',
-    layout: if type == 'error' then 'top' else 'bottomRight',
+    layout: if type == 'error' then 'topRight' else 'bottomRight',
     type: type,
     animateOpen:
       height: 'toggle'
@@ -67,11 +68,14 @@ window.l = (a, b)->
     else
       console.log(a)
 
+
 window.title = (mes = 404) ->
   document.title = mes
 
+
 window.curUrl = ()->
   $.url().attr().relative
+
 
 window.bind_urls = ->
   $('a').click (event)->
@@ -91,9 +95,11 @@ window.bind_urls = ->
             return false
         App.navigate(url, true)
 
+
 window.nav = (_this) ->
   url = $(_this).attr 'href'
   return App.navigate url, true
+
 
 window.too_late = 0
 window.loading = (ready = false) ->
@@ -117,21 +123,26 @@ window.loading = (ready = false) ->
       window.too_late = 0
     , fast_operation
 
+
 window.dur = (dur)->
   min = (dur/60).toFixed(0)
   sec = if (dur%60).toString().length == 2 then "#{(dur%60)}" else "0#{(dur%60)}"
   "#{min}:#{sec}"
 
+
 window.trackOver = (_this)->
   $(_this).find(".choose_track").show()
 
+
 window.trackOut = (_this)->
   $(_this).find(".choose_track").hide()
+
 
 window.playOnce = (_this)->
   json = $(_this).data 'track'
   track = new Playlists.Models.Track json
   App.player.playOnce track
+
 
 window.chooseTrack = (_this)->
   json = $(_this).data 'track'
@@ -148,9 +159,11 @@ window.chooseTrack = (_this)->
   count = App.new_tracks.length
   $('#progress_tracks .bar').width "#{count*20}%"
 
+
 window.make_playlist_url = (_this)->
   name = $(_this).val()
   $('#playlist_url').val(translitUrl(name))
+
 
 window.translitUrl = (url)->
   az = {'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'е':'e', 'ё':'e', 'ж':'zh', 'з':'z', 'и':'i', 'й':'y', 'к':'k', 'л':'l', 'м':'m', 'н':'n', 'о':'o', 'п':'p', 'р':'r', 'с':'s', 'т':'t', 'у':'u', 'ф':'f', 'х':'h', 'ц':'ts', 'ч':'ch', 'ш':'sh', 'щ':'sch', 'ъ':'', 'ь':'', 'ы':'y', 'э':'e', 'ю':'yu', 'я':'ya'}
@@ -162,9 +175,11 @@ window.translitUrl = (url)->
     .replace(/[\s-_]+/g, '-')
     .replace(/(^-|-$)+/g,'')
 
+
 window.linkify = (text) ->
   exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
   text.replace(exp,"<a href='$1' data-type='ext' target='blank'>$1</a>")
+
 
 window.can_update = (time_str) ->
   return false unless time_str
@@ -172,8 +187,18 @@ window.can_update = (time_str) ->
   max_time = 4*60*60
   return if diff > max_time then false else true
 
+
+window.show_ban_info = () ->
+  return $("#app").html "
+  <center>
+    <h1 style='font-size: 400px; margin-top: 250px;'>
+      BAN
+    </h1>
+  </center>"
+
+
 $ () ->
-  return $("#app").html "<center><h1 style='font-size: 400px; margin-top: 250px;'>BAN</h1></center>" if my_profile == -1
+  show_ban_info() if my_profile == -1
   
   unless debug
     console.log = ->
@@ -191,11 +216,13 @@ $ () ->
   bind_urls()
   
   ####### soundManager #######
-  soundManager.url = api_url;
+  soundManager.url = api_url
   # soundManager.preferFlash = true;
-  # soundManager.flashVersion = 9;
-  soundManager.debugMode = false
+  soundManager.flashVersion = 9;
+  soundManager.debugMode = !false
   soundManager.flashPollingInterval = 333
+  soundManager.consoleOnly = true
+  soundManager.waitForWindowLoad = true
   #soundManager.useHighPerformance = true  
   #soundManager.html5PollingInterval = 33
   soundManager.defaultOptions = 
@@ -220,26 +247,21 @@ $ () ->
   soundManager.ontimeout ->
     notify 'Похоже, что плеер завис, перезагрузите страницу! (F5)'
 
-  ####### AJAX SETTINGS #######
-  if $.cookie('user_id')
-    kookies = document.cookie
-  else
-    kookies = false
-
-  $.support.cors = true
   $.ajaxSetup
     cache: false
-    beforeSend: (jqXHR) ->
-      jqXHR.setRequestHeader 'kookies', kookies
+    #beforeSend: (jqXHR) ->
+    #  jqXHR.setRequestHeader 'kookies', kookies
 
   $(document).ajaxError (e, jqxhr, settings, exception) ->
     # console.error arguments
     # console.error jqxhr.responseText
     if jqxhr.status == 403
       if JSON.parse(jqxhr.responseText).error == 'abuse'
-        return notify 'Вы слишком часто обращаетесь к серверу, вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
+        return notify 'Вы слишком часто обращаетесь к серверу,
+          вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
 
-    notify "Упс. Кажется эта функция сейчас не работает. Уже чиним. (#{exception})"
+    notify "Упс. Кажется эта функция сейчас не работает.
+      Уже чиним. (#{exception})"
 
   $('footer').tooltip
     selector: 'span[rel=tooltip]'
@@ -289,7 +311,7 @@ $ () ->
   $('#search_input').keydown (e) ->
     if e.which == 13 # Enter
       query = e.currentTarget.value
-      return notify 'Запрос слишком короткий' if query.length < 3
+      return notify 'Запрос слишком короткий' and $('#search_input').val '' if query.length < 3
       $('#search_input').val ''
       # try search from playlist on client side
       if ps = App.playlists.where(url: query)
@@ -297,3 +319,7 @@ $ () ->
       if ps = App.playlists.where(name: query)
         return App.navigate "/#{ ps[0].get 'url' }", true if ps.length
       App.navigate "/search/#{query}", true
+
+  if qbaka?
+    u = my_profile.user
+    qbaka.user = "#{u.id} #{u.last_name} #{u.first_name}"
