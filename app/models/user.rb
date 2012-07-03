@@ -55,6 +55,12 @@ class User
       playlists_followers
     end
   end
+
+  class << self
+    def find2 id
+      any_of({screen_name: id}, {_id: id.to_i}).first
+    end
+  end
 end
 
 class Hash

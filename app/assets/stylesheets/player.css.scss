@@ -11,7 +11,7 @@
   #load {
     position: absolute;
     overflow: hidden;
-    height: 10px; width: 30%;
+    height: 10px; width: 0%;
     background-color: #CCCED0;
 
     border-top-right-radius: 4px;
@@ -22,7 +22,7 @@
   #play {
     position: absolute;
     //overflow: hidden;
-    height: 10px; width: 10%;
+    height: 10px; width: 0%;
     background-color: #2AB2E2;
 
     border-top-right-radius: 4px;
@@ -38,7 +38,7 @@
     margin: -5px -20px 0 -20px;
     cursor: pointer;
     z-index: 3;
-    left: 111px;
+    left: 0px;
     }
 
   #slider:hover {

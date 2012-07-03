@@ -10,11 +10,15 @@
   
   %body
     = yield
+    - debug = ApplicationController::DEBUG
     - a = cookies['user_id'] ? cookies['user_id'] : 'guest'
+    - qbaka_key = debug ? '0759461fa31b308cf7f4fcaf19cc0b3d' : '81a4e68328770398c68572af93fd3aed'
 
-    :plain
-      <script type="text/javascript">var yaParams = {uid: "#{a}"};</script><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter13060828 = new Ya.Metrika({id:13060828, enableAll: true, webvisor:true,params:window.yaParams||{ }}); } catch(e) {} }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/13060828" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    - unless debug
+      :plain
+        <script type="text/javascript">var yaParams = {uid: "#{a}"};</script><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter13060828 = new Ya.Metrika({id:13060828, enableAll: true, webvisor:true,params:window.yaParams||{ }}); } catch(e) {} }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/13060828" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     
+    :plain
       <script type="text/javascript" id="qbaka">
       (function (w,d) {w.__qbaka_eh = w.onerror;w.__qbaka_reports=[];w.onerror = function () {
       w.__qbaka_reports.push(arguments);};w.qbaka={exec:function(c){try{c()}catch(e){}},report:function(){},
@@ -23,7 +27,7 @@
       reportException:function(){}};var e=d.createElement('script');e.id='qbaka';e.type='text/javascript';
       e.async=!0;e.src='//cdn.qbaka.net/reporting.js';var s=d.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(e, s);w.addEventListener?w.addEventListener("load",w.qbaka._ldr,!1):
-      w.attachEvent("onload", w.qbaka._ldr);qbaka.key='0759461fa31b308cf7f4fcaf19cc0b3d';})(window, document);
+      w.attachEvent("onload", w.qbaka._ldr);qbaka.key="#{qbaka_key}";})(window, document);
       </script>
 
       

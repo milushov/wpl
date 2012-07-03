@@ -12,6 +12,9 @@
           %li
             %a{href: "/popular"} Популярные  
 #app.container
+  - if flash[:error]
+    .alert.alert-error
+      = flash[:error]
   .hero-unit
     %h1 wikiPlaylists
     %p Это супер сервис коллективных плейлистов, скорей заходи и слушай классные плейлисты, которые составили и отобрали для тебя опытные меломаны! (Тестовый слоган). лол

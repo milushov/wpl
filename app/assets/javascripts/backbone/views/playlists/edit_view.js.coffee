@@ -57,12 +57,11 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     pid = @model.get '_id'
     App.vk.editPlaylist pid, App.new_tracks.toJSON(), (data) ->
       return notify data.error if data.error
-      # removing this playlist from our cash
+      # removing this playlist from our 'cash'
       p = App.playlists.getById pid
       i = App.playlists.models.indexOf p
       console.log i
-      delete App.playlists.models[i]
-      App.playlists.models.length -= 1
+      App.playlists.models.splice i, 1
       App.navigate(data.id, true) if data.status  
     ,this
 

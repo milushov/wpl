@@ -7,14 +7,14 @@ class ApplicationController < ActionController::Base
   COUNT_FRIENDS = 0...15
   MAX_REQUERS_PER_SECOND = 2
 
-  APP_ID = ENV['USER'] ? 2999165 : 1111000
+  APP_ID = ENV['USER'] ? 2999165 : 1111000 # development and production app id
   APP_SECRET = '1111000key'
   SETTINGS = 'notify,friends,audio'
   DEV_URL = 'http://playlists.dev:3000/'
   PROD_URL = 'http://wpl.me/'
   APP_URL = ENV['USER'] ? DEV_URL : PROD_URL
   REDIRECT_URI = "#{APP_URL}auth"
-  DEBUG = ENV['USER'] ? true : false
+  DEBUG = ENV['USER'] || 1 ? true : false # temprary
 
 private
   
@@ -51,12 +51,19 @@ private
   # get id of user and return full profile with all friends and playlists
   def getProfile(id)
     return false unless id
-    return false unless user = User.any_of({screen_name: id}, {_id: id.to_i}).first
-    session['ban'] = user.unban_date and return -1 if user.ban
-    
-    mini_statistics user
-      
+    return false unless user = User.find2(id)
 
+    if user.ban
+      session['ban'] = user.unban_date
+      return -1 
+    end
+    
+    # if error occurs when we make request to vk.com
+    resp = mini_statistics user
+    if resp.respond_to?(:kind_of?)
+      return resp if resp.kind_of? Numeric
+    end
+      
     followers = user.all_followers_by_model('User').to_a
     followers_count = user.followers_count_by_model('User') || 0
     
@@ -141,7 +148,7 @@ private
   # return full playlist by id
   def getPlaylist(id)
     return false unless id
-    return false unless playlist = Playlist.any_of({url: id}, {_id: id}).first
+    return false unless playlist = Playlist.find2(id)
     
     followers = playlist.all_followers_by_model('User')  || []
     followers = followers[COUNT_FRIENDS]
@@ -175,7 +182,7 @@ private
     }    
   end
 
-  # simple check authorization for actions which rendering json
+  # simple check authorization for actions which render json
   def check_auth
     error('auth fail', 401) unless isAuth?
     error("ban up to #{session['ban']}", :auth) if session['ban']

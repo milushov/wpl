@@ -57,7 +57,6 @@ window.notify = (message, type = 'error', long_message = false) ->
     modal: if type == 'error' then true else false
   )
 
-
 window.l = (a, b)->
   if not a or arguments.length == 0 then return 'not arguments'
   if arguments.length > 2
@@ -68,14 +67,11 @@ window.l = (a, b)->
     else
       console.log(a)
 
-
 window.title = (mes = 404) ->
   document.title = mes
 
-
 window.curUrl = ()->
   $.url().attr().relative
-
 
 window.bind_urls = ->
   $('a').click (event)->
@@ -95,11 +91,9 @@ window.bind_urls = ->
             return false
         App.navigate(url, true)
 
-
 window.nav = (_this) ->
   url = $(_this).attr 'href'
   return App.navigate url, true
-
 
 window.too_late = 0
 window.loading = (ready = false) ->
@@ -123,12 +117,10 @@ window.loading = (ready = false) ->
       window.too_late = 0
     , fast_operation
 
-
 window.dur = (dur)->
   min = (dur/60).toFixed(0)
   sec = if (dur%60).toString().length == 2 then "#{(dur%60)}" else "0#{(dur%60)}"
   "#{min}:#{sec}"
-
 
 window.trackOver = (_this)->
   $(_this).find(".choose_track").show()
@@ -137,12 +129,10 @@ window.trackOver = (_this)->
 window.trackOut = (_this)->
   $(_this).find(".choose_track").hide()
 
-
 window.playOnce = (_this)->
   json = $(_this).data 'track'
   track = new Playlists.Models.Track json
   App.player.playOnce track
-
 
 window.chooseTrack = (_this)->
   json = $(_this).data 'track'
@@ -159,11 +149,9 @@ window.chooseTrack = (_this)->
   count = App.new_tracks.length
   $('#progress_tracks .bar').width "#{count*20}%"
 
-
 window.make_playlist_url = (_this)->
   name = $(_this).val()
   $('#playlist_url').val(translitUrl(name))
-
 
 window.translitUrl = (url)->
   az = {'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'е':'e', 'ё':'e', 'ж':'zh', 'з':'z', 'и':'i', 'й':'y', 'к':'k', 'л':'l', 'м':'m', 'н':'n', 'о':'o', 'п':'p', 'р':'r', 'с':'s', 'т':'t', 'у':'u', 'ф':'f', 'х':'h', 'ц':'ts', 'ч':'ch', 'ш':'sh', 'щ':'sch', 'ъ':'', 'ь':'', 'ы':'y', 'э':'e', 'ю':'yu', 'я':'ya'}
@@ -175,18 +163,15 @@ window.translitUrl = (url)->
     .replace(/[\s-_]+/g, '-')
     .replace(/(^-|-$)+/g,'')
 
-
 window.linkify = (text) ->
   exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig
   text.replace(exp,"<a href='$1' data-type='ext' target='blank'>$1</a>")
-
 
 window.can_update = (time_str) ->
   return false unless time_str
   diff = (moment().diff(time_str)/1000).toFixed()
   max_time = 4*60*60
   return if diff > max_time then false else true
-
 
 window.show_ban_info = () ->
   return $("#app").html "
@@ -196,40 +181,27 @@ window.show_ban_info = () ->
     </h1>
   </center>"
 
-
-$ () ->
-  show_ban_info() if my_profile == -1
-  
-  unless debug
-    console.log = ->
-    console.warn = ->
-    console.info = ->
-    window.l = ->
-    alert = window.notify
-
-  window.App = new Playlists.Routers.AppRouter(
-    playlists: my_profile['playlists']
-  )
-  
-  Backbone.history.start pushState: true
-
-  bind_urls()
-  
-  ####### soundManager #######
-  soundManager.url = api_url
-  # soundManager.preferFlash = true;
-  soundManager.flashVersion = 9;
-  soundManager.debugMode = !false
-  soundManager.flashPollingInterval = 333
-  soundManager.consoleOnly = true
+window.soundManagerSetup = ->
+  ####### soundManager settings #######
+  soundManager.url = "#{api_url}swf/"
   soundManager.waitForWindowLoad = true
-  #soundManager.useHighPerformance = true  
-  #soundManager.html5PollingInterval = 33
+  soundManager.debugMode = if !debug then true
+  
+  soundManager.preferFlash = true;
+  soundManager.flashVersion = 9;
+
+  soundManager.useHighPerformance = true
+
+  soundManager.html5PollingInterval = 33
+  soundManager.flashPollingInterval = 33
+
   soundManager.defaultOptions = 
     onfinish: -> App.player.model.next()
     onload: -> App.player.model.loadNextTrack()
     whileplaying: -> App.player.updatePlayProgress this.position, this.duration
     whileloading: -> App.player.updateLoadingProgress this.bytesLoaded, this.bytesTotal
+
+  # достасть из localStorage
 
   volume = $.cookie('volume') || 100
   dur_mode = $.cookie('duration_mode') || 'pos'
@@ -239,14 +211,15 @@ $ () ->
   soundManager.onready ->
     App.player = new Playlists.Views.Player.IndexView(
       model: new Playlists.Models.Player(
-        duration_mode: dur_mode,
-        volume: volume
+        volume: volume,
+        duration_mode: dur_mode
       )
     )
 
   soundManager.ontimeout ->
-    notify 'Похоже, что плеер завис, перезагрузите страницу! (F5)'
-
+    notify 'Плеер завис, перезагрузите страницу! (F5)'
+  
+window.ajaxSetup = ->
   $.ajaxSetup
     cache: false
     #beforeSend: (jqXHR) ->
@@ -255,27 +228,39 @@ $ () ->
   $(document).ajaxError (e, jqxhr, settings, exception) ->
     # console.error arguments
     # console.error jqxhr.responseText
+    data = JSON.parse jqxhr.responseText
     if jqxhr.status == 403
-      if JSON.parse(jqxhr.responseText).error == 'abuse'
+      if data.error == 'abuse'
         return notify 'Вы слишком часто обращаетесь к серверу,
           вы случайно не робот? Если да, то мы вас скоро забаним :-)', 'error', true
+      notify "Запрещенное действие.  #{exception}"
+    else if jqxhr.status == 401
+      if data.error == 'auth fail'
+        return notify "Вы почему-то не авторизованы. Обновите страницу. #{exception}"
+      notify "Ошибка авторизации. #{exception}"
+    else
+      notify "Упс, эта функция сломалась. Уже чиним. (#{exception})"
 
-    notify "Упс. Кажется эта функция сейчас не работает.
-      Уже чиним. (#{exception})"
+window.searchSetup = ->
+  $('#search_input').keydown (e) ->
+    if e.which == 13 # Enter
+      query = e.currentTarget.value
+      return notify 'Запрос слишком короткий' and $('#search_input').val '' if query.length < 3
+      $('#search_input').val ''
+      # try search from playlist on client side
+      if ps = App.playlists.where(url: query)
+        return App.navigate query, true if ps.length
+      if ps = App.playlists.where(name: query)
+        return App.navigate ps[0].get('url'), true if ps.length
+      App.navigate "/search/#{query}", true
 
-  $('footer').tooltip
-    selector: 'span[rel=tooltip]'
-    placement: 'right'
-    delay:
-      show: 420, hide: 100
+window.playerSetup = ->
 
-  ####### PLAYER PROGRESS #######
-#  $(".navbar").hover () ->
-#    $('#slider').show()
-#  , () ->
-#      if App.player.update == false
-#        return
-#      setTimeout (-> $('#slider').hide()), 3000
+  $(".navbar").hover () ->
+    $('#slider').show()
+  , () ->
+    return if App.player.update == false
+    $('#slider').hide()
 
   $('#slider').draggable(
     drag: (event, ui) ->
@@ -304,22 +289,45 @@ $ () ->
     percent = cur/all*100
 
     App.player.setPosition percent
-    setTimeout (-> $('#slider').hide()), 3000
+    # setTimeout (-> $('#slider').hide()), 3000
 
 
-  ####### SEARCH #######
-  $('#search_input').keydown (e) ->
-    if e.which == 13 # Enter
-      query = e.currentTarget.value
-      return notify 'Запрос слишком короткий' and $('#search_input').val '' if query.length < 3
-      $('#search_input').val ''
-      # try search from playlist on client side
-      if ps = App.playlists.where(url: query)
-        return App.navigate "/#{query}", true if ps.length
-      if ps = App.playlists.where(name: query)
-        return App.navigate "/#{ ps[0].get 'url' }", true if ps.length
-      App.navigate "/search/#{query}", true
+
+
+
+
+$ () ->
+  if my_profile == -1
+    show_ban_info() 
+  
+  unless debug
+    window.l = console.log = console.warn = console.info = ->
+    window.alert = window.notify
+
+  window.App = new Playlists.Routers.AppRouter(
+    playlists: my_profile['playlists']
+  )
+  
+  Backbone.history.start pushState: true
+
+  bind_urls()
+
+  soundManagerSetup()
+  
+  ajaxSetup()
+
+  $('footer').tooltip
+    selector: 'span[rel=tooltip]'
+    placement: 'right'
+    delay:
+      show: 420, hide: 100
+
+  searchSetup()
+
+  playerSetup()
 
   if qbaka?
     u = my_profile.user
     qbaka.user = "#{u.id} #{u.last_name} #{u.first_name}"
+
+
