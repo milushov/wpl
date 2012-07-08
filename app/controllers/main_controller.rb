@@ -75,10 +75,16 @@ class MainController < ApplicationController
     if response['error'] and response['error_description']
       return render inline: "#{params[:error]} - #{params[:error_description]}"
     else
+      logger.info "Saving obtained token #{response['access_token']} and user_id #{response['user_id']}"
+      logger.info "before #{session[:access_token]}"
       saveToken response['access_token'], response['user_id']
+      logger.info "after #{session[:access_token]}"
+      logger.info "return_to #{params[:return_to]}"
       if params[:return_to]
+        logger.info 'redirect to /return_to'
         redirect_to "/#{params[:return_to]}"
       else
+        logger.info 'redirect to index action'
         redirect_to action: 'index'
       end
     end
@@ -137,6 +143,10 @@ private
     cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
     cookies[:user_id] = {value: user_id, domain: domain, expires: expires}
     cookies[:auth_key] = {value: auth_key, domain: domain, expires: expires}
+    logger.info "saveToken already."
+    logger.info "cookies[:access_token] #{cookies[:access_token]}"
+    logger.info "cookies[:user_id] #{cookies[:user_id]}"
+    logger.info "cookies[:auth_key] #{cookies[:auth_key]}"
   end
 
   def from_vk_or_for_api
