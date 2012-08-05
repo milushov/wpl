@@ -87,7 +87,8 @@ window.bind_urls = ->
           setTimeout (->loading('off')), 15000
         
         if curUrl() == '/new' and App.need_ask
-          if !confirm("#{my_profile.user.first_name}, вы уверены, что хотите покинуть страницу? Несохраненные данные потеряются!")
+          if !confirm("#{my_profile.user.first_name}, вы уверены,
+            что хотите покинуть страницу? Несохраненные данные потеряются!")
             return false
         App.navigate(url, true)
 
@@ -140,7 +141,7 @@ window.chooseTrack = (_this)->
   audio_id = "#{track.get "owner_id"}_#{track.get "aid"}"
   if res = App.new_tracks.where('audio_id': audio_id)
     if res.length
-      name = "#{res[0].get 'artist'} - #{res[0].get 'title'}"
+      name = "#{res[0].get('artist')} - #{res[0].get('title')}"
       return notify "Этот трек <b>#{name}</b> уже есть в плейлисте"
   App.new_tracks.add track
   App.new_playlist_view?.trigger 'track_choosen'
@@ -154,7 +155,16 @@ window.make_playlist_url = (_this)->
   $('#playlist_url').val(translitUrl(name))
 
 window.translitUrl = (url)->
-  az = {'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d', 'е':'e', 'ё':'e', 'ж':'zh', 'з':'z', 'и':'i', 'й':'y', 'к':'k', 'л':'l', 'м':'m', 'н':'n', 'о':'o', 'п':'p', 'р':'r', 'с':'s', 'т':'t', 'у':'u', 'ф':'f', 'х':'h', 'ц':'ts', 'ч':'ch', 'ш':'sh', 'щ':'sch', 'ъ':'', 'ь':'', 'ы':'y', 'э':'e', 'ю':'yu', 'я':'ya'}
+  az = {
+    'а':'a', 'б':'b', 'в':'v', 'г':'g', 'д':'d',
+    'е':'e', 'ё':'e', 'ж':'zh', 'з':'z',
+    'и':'i', 'й':'y', 'к':'k', 'л':'l',
+    'м':'m', 'н':'n', 'о':'o', 'п':'p',
+    'р':'r', 'с':'s', 'т':'t', 'у':'u',
+    'ф':'f', 'х':'h', 'ц':'ts', 'ч':'ch',
+    'ш':'sh', 'щ':'sch', 'ъ':'', 'ь':'',
+    'ы':'y', 'э':'e', 'ю':'yu', 'я':'ya'
+  }
   return url.toLowerCase()
     .replace(/ье|ьё/g, 'je')
     .replace(/ый/g, 'y')

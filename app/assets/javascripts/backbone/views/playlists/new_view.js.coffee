@@ -21,16 +21,39 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     if track_name.length < 2
       return notify 'Название трека слишком короткое'
 
+    loading()
+
     App.vk.searchTracks track_name, 0, (data)->
-      if data.response.tracks
+      if data.response?.tracks
         data.response.tracks.splice 0, 1 # remove first element
+      else if data.error?
+        notify "#{data.error.error_msg} #{data.error.error_code}"
+        if data.error.error_code is 5
+          App.vk.logout()
+          #location.reload()
+
       tracks = data.response.tracks
       
-      return notify 'Ни одного трека не найдено' unless tracks
+      return notify 'Ни одного трека не найдено' and loading('off') unless tracks
+
+      lastfm.api.artist_info tracks[0].artist, (data) =>
+        if data.artist? and data.artist.image[1]['#text'] isnt ''
+          artist_photo = data.artist.image[1]['#text']
+        else
+          # lastfm.api.track_info tracks[0].artist, tracks[0].title, (data) =>
+            # console.log data
+
+        for track in tracks
+          track.artist_photo = artist_photo || '/assets/default.jpg'
+
+        @$('#searched_tracks').html(
+          new Playlists.Views.Tracks.FoundTracksView(tracks).render().el
+        )
+
+        @$('#searched_tracks').show()
         
-      @$('#searched_tracks').html(
-        new Playlists.Views.Tracks.FoundTracksView(tracks).render().el
-      )
+        loading('off')
+
     ,this
 
   updateTracks: ->
@@ -38,7 +61,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
     $('#tracks').empty()
     for track in App.new_tracks.models
       track.set audio_id: "#{track.get "owner_id"}_#{track.get "aid"}"
-      track.set artist_photo: '/assets/default.jpg'
+      # track.set artist_photo: '/assets/default.jpg'
       $('#tracks').append(
         new Playlists.Views.Tracks.TrackView(model: track).render().el
       )

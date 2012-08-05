@@ -21,10 +21,11 @@
       #progress_tracks.progress.progress-striped.progress-success.fl_l{ rel: 'popover', data-content: 'Для создания плейлиста нужно загрузить как минимум 5 музыкальных треков', data-original-title: '<b>Внимание</b>', data-placement: 'left' }
         .bar{style: 'width: 5%;'}
       #track_seacher.input-append.fl_r.clear
-        %input.span3{type: 'text', placeholder: 'Название трека', onkeypress: "if(event.which == 13 || event.keyCode == 13) {$('#track_seacher a').click();}", value: 'каста'} 
+        - str = "if(event.which == 13 || event.keyCode == 13){$('#track_seacher a').click();}"
+        %input.span3{type: 'text', placeholder: 'Название трека', onkeypress: str, value: 'каста'} 
         %a.btn.btn-primary{style: 'margin: 0 0 0 -4px;'} Найти трек
 
-    #searched_tracks
+    #searched_tracks{style: "display: none; padding: 0 10px 10px; background-color: #F8F8F8;border-radius: 5px;border: 1px #CCC solid;border-bottom: 1px solid #D9D9D9;border-top: 1px solid #E4E4E4;border-left: 1px solid #DFDFDF;border-right: 1px solid #DFDFDF;box-shadow: 0 1px 2px #F7F7F7;"}
 
     #tracks
 
