@@ -149,7 +149,6 @@ class Playlists.Models.Player extends Backbone.Model
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
 
-
   now_playing: ->
     return false unless track = @get('cur_track')
     
@@ -157,23 +156,40 @@ class Playlists.Models.Player extends Backbone.Model
     title = track.get('title')
 
     lastfm.api.now_playing artist, title, (resp) ->
-      console.log resp, "трек #{artist}: #{title} сейчас играет"
+      if resp.nowplaying? 
+        console.log resp, "трек #{artist}: #{title} сейчас играет"
+      else if resp.error?
+        if resp.error is 9
+          alert 'Сессия last.fm устарела. Нужно перезагрузиться.'
+          clear_lastfm_session(true) and lastfm.settings.get_auth_token()
+        else if resp.error in [1..30]
+          throw new Error 'Error last.fm API'
 
     @scrobble()
 
   scrobble: ->
     return false unless track = @get('cur_track')
+    
     delay = (track.get('duration') * lastfm.settings.scrobbing_perc | 0) * 1000
-    console.log delay
 
     setTimeout () =>
       if track.get('audio_id') is @get('cur_track').get('audio_id')
         artist = track.get('artist')
         title = track.get('title')
         lastfm.api.scrobble artist, title, (resp) ->
-          console.log resp, "трек #{artist}: #{title} заскроблен"
+          if resp.scrobbles? 
+            if resp.scrobbles['@attr'].accepted is 1
+              console.log resp, "трек #{artist}: #{title} заскроблен"
+            else if resp.scrobbles['@attr'].ignored is 1
+              console.log resp, "трек #{artist}: #{title} проигнорирован last.fm"
+          else if resp.error?
+            if resp.error is 9
+              alert 'Сессия last.fm устарела. Нужно перезагрузиться.'
+              clear_lastfm_session() and lastfm.settings.get_auth_token()
+            else if resp.error in [1..30]
+              throw new Error 'Error last.fm API'
       else
-        console.log 'трек переключили слишком быстро, скробить не будем'
+        console.log 'трек #{artist}: #{title} переключили слишком быстро, скробить не будем'
     , delay
 
 

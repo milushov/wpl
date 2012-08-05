@@ -297,6 +297,7 @@ lastfm.settings =
   api_key        : 'e05ce4a3913e89f05cbed944d8a53851',
   api_secret     : 'dc37074d34defcf7a5f9b96192b26ae2'
   auth_url       :  -> "#{@_auth_url}/?api_key=#{@api_key}",
+  get_auth_token : -> location.href = @auth_url()
   session_key    : if sk = localStorage.session_key then sk else null
   session_name   : if ln = localStorage.session_name then ln else null
   scrobbing_perc : .7
@@ -305,6 +306,13 @@ window.lastfmSetup = ->
   lastfm.api = new LastFM lastfm.settings.api_key, lastfm.settings.api_secret
   lastfm.api.session.key = localStorage.session_key || null
   lastfm.api.session.name = localStorage.session_name || null
+
+window.clear_lastfm_session = ->
+  delete lastfm.api.session.key
+  delete lastfm.api.session.name 
+
+  delete localStorage.session_key
+  delete localStorage.session_name
 
 window.userSetup = ->
   

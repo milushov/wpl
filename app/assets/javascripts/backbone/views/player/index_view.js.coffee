@@ -98,7 +98,7 @@ class Playlists.Views.Player.IndexView extends Backbone.View
       sec = "#{(dur-pos)%60}"
       if sec.length is 1
         sec = '0' + sec
-      dur_neg = "#{min}:#{sec}"
+      dur_neg = "-#{min}:#{sec}"
 
     $("#track_info #duration").text(dur_pos or dur_neg)
 
