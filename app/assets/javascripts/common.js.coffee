@@ -259,7 +259,7 @@ window.playerSetup = ->
   $(".navbar").hover () ->
     $('#slider').show()
   , () ->
-    return if App.player.update == false
+    return if App.player?.update == false
     $('#slider').hide()
 
   $('#slider').draggable(
@@ -291,9 +291,31 @@ window.playerSetup = ->
     App.player.setPosition percent
     # setTimeout (-> $('#slider').hide()), 3000
 
+window.lastfm = {}
+lastfm.settings =
+  _auth_url      : 'http://www.last.fm/api/auth'
+  api_key        : 'e05ce4a3913e89f05cbed944d8a53851',
+  api_secret     : 'dc37074d34defcf7a5f9b96192b26ae2'
+  auth_url       :  -> "#{@_auth_url}/?api_key=#{@api_key}",
+  session_key    : if sk = localStorage.session_key then sk else null
+  session_name   : if ln = localStorage.session_name then ln else null
+  scrobbing_perc : .7
 
+window.lastfmSetup = ->
+  lastfm.api = new LastFM lastfm.settings.api_key, lastfm.settings.api_secret
+  lastfm.api.session.key = localStorage.session_key || null
+  lastfm.api.session.name = localStorage.session_name || null
 
+window.userSetup = ->
+  
+  settigs_lastfm_enable = true
 
+  if my_profile?
+    my_profile.settings =
+      lastfm:
+        enable: settigs_lastfm_enable and localStorage.session_key?
+      twitter:
+        enable: false
 
 
 $ () ->
@@ -308,8 +330,6 @@ $ () ->
     playlists: my_profile['playlists']
   )
   
-  Backbone.history.start pushState: true
-
   bind_urls()
 
   soundManagerSetup()
@@ -324,10 +344,14 @@ $ () ->
 
   searchSetup()
 
+  userSetup()
+
   playerSetup()
+
+  lastfmSetup()
 
   if qbaka?
     u = my_profile.user
     qbaka.user = "#{u.id} #{u.last_name} #{u.first_name}"
 
-
+  Backbone.history.start pushState: true

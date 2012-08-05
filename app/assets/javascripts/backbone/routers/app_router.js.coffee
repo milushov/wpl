@@ -5,16 +5,18 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     ':url/edit'       : 'editPlaylist'
     'tag/:tag'        : 'getPlaylistsByTag'
     'search/:query'   : 'searchPlaylists'
+    'settings/lastfm/auth?token=:token' : 'lastfmAuth'
     'new'             : 'newPlaylist'
     'last'            : 'getLastPlaylists'
     'popular'         : 'getPopularPlaylists'
+    'settings'        : 'showSettings'
     ':url'            : 'getPlaylist'
     '.*'              : 'myProfile'
     '?*splat'         : 'from_vk'
     '*actions'        : 'notFound'
 
   from_vk: (a = null)->
-    # нужно будет сделать отдельную версию для vk.com
+    # TODO нужно будет сделать отдельную версию для vk.com
     # @myProfile()
 
   initialize: (options)->
@@ -256,6 +258,31 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     , 'json'
 
     @ok()
+
+  showSettings: ->
+    console.log 'showSettings()'
+    $('#app').html new Playlists.Views.Settings.IndexView().render().el
+
+  lastfmAuth: (token) ->
+    lastfm.api.authorize token, (resp) ->
+      if resp.session
+        session_key = resp.session.key
+        name = resp.session.name
+
+        localStorage.session_key = session_key
+        localStorage.session_name = name
+
+        lastfm.settings.session_key = session_key
+        lastfm.settings.session_name = name
+
+        my_profile.settings.lastfm.enable = true
+        App.navigate 'settings', true
+      else
+        notify resp.message
+        if resp.error is 4
+          alert 'last.fm токен прокис, авторизуемся еще раз'
+          location.href = lastfm.settings.auth_url()
+
 
   notFound: ->
     $('#app').html "<center><h1 style='font-size: 600px; margin-top: 250px;'>404</h1></center>"

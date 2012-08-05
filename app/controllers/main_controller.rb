@@ -125,7 +125,8 @@ private
   # first step: request code, which is required for getting auth token
   def requestAuth(return_to = nil)
     redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-    redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
+    redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }"+
+      "&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
   end
 
   # сохраняет access_token, user_id, auth_key в сессии, куке

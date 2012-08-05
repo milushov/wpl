@@ -49,12 +49,14 @@ class Playlists.Models.Player extends Backbone.Model
       @set cur_track: track
       App.player.trigger 'show_track_name'
       @createSound track, 'play'
+      @now_playing()
     ,this
 
   playOnce: (track) ->
     @set once: track
     #App.player.trigger 'show_track_name'
     @createSound track, 'play'
+    @now_playing()
 
   togglePause: () ->
     if track = @get 'once'
@@ -79,6 +81,7 @@ class Playlists.Models.Player extends Backbone.Model
       @set cur_track: prev
       App.player.trigger 'show_track_name'
       @createSound prev, 'play'
+      @now_playing()
     ,this
 
   next: ->
@@ -103,6 +106,7 @@ class Playlists.Models.Player extends Backbone.Model
       @set cur_track: next
       App.player.trigger 'show_track_name'
       @createSound next, 'play'
+      @now_playing()
     ,this
 
   loadNextTrack: ->
@@ -144,3 +148,33 @@ class Playlists.Models.Player extends Backbone.Model
 
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
+
+
+  now_playing: ->
+    return false unless track = @get('cur_track')
+    
+    artist = track.get('artist')
+    title = track.get('title')
+
+    lastfm.api.now_playing artist, title, (resp) ->
+      console.log resp, "трек #{artist}: #{title} сейчас играет"
+
+    @scrobble()
+
+  scrobble: ->
+    return false unless track = @get('cur_track')
+    delay = (track.get('duration') * lastfm.settings.scrobbing_perc | 0) * 1000
+    console.log delay
+
+    setTimeout () =>
+      if track.get('audio_id') is @get('cur_track').get('audio_id')
+        artist = track.get('artist')
+        title = track.get('title')
+        lastfm.api.scrobble artist, title, (resp) ->
+          console.log resp, "трек #{artist}: #{title} заскроблен"
+      else
+        console.log 'трек переключили слишком быстро, скробить не будем'
+    , delay
+
+
+

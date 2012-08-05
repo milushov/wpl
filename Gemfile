@@ -11,16 +11,19 @@ gem 'heroku'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-	gem 'sass-rails',   '~> 3.2.3'
-	gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
 
-	# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-	# gem 'therubyracer'
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer'
 
-	gem 'uglifier', '>= 1.0.3'
-	gem 'haml_coffee_assets'
+  gem 'uglifier', '>= 1.0.3'
   gem 'execjs'
 end
+
+# moved from assets block, because this:
+# https://github.com/netzpirat/haml_coffee_assets/issues/59
+gem 'haml_coffee_assets' 
 
 gem 'jquery-rails'
 
@@ -51,7 +54,7 @@ gem 'rails-backbone'
 gem 'yajl-ruby'
 gem 'vk-ruby', git: 'git://github.com/milushov/vk-ruby.git'
 gem 'mongoid_search'
-gem 'newrelic_rpm'
+# gem 'newrelic_rpm'
 
 # gem 'mongoid-simple-tags', '0.0.5', git: 'git://github.com/thrk/mongoid-simple-tags.git'
 

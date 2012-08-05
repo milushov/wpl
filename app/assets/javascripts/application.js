@@ -14,19 +14,24 @@
 //= require jquery_ujs
 //= require jquery.cookie
 //= require jquery.url
-//= require moment.min
-//= require bootstrap.min
+//= require jquery-ui.min
+//= require jquery.scrollTo-min
+//= require jquery.noty
+
+//= require hamlcoffee
 //= require underscore-min
 //= require backbone-min
-//= require hamlcoffee
-//= require common
+//= require bootstrap.min
+//= require moment.min
+//= require soundmanager2-jsmin
+//= require tag-it
+//= require Name
+//= require lastfm/manifest
+
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/playlists
-//= require soundmanager2-jsmin
-//= require jquery-ui.min
-//= require tag-it
-//= require jquery.noty
-//= require Name
-//= require jquery.scrollTo-min
+
+//= require common
+
 //= require_tree .

@@ -1,0 +1,7 @@
+- if @lastfm_enable
+  %a.lastfm.btn.btn-danger
+    %i.icon-ok.icon-white
+    Скробинг включен
+    %span.label.label-info=@lastfm_name
+- else
+  %a.lastfm.btn.btn-primary Включить скробинг
