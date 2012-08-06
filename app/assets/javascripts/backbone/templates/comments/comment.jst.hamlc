@@ -39,6 +39,6 @@
     .content
       = @content
     .date.fl_l
-      %a{rel: 'tooltip', data-original-options: "{placement: 'right'}", data-original-title: moment(@created_at).format(format) } }
+      %a{rel: 'tooltip', data-original-options: "{placement: 'right'}", data-original-title: moment(@created_at).format(format) }
         = moment(@created_at).fromNow()
     %a.reply_btn.btn.btn-mini.fl_r{ data-reply_to: @_id } Ответить
