@@ -6,10 +6,11 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
   events :
     'mouseover' : 'showVoteButtons'
     'mouseout' : 'hideVoteButtons'
-    'click .play_btn' : 'play'
+    # 'click .play_btn' : 'play'
     'click .up a'     : 'like'
     'click .down a'   : 'hate'
     'click .destroy'  : 'destroy'
+    'click' : 'play'
 
   tagName: 'div'
   className: 'track'
@@ -18,6 +19,7 @@ class Playlists.Views.Tracks.TrackView extends Backbone.View
     @model = @options.model
     @options = null
     $(@el).attr 'id', "track_id-#{ @model.get("_id") }"
+    $(@el).css 'cursor', 'pointer'
 
   showVoteButtons: ->
     $(@el).find('.lovers').hide()
