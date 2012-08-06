@@ -262,6 +262,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   showSettings: ->
     console.log 'showSettings()'
     $('#app').html new Playlists.Views.Settings.IndexView().render().el
+    $('#scrobbling_off').width $('#scrobbling_on').width() + 'px'
 
   lastfmAuth: (token) ->
     lastfm.api.authorize token, (resp) ->

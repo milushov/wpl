@@ -64,12 +64,39 @@ LastFM.prototype.authorize = function(token, callback) {
  */
 LastFM.prototype.artist_info = function(artist, callback) {
     autocorrect = true
-
+    //username = 'durov'
     var params = {
         'api_key': this.API_KEY,
         'method': "artist.getInfo",
         'artist': artist,
-        'autocorrect': autocorrect,
+        'autocorrect': autocorrect
+    };
+
+    params.api_sig = this._req_sign(params);
+    params.format = "json";
+
+    this._xhr("POST", params, 
+        function(result) {
+            callback(result);
+        });     
+};
+
+/**
+ * Gets track info
+ *
+ * @param track Track title
+ * @param artist Track artist
+ * @param callback Callback function for the request. Sends a parameter with
+ *                 reply decoded as JS object from JSON on null on error
+ */
+LastFM.prototype.track_info = function(artist, track, callback) {
+    autocorrect = true
+    var params = {
+        'api_key': this.API_KEY,
+        'method': "track.getInfo",
+        'artist': artist,
+        'track': track,
+        'autocorrect': autocorrect
     };
 
     params.api_sig = this._req_sign(params);
