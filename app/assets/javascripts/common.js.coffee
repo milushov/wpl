@@ -70,8 +70,13 @@ window.l = (a, b)->
 window.title = (mes = 404) ->
   document.title = mes
 
-window.curUrl = ()->
-  $.url().attr().relative
+window.curUrl = (what) ->
+  switch what
+    when 'playlist' then return $.url().segment(1)
+    when 'track' then return $.url().param('track')
+    when 'user' then return $.url().segment(2)
+    else return false
+  
 
 window.bind_urls = ->
   $('a').click (event)->
@@ -195,7 +200,7 @@ window.soundManagerSetup = ->
   ####### soundManager settings #######
   soundManager.url = "#{api_url}swf/"
   soundManager.waitForWindowLoad = true
-  soundManager.debugMode = if !debug then true
+  soundManager.debugMode = false #if !debug then true
   
   soundManager.preferFlash = true;
   soundManager.flashVersion = 9;
@@ -373,3 +378,8 @@ $ () ->
     qbaka.user = "#{u.id} #{u.last_name} #{u.first_name}"
 
   Backbone.history.start pushState: true
+
+  # temporary monkey bug fix
+  setInterval( (-> $('.tooltip').remove()), 60*1000)
+
+
