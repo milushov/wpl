@@ -3,6 +3,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'u/:user_id'      : 'getUserProfile'
     ':url/comments'   : 'showComments'
     ':url/edit'       : 'editPlaylist'
+    ':url?track=:track' : 'getTrack'
     'tag/:tag'        : 'getPlaylistsByTag'
     'search/:query'   : 'searchPlaylists'
     'settings/lastfm/auth?token=:token' : 'lastfmAuth'
@@ -106,6 +107,14 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @showPlaylist(playlist)
     else
       @vk.getPlaylist(url)
+
+  getTrack: (url, track_id) ->
+    @instant_play = track_id
+
+    if playlist = @playlists.getByUrl(url)
+      @showPlaylist(playlist)
+    else
+      @vk.getPlaylist(url)
   
   editPlaylist: (url) ->
     playlist = @playlists.getByUrl(url)
@@ -152,7 +161,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     $('#app').html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
-    @navigate playlist.get 'url'
+    # @navigate playlist.get 'url'
     return @ok()
 
   showComments: (url) ->
