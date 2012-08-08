@@ -18,6 +18,9 @@ class Playlists.Models.Player extends Backbone.Model
     if App.playlists.getByUrl(curUrl('playlist'))?
       @playlist = App.playlists.getByUrl(curUrl('playlist'))
 
+      if track_id = App.instant_play
+        @play @playlist.tracks.getById(track_id)
+
   reset: ->
     soundManager.reboot()
 
