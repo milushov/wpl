@@ -67,6 +67,7 @@ class Playlists.Views.Playlists.NewView extends Backbone.View
       )
       l track
     $('#searched_tracks').empty()
+    $('#searched_tracks').hide()
 
   savePlaylist: ->
     console.log 'Views.Playlists.NewView savePlaylist()'
