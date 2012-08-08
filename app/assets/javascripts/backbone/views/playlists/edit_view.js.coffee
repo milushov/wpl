@@ -56,11 +56,12 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     # $('#tracks').empty()
     track = App.new_tracks.models[App.new_tracks.models.length-1]
     track.set audio_id: "#{track.get "owner_id"}_#{track.get "aid"}"
-    track.set artist_photo: '/assets/default.jpg'
+    # track.set artist_photo: '/assets/default.jpg'
     $('#tracks').append(
       new Playlists.Views.Tracks.TrackView(model: track).render().el
     )
     $('#searched_tracks').empty()
+    $('#searched_tracks').hide()
 
   savePlaylist: ->
     console.log 'Views.Playlists.NewView savePlaylist()'
@@ -84,7 +85,10 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     ,this
 
   render: ->    
-    url = @model.get 'url'
+    # FIXME temprary bagfix
+    unless url = @model.get('url')
+      location.href = '/'+ $.url().segment(1)
+
     i_follow = false
     if my_profile.playlists.length != 0
       i_follow = p for p in my_profile.playlists when p.url == url
