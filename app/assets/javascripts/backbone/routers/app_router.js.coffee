@@ -3,6 +3,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     'u/:user_id'      : 'getUserProfile'
     ':url/comments'   : 'showComments'
     ':url/edit'       : 'editPlaylist'
+    ':url?track=:track' : 'getTrack'
     'tag/:tag'        : 'getPlaylistsByTag'
     'search/:query'   : 'searchPlaylists'
     'settings/lastfm/auth?token=:token' : 'lastfmAuth'
@@ -106,6 +107,14 @@ class Playlists.Routers.AppRouter extends Backbone.Router
       @showPlaylist(playlist)
     else
       @vk.getPlaylist(url)
+
+  getTrack: (url, track_id) ->
+    @instant_play = track_id
+
+    if playlist = @playlists.getByUrl(url)
+      @showPlaylist(playlist)
+    else
+      @vk.getPlaylist(url)
   
   editPlaylist: (url) ->
     playlist = @playlists.getByUrl(url)
@@ -152,7 +161,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     $('#app').html( new Playlists.Views.Playlists.ShowView(
       model: playlist
     ).render().el )
-    @navigate playlist.get 'url'
+    # @navigate playlist.get 'url'
     return @ok()
 
   showComments: (url) ->
@@ -164,8 +173,10 @@ class Playlists.Routers.AppRouter extends Backbone.Router
     # BUG: way, when i use fetch method for obtain comments - not work!
     if playlist.comments.length == 0
       playlist.fetch
+      loading()
       @vk.getComments playlist.get('url'), 0, 10, (data) ->
-        return notify data.error if data.error
+        if data.error
+          return notify data.error
         
         playlist.comments.add data if data.comments?.length != 0
         playlist.comments.url = "#{playlist.url()}/comments"
@@ -262,6 +273,7 @@ class Playlists.Routers.AppRouter extends Backbone.Router
   showSettings: ->
     console.log 'showSettings()'
     $('#app').html new Playlists.Views.Settings.IndexView().render().el
+    $('#scrobbling_off').width $('#scrobbling_on').width() + 'px'
 
   lastfmAuth: (token) ->
     lastfm.api.authorize token, (resp) ->

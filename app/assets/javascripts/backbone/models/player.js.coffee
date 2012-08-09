@@ -14,6 +14,13 @@ class Playlists.Models.Player extends Backbone.Model
     @set duration_mode: opts.duration_mode
     @set volume: opts.volume
 
+    # for experiments.. 
+    if App.playlists.getByUrl(curUrl('playlist'))?
+      @playlist = App.playlists.getByUrl(curUrl('playlist'))
+
+      if track_id = App.instant_play
+        @play @playlist.tracks.getById(track_id)
+
   reset: ->
     soundManager.reboot()
 
@@ -22,9 +29,12 @@ class Playlists.Models.Player extends Backbone.Model
       audio_id = track.get 'audio_id'
       playlist_id = track.get 'playlist_id'
     else
-      @playlist = App.playlists.getByUrl curUrl()[1..]
-      audio_id = @playlist.tracks.at(0).get 'audio_id'
+      @playlist = App.playlists.getByUrl curUrl('playlist')
+      audio_id = @playlist.tracks.at(0)?.get 'audio_id'
       playlist_id = @playlist.get '_id'
+      
+      unless audio_id # fuck the police!11
+        return notify 'Треков для воспроизведения нет.'
 
     if not @playlist? or @playlist?.get('_id') isnt playlist_id
       @playlist = App.playlists.getById playlist_id
@@ -50,6 +60,7 @@ class Playlists.Models.Player extends Backbone.Model
       App.player.trigger 'show_track_name'
       @createSound track, 'play'
       @now_playing()
+      App.player.trigger('highlight_cur_track')
     ,this
 
   playOnce: (track) ->
@@ -57,6 +68,7 @@ class Playlists.Models.Player extends Backbone.Model
     #App.player.trigger 'show_track_name'
     @createSound track, 'play'
     @now_playing()
+    App.player.trigger('highlight_cur_track')
 
   togglePause: () ->
     if track = @get 'once'
@@ -74,7 +86,6 @@ class Playlists.Models.Player extends Backbone.Model
     cur_track =  @get('cur_track')
     soundManager.destroySound cur_track.smid()
     prev = @playlist.tracks.getPrev cur_track.get('audio_id')
-
     App.vk.getTrackData prev.get('audio_id'), (data) ->
       if data.response
         prev.set url: data.response[0].url || @fail_url
@@ -82,6 +93,7 @@ class Playlists.Models.Player extends Backbone.Model
       App.player.trigger 'show_track_name'
       @createSound prev, 'play'
       @now_playing()
+      App.player.trigger('highlight_cur_track')
     ,this
 
   next: ->
@@ -98,7 +110,7 @@ class Playlists.Models.Player extends Backbone.Model
       soundManager.play next.smid()
       @set cur_track: @next if @next
       delete @next
-      return
+      return App.player.trigger('highlight_cur_track')
 
     App.vk.getTrackData next.get('audio_id'), (data) ->
       if data.response
@@ -107,6 +119,7 @@ class Playlists.Models.Player extends Backbone.Model
       App.player.trigger 'show_track_name'
       @createSound next, 'play'
       @now_playing()
+      App.player.trigger('highlight_cur_track')
     ,this
 
   loadNextTrack: ->
@@ -149,7 +162,6 @@ class Playlists.Models.Player extends Backbone.Model
   memory: ->
     (soundManager.getMemoryUse()/1024/1024).toFixed(2) + " mb"
 
-
   now_playing: ->
     return false unless track = @get('cur_track')
     
@@ -157,23 +169,40 @@ class Playlists.Models.Player extends Backbone.Model
     title = track.get('title')
 
     lastfm.api.now_playing artist, title, (resp) ->
-      console.log resp, "трек #{artist}: #{title} сейчас играет"
+      if resp.nowplaying? 
+        console.log resp, "трек #{artist}: #{title} сейчас играет"
+      else if resp.error?
+        if resp.error is 9
+          alert 'Сессия last.fm устарела. Нужно перезагрузиться.'
+          clear_lastfm_session(true) and lastfm.settings.get_auth_token()
+        else if resp.error in [1..30]
+          throw new Error 'Error last.fm API'
 
     @scrobble()
 
   scrobble: ->
     return false unless track = @get('cur_track')
+    
     delay = (track.get('duration') * lastfm.settings.scrobbing_perc | 0) * 1000
-    console.log delay
 
     setTimeout () =>
       if track.get('audio_id') is @get('cur_track').get('audio_id')
         artist = track.get('artist')
         title = track.get('title')
         lastfm.api.scrobble artist, title, (resp) ->
-          console.log resp, "трек #{artist}: #{title} заскроблен"
+          if resp.scrobbles? 
+            if resp.scrobbles['@attr'].accepted is 1
+              console.log resp, "трек #{artist}: #{title} заскроблен"
+            else if resp.scrobbles['@attr'].ignored is 1
+              console.log resp, "трек #{artist}: #{title} проигнорирован last.fm"
+          else if resp.error?
+            if resp.error is 9
+              alert 'Сессия last.fm устарела. Нужно перезагрузиться.'
+              clear_lastfm_session() and lastfm.settings.get_auth_token()
+            else if resp.error in [1..30]
+              throw new Error 'Error last.fm API'
       else
-        console.log 'трек переключили слишком быстро, скробить не будем'
+        console.log "трек #{artist}: #{title} переключили слишком быстро, скробить не будем"
     , delay
 
 

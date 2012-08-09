@@ -169,9 +169,14 @@ private
 
       playlist.tracks.map! do |track|
         track[:lovers] = track[:lovers].reverse[0...5]
+        track[:real_lovers_count] = track.lovers.count
+        track[:real_haters_count] = track.haters.count
         ts += track[:lovers]
         track
       end
+
+      # we don't need to show banned tracks
+      playlist.tracks.keep_if{ |track| not track.haters.include?(session[:user_id].to_i) }
 
       playlists << {
         _id: playlist.id.to_s,
@@ -192,8 +197,6 @@ private
     playlists.each do |playlist|
       playlist[:followers] = playlist[:followers][COUNT_FRIENDS].map { |id| playlists_followers[id] }
       playlist[:tracks].each do |track|
-        track[:real_lovers_count] = track.lovers.count
-        track[:real_haters_count] = track.haters.count
         track[:lovers].map! do |id|
           playlists_followers[id].show without: %w{ photo_big last_name }
         end

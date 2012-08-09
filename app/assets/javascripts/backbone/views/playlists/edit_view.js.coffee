@@ -19,18 +19,36 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     if track_name.length < 2
       return notify 'Название трека слишком короткое'
 
+    loading()
+
     App.vk.searchTracks track_name, 0, (data)->
-      if data.error
-        return notify data.error.error_msg + ' Перезагрузите страничку (F5)'
-      if data.response.tracks
+      if data.response?.tracks
         data.response.tracks.splice 0, 1 # remove first element
+      else if data.error?
+        notify "#{data.error.error_msg} #{data.error.error_code}"
+        if data.error.error_code is 5
+          App.vk.logout()
+          #location.reload()
+
       tracks = data.response.tracks
       
-      return notify 'Ни одного трека не найдено' unless tracks
+      return notify 'Ни одного трека не найдено' and loading('off') unless tracks
+
+      lastfm.api.artist_info tracks[0].artist, (data) =>
+        if data.artist? and data.artist.image[1]['#text'] isnt ''
+          artist_photo = data.artist.image[1]['#text']
+
+        for track in tracks
+          track.artist_photo = artist_photo || '/assets/default.jpg'
+
+        @$('#searched_tracks').html(
+          new Playlists.Views.Tracks.FoundTracksView(tracks).render().el
+        )
+
+        @$('#searched_tracks').show()
         
-      @$('#searched_tracks').html(
-        new Playlists.Views.Tracks.FoundTracksView(tracks).render().el
-      )
+        loading('off')
+
     ,this
 
   updateTracks: ->
@@ -38,11 +56,12 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     # $('#tracks').empty()
     track = App.new_tracks.models[App.new_tracks.models.length-1]
     track.set audio_id: "#{track.get "owner_id"}_#{track.get "aid"}"
-    track.set artist_photo: '/assets/default.jpg'
+    # track.set artist_photo: '/assets/default.jpg'
     $('#tracks').append(
       new Playlists.Views.Tracks.TrackView(model: track).render().el
     )
     $('#searched_tracks').empty()
+    $('#searched_tracks').hide()
 
   savePlaylist: ->
     console.log 'Views.Playlists.NewView savePlaylist()'
@@ -66,7 +85,10 @@ class Playlists.Views.Playlists.EditView extends Backbone.View
     ,this
 
   render: ->    
-    url = @model.get 'url'
+    # FIXME temprary bagfix
+    unless url = @model.get('url')
+      location.href = '/'+ $.url().segment(1)
+
     i_follow = false
     if my_profile.playlists.length != 0
       i_follow = p for p in my_profile.playlists when p.url == url

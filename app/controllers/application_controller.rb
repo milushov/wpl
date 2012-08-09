@@ -162,6 +162,9 @@ private
 
       track
     end
+
+    # we don't need to show banned tracks
+    playlist.tracks.keep_if{ |track| not track.haters.include?(session[:user_id].to_i) }
     
     lovers = User.getByIds lovers_ids
 

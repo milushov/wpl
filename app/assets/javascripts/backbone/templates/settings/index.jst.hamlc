@@ -1,7 +1,13 @@
 - if @lastfm_enable
-  %a.lastfm.btn.btn-danger
+  %a.lastfm.btn.btn-danger#scrobbling_on{style: 'display: inline-block;', onMouseOver: "$('#scrobbling_on').css('display', 'none'); $('#scrobbling_off').css('display', 'inline-block');"}
     %i.icon-ok.icon-white
     Скробинг включен
     %span.label.label-info=@lastfm_name
+
+  %a.lastfm.btn#scrobbling_off{style: 'display: none;', onMouseOut: "$('#scrobbling_on').css('display', 'inline-block'); $('#scrobbling_off').css('display', 'none');"}
+    %i.icon-remove
+    Выключить
 - else
-  %a.lastfm.btn.btn-primary Включить скробинг
+  %a.lastfm.btn.btn-danger
+    %i.icon-list.icon-white
+    Включить скробинг

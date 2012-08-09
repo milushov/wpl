@@ -1,6 +1,6 @@
 - audio_id =  "#{@owner_id}_#{@aid}"
 .track.found_track{id: "track-#{audio_id}", onMouseOver: "trackOver(this);", onMouseOut: "trackOut(this);" }
-  .play_btn_wrap.fl_l{style: "background-image: url(/assets/default.jpg);"}
+  .play_btn_wrap.fl_l{style: "background-image: url(#{@artist_photo}); background-size: 32px;"}
     .play_btn{data: {track: @json}, onClick: "playOnce(this);"}
   .info.fl_l
     .track_name.fl_l

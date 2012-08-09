@@ -192,6 +192,11 @@ class Playlists.Models.Vk extends Backbone.Model
     $.cookie('access_token', access_token, { expires: expires_in });
     $.cookie('user_id', user_id, { expires: expires_in });
 
+  # erase access_token from cookie
+  logout: ->
+    domain = if debug then '.playlists.dev' else '.wpl.me'
+    $.cookie('access_token', null, {domain: domain})
+
   getCookies: ->
     access_token: $.cookie('access_token')
     user_id: $.cookie('user_id')

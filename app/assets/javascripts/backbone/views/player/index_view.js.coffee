@@ -19,6 +19,7 @@ class Playlists.Views.Player.IndexView extends Backbone.View
 
     @.on 'show_track_name', -> @showTrackName()
     @.on 'toggle_pause', -> @togglePause('auto')
+    @.on 'highlight_cur_track', -> @highlightTrack()
 
   togglePause: (how) ->
     if how and how == 'auto'
@@ -26,11 +27,11 @@ class Playlists.Views.Player.IndexView extends Backbone.View
     else
       @model.togglePause()
 
-  play: (track) ->
+  play: (track = null) ->
     @model.play(track)
     @showProgressLine()
   
-  playOnce: (track) ->
+  playOnce: (track = null) ->
     @model.playOnce(track)
     @showProgressLine()
 
@@ -98,7 +99,7 @@ class Playlists.Views.Player.IndexView extends Backbone.View
       sec = "#{(dur-pos)%60}"
       if sec.length is 1
         sec = '0' + sec
-      dur_neg = "#{min}:#{sec}"
+      dur_neg = "-#{min}:#{sec}"
 
     $("#track_info #duration").text(dur_pos or dur_neg)
 
@@ -118,3 +119,22 @@ class Playlists.Views.Player.IndexView extends Backbone.View
 
   hideProgressLine: () ->
     $('#progress_line').hide()
+
+  highlightTrack: ->  
+    id = App.player.model.get('cur_track').get('_id')
+    track_block = $("#track_id-#{ id }")
+    $('.playing_track').removeClass 'playing_track'
+    track_block.addClass 'playing_track'
+
+    # dst = $(document).scrollTop()
+    wh = $(window).height()
+    bt = track_block.offset().top
+    bh = track_block.height()
+    
+    y = Math.max 0, bt + bh - wh/2
+
+    $(document).scrollTo top: y, left: 0,
+      duration: 500,
+      easing:'easeOutExpo'
+
+

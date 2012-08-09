@@ -15,17 +15,13 @@ class Playlists.Views.Settings.IndexView extends Backbone.View
     my_profile.settings.lastfm.enable = !@lastfm
 
     if @lastfm
-      return location.href = lastfm.settings.auth_url()
+      return lastfm.settings.get_auth_token()
     else
-      delete lastfm.settings.session_key
-      delete lastfm.settings.session_name
-
-      delete localStorage.session_key
-      delete localStorage.session_name
+      clear_lastfm_session()
 
     @render()
     
-  render: =>
+  render: ->
     console.log 'Settings.IndexView render', @el
     $(@el).html @template(
       lastfm_enable: @lastfm,

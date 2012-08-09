@@ -1,4 +1,4 @@
-.play_btn_wrap.fl_l{ style: "background-image: url(#{@artist_photo});"}
+.play_btn_wrap.fl_l{ style: "background-image: url(#{@artist_photo}); background-size: 32px;"}
   .play_btn{ data: {audio_id: @audio_id}}
 .info.fl_l
   .track_name.fl_l
