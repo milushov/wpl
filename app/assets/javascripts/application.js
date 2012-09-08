@@ -27,6 +27,7 @@
 //= require tag-it
 //= require Name
 //= require lastfm/manifest
+//= require piecon.min.js
 
 //= require backbone_rails_sync
 //= require backbone_datalink

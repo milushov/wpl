@@ -75,6 +75,8 @@ class Playlists.Views.Player.IndexView extends Backbone.View
     $("#track_info #name").html @model.get('cur_track').getName()
 
   updateDuraion: (pos, dur) ->
+    # thiw will be piecon update
+    #Piecon.setProgress(12)
     if not pos or not dur
       pos = Math.round(
         soundManager.getSoundById(
