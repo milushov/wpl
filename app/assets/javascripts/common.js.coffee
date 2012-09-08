@@ -340,6 +340,12 @@ window.userSetup = ->
       twitter:
         enable: false
 
+window.pieconSetup = ->
+  Piecon.setOptions
+    color:      '#ff0084' # pie chart color i:
+    background: '#bbb' # empty pie chart color
+    shadow:     '#fff', # outer ring color
+    fallback:   false # toggles displaying percentage in the title bar (possible values - true, false, 'force')
 
 $ () ->
   if my_profile == -1
@@ -372,6 +378,8 @@ $ () ->
   playerSetup()
 
   lastfmSetup()
+
+  pieconSetup()
 
   if qbaka?
     u = my_profile.user

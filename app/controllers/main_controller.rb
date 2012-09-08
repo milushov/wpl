@@ -8,9 +8,9 @@ class MainController < ApplicationController
     from_vk_or_for_api
 
     if isAuth?
-      # here we will be select user profile by id,
-      # if profile don't extst (@user_profile will be equal false),
-      # we create user...
+      # here we will select user profile by id,
+      # if a profile doesn't exist (@user_profile will equal false),
+      # we create a user...
       @user_profile = getProfile session[:user_id]
       
       unless @user_profile
@@ -44,18 +44,32 @@ class MainController < ApplicationController
     if isAuth?
       return redirect_to action: 'index'
     else
+      logger.info "логинимся..."
+      logger.info "[before deleting] cookies: #{cookies}"
       destroy_auth
-      return requestAuth params[:return_to] # try to get auth_token
+      logger.info "[after deleting] cookies: #{cookies}"
+      
+      url = request_auth params[:return_to] # try to get auth_token
+      logger.info "редирект на #{url}"
+      redirect_to url
     end
   end
 
   def logout
+    logger.info "[before deleting] cookies: #{cookies}"
     destroy_auth
+    logger.info "[after deleting] cookies: #{cookies}"
     return redirect_to action: 'index'
   end
 
   # step2: obtain and save access token
   def auth
+    logger.info "мы в методе auth..."
+
+    logger.info "params: #{params}"
+    logger.info "session: #{session}"
+    logger.info "cookies: #{cookies}"
+
     if params[:code].nil?
       return redirect_to action: 'index'
     elsif params[:error] and params[:error_description]
@@ -65,23 +79,27 @@ class MainController < ApplicationController
     uri = "https://oauth.vk.com/access_token?client_id=#{ APP_ID }&client_secret=#{ APP_SECRET }&code=#{params[:code]}"
 
     begin
-      response = open(uri, ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE).read
+      ssl = OpenSSL::SSL::VERIFY_NONE
+      response = open(uri, ssl_verify_mode: ssl).read
     rescue => ex
       return render inline: "#{ex.class}: #{ex.message} uri(#{uri}) <b>failed</b>" 
     end
 
     response = JSON.parse response
+    logger.info "response: #{response}"
 
     if response['error'] and response['error_description']
+      logger.info "упс ошибка, выводим её.. response['error']: #{response['error']}"
       return render inline: "#{params[:error]} - #{params[:error_description]}"
     else
       logger.info "Saving obtained token #{response['access_token']} and user_id #{response['user_id']}"
-      logger.info "before #{session[:access_token]}"
+      logger.info "before saveToken() cookies[:access_token]: #{cookies[:access_token]}"
+
       saveToken response['access_token'], response['user_id']
-      logger.info "after #{session[:access_token]}"
-      logger.info "return_to #{params[:return_to]}"
+      
+      logger.info "after saveToken() cookies[:access_token]: #{cookies[:access_token]}"
       if params[:return_to]
-        logger.info 'redirect to /return_to'
+        logger.info "redirect to params[:return_to]: #{params[:return_to]}"
         redirect_to "/#{params[:return_to]}"
       else
         logger.info 'redirect to index action'
@@ -116,17 +134,18 @@ private
       fields: 'photo_big,screen_name,sex'
     ).first
 
-    user_info[:id] = user_info['uid']
+    user_info['id'] = user_info['uid']
     user_info.delete 'uid'
 
+    binding.pry
     User.create! user_info
   end
 
   # first step: request code, which is required for getting auth token
-  def requestAuth(return_to = nil)
+  def request_auth return_to = nil
     redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-    redirect_to "http://oauth.vk.com/authorize?client_id=#{ APP_ID }"+
-      "&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
+    "http://oauth.vk.com/authorize?client_id=#{ APP_ID }"+
+    "&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
   end
 
   # сохраняет access_token, user_id, auth_key в сессии, куке
@@ -138,12 +157,14 @@ private
     auth_key = session[:auth_key] = getAuthKey user_id.to_i
     
     domain = get_domain
+    logger.info "domain: #{get_domain}"
 
     expires = Time.now + 366.days
 
     cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
     cookies[:user_id] = {value: user_id, domain: domain, expires: expires}
     cookies[:auth_key] = {value: auth_key, domain: domain, expires: expires}
+
     logger.info "saveToken already."
     logger.info "cookies[:access_token] #{cookies[:access_token]}"
     logger.info "cookies[:user_id] #{cookies[:user_id]}"
