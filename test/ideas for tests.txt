@@ -1,2 +1,0 @@
-if user exist, then getProfile() should retun object with specific properties;
-same eith playlists;
