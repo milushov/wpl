@@ -54,11 +54,26 @@ class User
       end
       playlists_followers
     end
-  end
 
-  class << self
     def find2 id
       any_of({screen_name: id}, {_id: id.to_i}).first
+    end
+    
+    def from_omniauth data
+      where(_id: data.uid).first || create_from_omniauth(data)
+    end
+    
+    def create_from_omniauth data
+      info = data.extra.raw_info
+      user = User.create! do |user|
+        user.id = data.uid
+        user.screen_name = info.domain
+        user.first_name = info.first_name
+        user.last_name = info.last_name
+        user.sex = info.sex
+        user.photo = info.photo
+        user.photo_big = info.photo_big
+      end
     end
   end
 end
