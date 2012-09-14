@@ -48,6 +48,12 @@ private
     end
   end
 
+  def current_user
+    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+
+  helper_method :current_user
+
   # get id of user and return full profile with all friends and playlists
   def getProfile(id)
     return false unless id

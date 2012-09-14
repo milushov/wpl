@@ -37,9 +37,8 @@ Playlists::Application.routes.draw do
   end
 
   get 'u/:id', to: 'main#index'
-  get 'auth', to: 'main#auth'
-  get 'login', to: 'main#login'
-  get 'logout', to: 'main#logout'
+  get 'auth/vkontakte/callback', to: 'sessions#default'
+  get 'logout', to: 'sessions#destroy'
 
   root to: 'main#index'
   get '*path', to: 'main#index'

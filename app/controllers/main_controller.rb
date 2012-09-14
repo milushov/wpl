@@ -5,34 +5,25 @@ class MainController < ApplicationController
 
   def index
     format_fix if params[:format]
-    from_vk_or_for_api
 
     if isAuth?
-      # here we will select user profile by id,
-      # if a profile doesn't exist (@user_profile will equal false),
-      # we create a user...
       @user_profile = getProfile session[:user_id]
       
       unless @user_profile
-        create_user
-        unless(@user_profile = getProfile session[:user_id])
-          flash[:error] = 'Невозможно вас авторизовать'
-          return render 'main/start'
-        end
+        flash[:error] = 'Невозможно вас авторизовать'
       end
       
+      # if the token id obsoleted
       if @user_profile.kind_of? Integer
-        cookies.delete :auth_key, domain: get_domain
-        return redirect_to action: 'login', return_to: params[:path]
+        cookies.delete :auth_key#, domain: get_domain
+        return redirect_to '/auth/vkontakte'
       end
 
       @count_friends = ApplicationController::COUNT_FRIENDS.max + 1 # depricated
       @api_url = ApplicationController::APP_URL # main url of application
       @debug = ApplicationController::DEBUG
       
-      respond_to do |format|
-        format.html # index.html.haml
-      end
+      render 'main/index'
     else
       # переводим юзера на стартовую страницу приложения
       @return_to = params[:path] ? "?return_to=#{params[:path]}" : nil
@@ -40,147 +31,9 @@ class MainController < ApplicationController
     end
   end
 
-  def login
-    if isAuth?
-      return redirect_to action: 'index'
-    else
-      logger.info "логинимся..."
-      logger.info "[before deleting] cookies: #{cookies}"
-      destroy_auth
-      logger.info "[after deleting] cookies: #{cookies}"
-      
-      url = request_auth params[:return_to] # try to get auth_token
-      logger.info "редирект на #{url}"
-      redirect_to url
-    end
-  end
-
-  def logout
-    logger.info "[before deleting] cookies: #{cookies}"
-    destroy_auth
-    logger.info "[after deleting] cookies: #{cookies}"
-    return redirect_to action: 'index'
-  end
-
-  # step2: obtain and save access token
-  def auth
-    logger.info "мы в методе auth..."
-
-    logger.info "params: #{params}"
-    logger.info "session: #{session}"
-    logger.info "cookies: #{cookies}"
-
-    if params[:code].nil?
-      return redirect_to action: 'index'
-    elsif params[:error] and params[:error_description]
-      return render inline: "#{params[:error]} - #{params[:error_description]}"
-    end
-
-    uri = "https://oauth.vk.com/access_token?client_id=#{ APP_ID }&client_secret=#{ APP_SECRET }&code=#{params[:code]}"
-
-    begin
-      ssl = OpenSSL::SSL::VERIFY_NONE
-      response = open(uri, ssl_verify_mode: ssl).read
-    rescue => ex
-      return render inline: "#{ex.class}: #{ex.message} uri(#{uri}) <b>failed</b>" 
-    end
-
-    response = JSON.parse response
-    logger.info "response: #{response}"
-
-    if response['error'] and response['error_description']
-      logger.info "упс ошибка, выводим её.. response['error']: #{response['error']}"
-      return render inline: "#{params[:error]} - #{params[:error_description]}"
-    else
-      logger.info "Saving obtained token #{response['access_token']} and user_id #{response['user_id']}"
-      logger.info "before saveToken() cookies[:access_token]: #{cookies[:access_token]}"
-
-      saveToken response['access_token'], response['user_id']
-      
-      logger.info "after saveToken() cookies[:access_token]: #{cookies[:access_token]}"
-      if params[:return_to]
-        logger.info "redirect to params[:return_to]: #{params[:return_to]}"
-        redirect_to "/#{params[:return_to]}"
-      else
-        logger.info 'redirect to index action'
-        redirect_to action: 'index'
-      end
-    end
-  end
-
 private
 
   def blacklist
     error 'you are in blacklist by ip'
-  end
-  
-  def destroy_auth
-    session[:access_token] = nil
-    session[:user_id] = nil
-    session[:auth_key] = nil
-    session['ban'] = nil
-
-    domain = get_domain
-
-    cookies.delete :access_token, domain: domain
-    cookies.delete :user_id, domain: domain
-    cookies.delete :auth_key, domain: domain
-  end
-
-  def create_user
-    user_info = @vk.users.get(
-      uids: session[:user_id],
-      lang: 'ru', # REMARK: not tested!
-      fields: 'photo_big,screen_name,sex'
-    ).first
-
-    user_info['id'] = user_info['uid']
-    user_info.delete 'uid'
-
-    binding.pry
-    User.create! user_info
-  end
-
-  # first step: request code, which is required for getting auth token
-  def request_auth return_to = nil
-    redirect_uri = return_to ? "#{REDIRECT_URI}?return_to=#{return_to}" : REDIRECT_URI
-    "http://oauth.vk.com/authorize?client_id=#{ APP_ID }"+
-    "&redirect_uri=#{ redirect_uri }&scope=#{ SETTINGS }&response_type=code"
-  end
-
-  # сохраняет access_token, user_id, auth_key в сессии, куке
-  def saveToken( access_token, user_id )
-    session[:abuse] = []
-
-    access_token = session[:access_token] = access_token
-    user_id = session[:user_id] = user_id.to_i
-    auth_key = session[:auth_key] = getAuthKey user_id.to_i
-    
-    domain = get_domain
-    logger.info "domain: #{get_domain}"
-
-    expires = Time.now + 366.days
-
-    cookies[:access_token] = {value: access_token, domain: domain, expires: expires}
-    cookies[:user_id] = {value: user_id, domain: domain, expires: expires}
-    cookies[:auth_key] = {value: auth_key, domain: domain, expires: expires}
-
-    logger.info "saveToken already."
-    logger.info "cookies[:access_token] #{cookies[:access_token]}"
-    logger.info "cookies[:user_id] #{cookies[:user_id]}"
-    logger.info "cookies[:auth_key] #{cookies[:auth_key]}"
-  end
-
-  def from_vk_or_for_api
-    if params[:viewer_id]
-      user_id = params[:viewer_id].to_i
-      access_token = params[:access_token].to_i
-      # auth_key = params[:auth_key].to_i
-      saveToken access_token, user_id
-    end
-  end
-
-  def get_domain
-    domain = DEBUG ? '.playlists.dev' : '.wpl.me'
   end
 end
