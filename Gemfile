@@ -24,7 +24,7 @@ gem 'haml_coffee_assets' # moved from assets block, because this https://github.
 gem 'jquery-rails'
 gem 'heroku'
 gem 'thin'
-gem 'mongoid'
+gem 'mongoid', '~> 2.4'
 gem 'mongoid_follow', git: 'git://github.com/YanhaoYang/mongoid_follow.git'
 gem 'bson_ext'
 gem 'haml-rails'

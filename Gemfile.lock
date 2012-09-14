@@ -241,7 +241,7 @@ DEPENDENCIES
   haml_coffee_assets
   heroku
   jquery-rails
-  mongoid
+  mongoid (~> 2.4)
   mongoid_follow!
   mongoid_search
   omniauth-vkontakte
