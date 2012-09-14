@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   PROD_URL = 'http://wpl.me/'
   APP_URL = ENV['USER'] ? DEV_URL : PROD_URL
   REDIRECT_URI = "#{APP_URL}auth"
-  DEBUG = ENV['USER'] || 1 ? true : false # temprary
+  DEBUG = ENV['USER'] ? true : false
 
 private
   
