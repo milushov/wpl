@@ -7,6 +7,15 @@ GIT
       mongoid
 
 GIT
+  remote: git://github.com/milushov/omniauth-vkontakte
+  revision: 143d6ee767b690816da3f76c1968cdaa1c57707f
+  specs:
+    omniauth-vkontakte (1.1.0)
+      multi_json
+      omniauth (= 1.0.3)
+      omniauth-oauth2 (= 1.0.0)
+
+GIT
   remote: git://github.com/milushov/vk-ruby.git
   revision: 6d9182025cf55bcc55ada25851445e88e006df18
   specs:
@@ -98,15 +107,12 @@ GEM
     heroku-api (0.2.5)
       excon (~> 0.14.0)
     hike (1.2.1)
-    httpauth (0.1)
     i18n (0.6.0)
     journey (1.0.4)
     jquery-rails (2.0.2)
       railties (>= 3.2.0, < 5.0)
       thor (~> 0.14)
     json (1.7.3)
-    jwt (0.1.5)
-      multi_json (>= 1.0)
     launchy (2.1.0)
       addressable (~> 2.2.6)
     mail (2.4.4)
@@ -128,22 +134,15 @@ GEM
     multi_json (1.2.0)
     multipart-post (1.1.5)
     netrc (0.7.4)
-    oauth2 (0.8.0)
-      faraday (~> 0.8)
-      httpauth (~> 0.1)
-      jwt (~> 0.1.4)
+    oauth2 (0.5.2)
+      faraday (~> 0.7)
       multi_json (~> 1.0)
-      rack (~> 1.2)
-    omniauth (1.1.1)
+    omniauth (1.0.3)
       hashie (~> 1.2)
       rack
-    omniauth-oauth2 (1.1.0)
-      oauth2 (~> 0.8.0)
+    omniauth-oauth2 (1.0.0)
+      oauth2 (~> 0.5.0)
       omniauth (~> 1.0)
-    omniauth-vkontakte (1.1.0)
-      multi_json
-      omniauth (~> 1.1.0)
-      omniauth-oauth2 (~> 1.0)
     polyglot (0.3.3)
     pry (0.9.9.6)
       coderay (~> 1.0.5)
@@ -244,7 +243,7 @@ DEPENDENCIES
   mongoid (~> 2.4)
   mongoid_follow!
   mongoid_search
-  omniauth-vkontakte
+  omniauth-vkontakte!
   pry
   rails (= 3.2.3)
   rails-backbone
