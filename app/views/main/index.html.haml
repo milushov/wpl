@@ -31,7 +31,7 @@
                   %a{href: '/settings'} Настройки
                 %li.divider
                 %li
-                  %a{href: '/logout', data: {type: 'ext'} } Выход
+                  =link_to 'Выход', :destroy_session, data: { type: 'ext' }
             
       / /.nav-collapse
   #progress_line

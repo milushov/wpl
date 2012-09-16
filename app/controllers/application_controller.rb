@@ -2,7 +2,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :app_init, :check_abuse
+  before_filter :check_abuse
 
   COUNT_FRIENDS = 0...15
   MAX_REQUERS_PER_SECOND = 2
@@ -20,13 +20,6 @@ private
   
   def getAuthKey user_id
     Digest::MD5.hexdigest "#{APP_ID}_#{user_id}_#{APP_SECRET}"
-  end
-
-  # at the beginning we need to init VK module for requesting to vk.com api
-  def app_init
-    @vk = VK::Serverside.new app_id:APP_ID, app_secret: APP_SECRET#, settings: SETTINGS
-    @vk.settings = SETTINGS
-    @vk.access_token = session[:access_token] if isAuth?
   end
 
   # check user authentication by cookies, and if alright - save them to session
@@ -47,12 +40,6 @@ private
       false
     end
   end
-
-  def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  end
-
-  helper_method :current_user
 
   # get id of user and return full profile with all friends and playlists
   def getProfile(id)
