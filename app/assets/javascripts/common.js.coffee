@@ -17,7 +17,7 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
   nestedCollection
 
 window.is_dev = ->
-  not window.location.hostname is 'wpl.me'
+  window.location.hostname isnt 'wpl.me'
 
 window.debug = window.debug || is_dev()
 
