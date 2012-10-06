@@ -326,7 +326,7 @@ lastfm.settings =
   _auth_url      : 'http://www.last.fm/api/auth'
   api_key        : if debug then lastfm_keys.dev.key else lastfm_keys.prod.key
   api_secret     : if debug then lastfm_keys.dev.secret else lastfm_keys.prod.secret
-  auth_url       :  -> "#{@_auth_url}/?api_key=#{@api_key}",
+  auth_url       : -> "#{@_auth_url}/?api_key=#{@api_key}",
   get_auth_token : -> location.href = @auth_url()
   session_key    : if sk = localStorage.session_key then sk else null
   session_name   : if ln = localStorage.session_name then ln else null
