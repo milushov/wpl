@@ -16,11 +16,16 @@ Backbone.Model::nestCollection = (attributeName, nestedCollection) ->
 
   nestedCollection
 
+is_dev = ->
+  not window.location.hostname is 'wpl.me'
+
+window.debug = window.debug || is_dev()
+
 window.imgur = {}
 window.imgur.api_url = 'http://api.imgur.com/2/upload.json'
 window.imgur.key = 'f7efb1f4aa7bd05fdf3569e20e5b3759'
 
-# moment foemat for created_at property of comment
+# moment format for created_at property of comment
 window.format = 'D MMMM YYYY, H:mm, dddd'
 window.lite_format = 'D MMMM, H:mm'
 
@@ -307,10 +312,20 @@ window.playerSetup = ->
     # setTimeout (-> $('#slider').hide()), 3000
 
 window.lastfm = {}
+
+lastfm_keys =
+  dev:
+    key: 'e05ce4a3913e89f05cbed944d8a53851'
+    secret: 'dc37074d34defcf7a5f9b96192b26ae2'
+
+  prod:
+    key: '0a4327b25688777abb96e5caf2a0698d'
+    secret: '32749807a6e7c60f8a1921ce26f2dbea'
+
 lastfm.settings =
   _auth_url      : 'http://www.last.fm/api/auth'
-  api_key        : 'e05ce4a3913e89f05cbed944d8a53851',
-  api_secret     : 'dc37074d34defcf7a5f9b96192b26ae2'
+  api_key        : if debug then lastfm_keys.dev.key else lastfm_keys.prod.key
+  api_secret     : if debug then lastfm_keys.dev.secret else lastfm_keys.prod.secret
   auth_url       :  -> "#{@_auth_url}/?api_key=#{@api_key}",
   get_auth_token : -> location.href = @auth_url()
   session_key    : if sk = localStorage.session_key then sk else null
